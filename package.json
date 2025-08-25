@@ -16,7 +16,7 @@
     "@fancyapps/ui": "^6.0.16",
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.12",
-    "@rails/actiontext": "^8.0.200",
+    "@rails/actiontext": "^8.0.201",
     "trix": "^2.1.15"
   },
   "devDependencies": {
