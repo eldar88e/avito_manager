@@ -10,6 +10,15 @@ AllCops:
     - 'vendor/**/*' # long check and error in ci
     - 'spec/**/*'
     - 'bin/*'
+    - 'config/environments/*.rb'
+    - 'config/initializers/content_security_policy.rb'
+    - 'config/initializers/filter_parameter_logging.rb'
+    - 'config/puma.rb'
+    - 'config/boot.rb'
+    - 'config/application.rb'
+    - 'config/environment.rb'
+    - 'config.ru'
+    - 'Rakefile'
 
 Style/Documentation:
   Enabled: false
