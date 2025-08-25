@@ -37,16 +37,10 @@ class WatermarkService
   private
 
   def handle_layers(address)
-    layers_row = make_layers_row
-    @platforms, @layers = layers_row.partition { |i| i[:layer_type] == 'platform' }
+    @layers = make_layers_row
     @layers << { img: @main_img, menuindex: @store.menuindex,
                  params: @store.game_img_params.presence || {}, layer_type: 'img' }
     @layers.sort_by! { |layer| layer[:menuindex] }
-
-    if @platforms.present?
-      platform = make_platform
-      @layers << platform if platform.present?
-    end
     @layers << make_slogan(address)
   end
 
@@ -142,32 +136,14 @@ class WatermarkService
       'bottom_right' => SouthEastGravity }[gravity] || NorthWestGravity
   end
 
-  def make_platform
-    if @game.platform == 'PS5, PS4'
-      @platforms.find { |i| i[:title] == 'ps4_ps5' }
-    elsif @game.platform == 'PS5'
-      @platforms.find { |i| i[:title] == 'ps5' }
-    elsif @game.platform.include?('PS4')
-      @platforms.find { |i| i[:title] == 'ps4' }
-    end
-  end
-
   def make_layers_row
     @store.image_layers.active.filter_map do |layer|
-      next if excluded_layer?(layer)
-
       if layer.layer.attached?
         form_img_layer(layer)
       elsif layer.layer_type == 'text' && layer.title.present?
         build_layer(layer)
       end
     end
-  end
-
-  def excluded_layer?(layer)
-    return layer.layer_type.match?(/flag|platform/) if @game.instance_of?(Product)
-
-    layer.layer_type == 'flag' && !@game.rus_screen && !@game.rus_voice
   end
 
   def build_layer(layer)
