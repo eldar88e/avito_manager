@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_25_164206) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_25_165341) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -81,6 +81,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_25_164206) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["store_id"], name: "index_addresses_on_store_id"
+  end
+
+  create_table "avito_tokens", force: :cascade do |t|
+    t.string "access_token", null: false
+    t.integer "expires_in", null: false
+    t.string "token_type", null: false
+    t.bigint "store_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_avito_tokens_on_store_id"
   end
 
   create_table "image_layers", force: :cascade do |t|
@@ -160,6 +170,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_25_164206) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "ad_imports", "users"
   add_foreign_key "addresses", "stores"
+  add_foreign_key "avito_tokens", "stores"
   add_foreign_key "image_layers", "stores"
   add_foreign_key "settings", "users"
   add_foreign_key "stores", "users"
