@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_25_130426) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_25_155847) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -70,6 +70,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_25_130426) do
     t.index ["user_id"], name: "index_ad_imports_on_user_id"
   end
 
+  create_table "image_layers", force: :cascade do |t|
+    t.string "title", null: false
+    t.jsonb "layer_params", default: {}
+    t.integer "layer_type", default: 0, null: false
+    t.bigint "store_id", null: false
+    t.integer "menuindex", default: 0, null: false
+    t.boolean "active", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_image_layers_on_store_id"
+  end
+
   create_table "settings", force: :cascade do |t|
     t.string "variable"
     t.string "value"
@@ -79,6 +91,35 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_25_130426) do
     t.datetime "updated_at", null: false
     t.index ["user_id", "variable"], name: "index_settings_on_user_id_and_variable", unique: true
     t.index ["user_id"], name: "index_settings_on_user_id"
+  end
+
+  create_table "stores", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "var", null: false
+    t.string "ad_status"
+    t.string "category", null: false
+    t.string "goods_type", null: false
+    t.string "ad_type", null: false
+    t.text "description", null: false
+    t.string "condition", null: false
+    t.string "allow_email", null: false
+    t.string "manager_name", null: false
+    t.string "contact_phone", null: false
+    t.integer "menuindex", default: 0
+    t.jsonb "img_params"
+    t.boolean "active", default: false, null: false
+    t.string "contact_method"
+    t.text "desc_game"
+    t.text "desc_product"
+    t.string "type"
+    t.string "client_id"
+    t.string "client_secret"
+    t.integer "percent", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contact_phone"], name: "index_stores_on_contact_phone", unique: true
+    t.index ["user_id", "var"], name: "index_stores_on_user_id_and_var", unique: true
+    t.index ["user_id"], name: "index_stores_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -96,5 +137,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_25_130426) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "ad_imports", "users"
+  add_foreign_key "image_layers", "stores"
   add_foreign_key "settings", "users"
+  add_foreign_key "stores", "users"
 end
