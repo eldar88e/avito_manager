@@ -1,0 +1,43 @@
+#notices {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin: 10px;
+  z-index: 31;
+  width: 100%;
+  max-width: 320px;
+
+  &>div {
+    opacity: 1;
+    transition: opacity 0.7s ease-out;
+    font-size: 12px;
+    @media (max-width: 575px) {
+      padding: 10px;
+    }
+
+    .notice-close {
+      cursor: pointer;
+      position: absolute;
+      top: 0;
+      right: 4px;
+
+      &::before, &::after {
+        content: '';
+        position: absolute;
+        top: 7px;
+        right: -7px;
+        width: 11px;
+        height: 1.5px;
+        background-color: rgba(71, 132, 252, 1);
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+
+      &::after {
+        transform: translate(-50%, -50%) rotate(-45deg); /* Вторая линия */
+      }
+    }
+  }
+  &>div.fade-out {
+    opacity: 0;
+  }
+}

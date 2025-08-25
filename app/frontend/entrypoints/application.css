@@ -1,0 +1,12 @@
+@import "../styles/application.scss";
+@import "../styles/notice.scss";
+@import "../styles/preloader.scss";
+@import "../styles/mobile-menu.scss";
+@import "../styles/catalog-menu.scss";
+@import "../styles/cookies.scss";
+@import "../styles/footer.scss";
+
+@source "../../../app/components/**/*.html.slim";
+@source "../../../app/views/**/*.html.erb";
+@source "../../../app/views/**/*.html.slim";
+@source "../../../app/helpers/**/*.rb";

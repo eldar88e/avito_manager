@@ -1,0 +1,54 @@
+services:
+  base: &base
+    image: app
+    build: .
+    env_file: ./.env
+    volumes:
+      - gems:/usr/local/bundle
+      - .:/app
+
+  app:
+    <<: *base
+    container_name: app
+    hostname: app
+    depends_on:
+      - pg
+    command: ['bundle', 'exec', 'rails', 's', '-p', '3000', '-b', '0.0.0.0']
+    ports:
+      - "3000:3000"
+    networks:
+      - net
+    restart: always
+
+  worker:
+    <<: *base
+    container_name: app-worker
+    hostname: worker
+    depends_on:
+      - pg
+    command: ['bundle', 'exec', 'rails', 'solid_queue:start']
+    networks:
+      - net
+    restart: always
+
+  pg:
+    image: postgres:16.10-alpine3.22
+    container_name: app-pg
+    hostname: pg
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      TZ: Europe/Moscow
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - net
+    restart: unless-stopped
+
+volumes:
+  db_data:
+  gems:
+
+networks:
+  net:

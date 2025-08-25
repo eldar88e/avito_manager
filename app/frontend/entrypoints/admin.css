@@ -1,0 +1,13 @@
+@import "../styles/admin.scss";
+@import "../styles/notice.scss";
+@import "../styles/preloader.scss";
+@import "trix/dist/trix.css";
+@import "../styles/actiontext.scss";
+
+@source "../../../app/components/admin/**/*.slim";
+@source "../../../app/views/admin/**/*.html.erb";
+@source "../../../app/views/admin/**/*.html.slim";
+@source "../../../app/views/notices/**/*.html.erb";
+@source "../../../app/views/layouts/**/*.html.slim";
+@source "../../../app/views/layouts/**/*.html.erb";
+@source "../../../app/helpers/**/*.rb";

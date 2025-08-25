@@ -1,0 +1,22 @@
+plugins:
+  - rubocop-performance
+  - rubocop-rails
+
+AllCops:
+  SuggestExtensions: false
+  NewCops: enable
+  Exclude:
+    - 'db/**/*'
+    - 'vendor/**/*' # long check and error in ci
+    - 'spec/**/*'
+    - 'bin/*'
+
+Style/Documentation:
+  Enabled: false
+
+# Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
+Layout/SpaceInsideArrayLiteralBrackets:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
