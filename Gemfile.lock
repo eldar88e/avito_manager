@@ -243,6 +243,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.18.9-x86_64-linux-musl)
       racc (~> 1.4)
+    observer (0.1.2)
     orm_adapter (0.5.0)
     pagy (9.4.0)
     parallel (1.27.0)
@@ -255,6 +256,7 @@ GEM
     pg (1.6.1-x86_64-linux-musl)
     pghero (3.7.0)
       activerecord (>= 7.1)
+    pkg-config (1.6.2)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
@@ -327,6 +329,9 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
+    rmagick (6.1.4)
+      observer (~> 0.1)
+      pkg-config (~> 1.4)
     rouge (4.5.2)
     rubocop (1.80.0)
       json (~> 2.3)
@@ -460,6 +465,7 @@ DEPENDENCIES
   rails (~> 8.0.2)
   rails-i18n
   ransack (~> 4.2)
+  rmagick
   rubocop-performance
   rubocop-rails
   slim-rails

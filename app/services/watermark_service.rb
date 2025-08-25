@@ -1,8 +1,7 @@
-# TODO: прейти на mini_magick
-
 class WatermarkService
   include Rails.application.routes.url_helpers
   include Magick
+
   BLOB_CACHE_EXPIRES = 30.minutes
   DEFAULT_WIDTH      = 1920
   DEFAULT_HEIGHT     = 1440
@@ -56,9 +55,13 @@ class WatermarkService
       if params.is_a?(Hash)
         params
       elsif params.present?
-        eval(params).transform_keys(&:to_s) # TODO: убрать eval
+        # eval(params).transform_keys(&:to_s) # TODO: убрать eval
+        JSON.parse(params.gsub('=>', ':'))
       end
     rewrite_pos_size(result)
+  rescue JSON::ParserError
+    Rails.logger.error "Failed to parse layer params: #{params}!"
+    {}
   end
 
   def rewrite_pos_size(args)

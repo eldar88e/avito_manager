@@ -33,6 +33,8 @@ gem 'slim-rails'
 gem 'telegram-bot-ruby', '~> 2.0'
 gem 'view_component'
 
+gem 'rmagick' # TODO: change to vips
+
 group :development, :test do
   gem 'brakeman', require: false
   gem 'pry'

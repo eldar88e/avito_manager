@@ -20,6 +20,10 @@ AllCops:
     - 'config.ru'
     - 'Rakefile'
 
+Metrics/ClassLength:
+  Exclude:
+    - 'app/services/watermark_service.rb'
+
 Style/Documentation:
   Enabled: false
 
