@@ -36,7 +36,7 @@ jobs:
           bundler-cache: true
 
       - name: Scan for security vulnerabilities in JavaScript dependencies
-        run: puts "Not implemented yet"
+        run: echo "⚠️  Not implemented yet"
 
   lint:
     runs-on: ubuntu-latest
