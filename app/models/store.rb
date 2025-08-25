@@ -10,8 +10,8 @@ class Store < ApplicationRecord
   validates :manager_name, presence: true
   validates :contact_phone, presence: true, uniqueness: { case_sensitive: false }
 
-  # has_many :image_layers, dependent: :destroy
-  # has_many :addresses, dependent: :destroy
+  has_many :image_layers, dependent: :destroy
+  has_many :addresses, dependent: :destroy
   # has_many :avito_tokens, dependent: :destroy
   # has_many :ban_lists, dependent: :destroy
   # has_many :ads, dependent: :destroy

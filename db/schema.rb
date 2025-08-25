@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_25_155847) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_25_164206) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -70,6 +70,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_25_155847) do
     t.index ["user_id"], name: "index_ad_imports_on_user_id"
   end
 
+  create_table "addresses", force: :cascade do |t|
+    t.bigint "store_id", null: false
+    t.string "city", null: false
+    t.string "slogan"
+    t.jsonb "slogan_params"
+    t.boolean "active", default: false, null: false
+    t.string "description"
+    t.integer "total_games"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_addresses_on_store_id"
+  end
+
   create_table "image_layers", force: :cascade do |t|
     t.string "title", null: false
     t.jsonb "layer_params", default: {}
@@ -122,6 +135,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_25_155847) do
     t.index ["user_id"], name: "index_stores_on_user_id"
   end
 
+  create_table "streets", force: :cascade do |t|
+    t.string "title", null: false
+    t.bigint "address_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["address_id", "title"], name: "index_streets_on_address_id_and_title", unique: true
+    t.index ["address_id"], name: "index_streets_on_address_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -137,7 +159,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_25_155847) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "ad_imports", "users"
+  add_foreign_key "addresses", "stores"
   add_foreign_key "image_layers", "stores"
   add_foreign_key "settings", "users"
   add_foreign_key "stores", "users"
+  add_foreign_key "streets", "addresses"
 end
