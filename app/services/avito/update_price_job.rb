@@ -28,7 +28,11 @@ module Avito
       return unless store
 
       avito = AvitoService.new(store:)
-      count = group_ads.reduce(0) { |acc, ad| process_ad(store, avito, ad) ? acc + 1 : acc }
+      count = group_ads.reduce(0) do |acc, adv|
+        result = process_ad(store, avito, adv)
+        sleep rand(0.3..0.5)
+        result&.dig('result', 'success').present? ? acc + 1 : acc
+      end
       notify_updated(user, count, store)
     end
 
@@ -43,13 +47,11 @@ module Avito
       notify(user, msg) if games.size.positive?
     end
 
-    def process_ad(store, avito, ad)
-      item_id = ad.avito_id || fetch_avito_id(avito, ad)
+    def process_ad(store, avito, advert)
+      item_id = advert.avito_id || fetch_avito_id(avito, advert)
       url     = "https://api.avito.ru/core/v1/items/#{item_id}/update_price"
-      price   = GamePriceService.call(ad.adable.price_tl, store)
-      result  = fetch_and_parse(avito, url, :post, { price: })
-      sleep rand(0.3..0.5)
-      result&.dig('result', 'success').present?
+      price   = GamePriceService.call(advert.adable.price_tl, store)
+      fetch_and_parse(avito, url, :post, { price: })
     end
 
     def fetch_avito_id(avito, item)

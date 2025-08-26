@@ -1,0 +1,12 @@
+<div class="chat-form">
+  <%= form_with(url: store_avito_chats_path(chat_id: @chat_id)) do |form| %>
+    <div class="d-flex">
+      <div class="">
+        <%= form.text_area :msg, size: '98x1', maxlength: 1000, placeholder: 'Введите сообщение', class: 'form-control' %>
+      </div>
+      <div class="">
+        <%= form.submit 'Send', class: "ms-3 btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+</div>

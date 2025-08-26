@@ -15,8 +15,7 @@ gem 'solid_cable'
 gem 'solid_cache'
 gem 'solid_queue'
 
-# Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
-gem 'thruster', require: false
+# gem 'thruster', require: false
 
 gem 'active_link_to'
 gem 'aws-sdk-s3'

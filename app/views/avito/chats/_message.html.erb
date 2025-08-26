@@ -1,0 +1,16 @@
+<li class="list-group-item list-group-item-action<%= ' list-group-item-info' if @account['id'] != message['author_id'] %>">
+  <div class="msg<%= ' your-msg' if @account['id'] == message['author_id'] %>">
+    <div class="d-flex">
+      <% if @account['id'] == message['author_id'] %>
+        <% if message['isRead'] %>
+          <i class="bi bi-check2-all"></i>
+        <% end %>
+        <span class="msg-date"><%= parse_date(message['created']) %></span>
+        <%= formit_msg message %>
+      <% else %>
+        <div class="<%= 'fw-bold' unless message['isRead'] %>"><%= formit_msg message %></div>
+        <span class="msg-date"><%= parse_date(message['created']) %></span>
+      <% end %>
+    </div>
+  </div>
+</li>

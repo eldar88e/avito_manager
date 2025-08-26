@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_25_171836) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_25_184743) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -62,11 +62,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_25_171836) do
     t.boolean "deleted", default: false
     t.bigint "price_updated"
     t.jsonb "images", default: {}
-    t.bigint "run", null: false
-    t.bigint "touched_run", null: false
+    t.bigint "run_id", null: false
+    t.bigint "touched_run_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["md5_hash"], name: "index_ad_imports_on_md5_hash", unique: true
+    t.index ["run_id"], name: "index_ad_imports_on_run_id"
+    t.index ["touched_run_id"], name: "index_ad_imports_on_touched_run_id"
     t.index ["user_id"], name: "index_ad_imports_on_user_id"
   end
 

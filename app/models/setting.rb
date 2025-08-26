@@ -1,5 +1,6 @@
 class Setting < ApplicationRecord
   belongs_to :user
+  has_one_attached :font, dependent: :purge
 
   validates :variable, presence: true
   validates :variable, uniqueness: { scope: :user_id }

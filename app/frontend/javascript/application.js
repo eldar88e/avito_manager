@@ -37,9 +37,6 @@ window.openModal = function () {
   modal.addEventListener("click", handleOutsideClick);
 };
 
-window.closeMiniApp = function () {
-  Telegram.WebApp.close();
-};
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", function () {

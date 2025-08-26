@@ -1,0 +1,48 @@
+<%= turbo_frame_tag @store do %>
+  <%= form_with(model: @store, url: store_avito_autoload_path, method: :patch) do |form| %>
+    <% first_parms = {}; first_parms['upload_url'] = @auto_load.delete('upload_url') %>
+    <% first_parms['report_email'] = @auto_load.delete('report_email') %>
+    <div class="row">
+      <% first_parms.each do |key, val| %>
+        <div class="col-12 col-md-6 mb-3">
+          <%= form.label key, t("avito.autoload.#{key}"), class: 'form-label' %>
+          <%= form.text_field key, value: val, class: 'form-control' %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-md-4 mb-3">
+        <%= form.label :rate, t("avito.autoload.rate"), class: 'form-label' %>
+        <%= form.number_field :rate, value: @auto_load['schedule'][0]['rate'], class: 'form-control mb-3',
+                              title: 'Please enter only digits'%>
+        <%= form.check_box :autoload_enabled, { checked: @auto_load['autoload_enabled'], class: 'form-check-input' } %>
+        <%= form.label :autoload_enabled, t('avito.autoload.autoload_enabled'), class: 'form-check-label' %>
+      </div>
+      <div class="col-12 col-md-4 mb-3">
+        <%= form.label :weekdays, t('avito.autoload.weekdays'), class: 'form-label' %>
+        <%= form.collection_select :weekdays, Avito::DashboardHelper::WEEKDAYS.map { |i| OpenStruct.new(i) }, :id, :name,
+                                   { selected: @auto_load['schedule'][0]['weekdays'] },
+                                   { multiple: true, class: "form-control" } %>
+      </div>
+
+      <div class="col-12 col-md-4 mb-3">
+        <%= form.label :time_slots, t('avito.autoload.time_slots'), class: 'form-label' %>
+        <%= form.collection_select :time_slots,
+                                   Avito::AutoloadHelper::TIME_SLOTS.map { |i| OpenStruct.new(i) }, :id, :name,
+                                   { selected: @auto_load['schedule'][0]['time_slots'] },
+                                   { multiple: true, class: "form-control" } %>
+      </div>
+    </div>
+
+    <%= link_to store_avito_autoload_path(@store),
+                title: 'Назад',
+                class: 'btn btn-danger btn-sm me-2',
+                data: { turbo_prefetch: false } do %>
+      <i class="bi bi-backspace"></i>
+    <% end %>
+
+    <%= form.submit 'Сохранить', class: 'btn btn-primary btn-sm' do %>
+    <% end %>
+  <% end %>
+<% end %>

@@ -1,0 +1,15 @@
+<%= link_to store_avito_chats_path(@store), class: 'btn btn-primary mb-3', data: { turbo_prefetch: false } do %>
+  <i class="bi bi-arrow-left"></i>
+<% end %>
+
+<div class="mb-3">
+  <div class="list-messages" data-controller="fancybox auto-scroll-down" style="height: calc(100vh - 350px);">
+    <ul class="list-group" id="messages">
+      <% @messages.each do |message| %>
+        <%= render partial: 'message', locals: { message: message } %>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+<%= render partial: '/avito/chats/form' %>

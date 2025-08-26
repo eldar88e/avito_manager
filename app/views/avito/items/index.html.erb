@@ -1,0 +1,44 @@
+<% content_for :title do %>
+  Объявления
+<% end %>
+
+<div class="container">
+  <%= turbo_frame_tag :items do %>
+    <div class="mb-3">
+      <%= link_to 'Активные', store_avito_items_path(status: 'active'), class: 'btn btn-success btn-sm mt-1 mt-md-0' %>
+      <%= link_to 'С ошибками', store_avito_items_path(status: 'blocked'), class: 'btn btn-danger btn-sm mt-1 mt-md-0' %>
+      <%= link_to 'Архив', store_avito_items_path(status: 'old'), class: 'btn btn-primary btn-sm mt-1 mt-md-0' %>
+      <%= link_to 'Удаленные', store_avito_items_path(status: 'removed'), class: 'btn btn-dark btn-sm mt-1 mt-md-0' %>
+      <%= link_to 'Отклоненые', store_avito_items_path(status: 'rejected'), class: 'btn btn-warning btn-sm mt-1 mt-md-0' %>
+    </div>
+    <% if @items['resources'].present? %>
+      <ul class="list-group list-avito-ads">
+        <li class="list-group-item list-group-item-action active d-md-block d-none">
+          <div class="row">
+            <div class="col-1">Id</div>
+            <div class="col-3">Название</div>
+            <div class="col-1">Статус</div>
+            <div class="col-1">Цена</div>
+            <div class="col-4">Адрес</div>
+            <div class="col-2">Категория</div>
+          </div>
+        </li>
+
+        <% @items['resources'].each do |item| %>
+          <%= render partial: '/avito/items/item', locals: { item: item } %>
+        <% end %>
+      </ul>
+    <% else %>
+      Записей не найдено!
+    <% end %>
+    <%= render partial: '/avito/partials/pagy',
+               locals: { end_page: @end_page, starts: 1, path: 'items',
+                         turbo_frame: 'items' } if (@page == 1 && @items['resources'].size == @per_page) || @page != 1 %>
+    <div class="mt-3 mb-3">
+      <% @items['meta'].each do |k, v| %>
+        <span class="px-2"><%= t("avito.autoload.report.#{k}") + ": #{v}" %></span>
+      <% end %>
+      <span class="px-2"><%= "Отображается: #{@items['resources'].size}" %></span>
+    </div>
+  <% end %>
+</div>

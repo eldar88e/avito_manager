@@ -1,0 +1,38 @@
+<% content_for :title do %>
+  Отзывы <%= @store.manager_name %>
+<% end %>
+
+<div class="container">
+  <div class="row">
+    <%= render partial: '/avito/partials/left_bar', locals: { path: :store_avito_reviews_path } %>
+
+    <div class="col-12 col-md-9">
+      <% if @reviews.present? %>
+        <%= turbo_frame_tag :reviews do %>
+          <ul class="list-group" data-controller="fancybox">
+            <li class="list-group-item list-group-item-action">
+              Рейтинг:
+              <% if @rate.blank? || !@rate[:error]  %>
+                <%= @rate['rating']['score'] %>&nbsp;&nbsp;
+                Голосов: <%= @rate['rating']['reviewsWithScoreCount'] %>&nbsp;&nbsp;
+                Отзывов: <span style="<%= @rate['rating']['reviewsCount'] < 30 ? 'color: red; ' : '' %>">
+                     <%= @rate['rating']['reviewsCount'] %>
+                   </span>
+              <% else %>
+                Ошибка получения рейтинга: <%= @rate[:error] %>
+              <% end %>
+            </li>
+            <% @reviews.each do |review| %>
+              <%= render partial: 'review', locals: { review: review } %>
+            <% end %>
+          </ul>
+          <%= render partial: '/avito/partials/pagy',
+                     locals: { end_page: (@reviews.size >= 30 ? @page + 1 : @page), starts: 0,
+                               path: "reviews", turbo_frame: 'reviews' } if @reviews.size >= 30 || @page > 0 %>
+        <% end %>
+      <% else %>
+        <p>Записей не найдено!</p>
+      <% end %>
+    </div>
+  </div>
+</div>

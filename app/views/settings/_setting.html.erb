@@ -1,0 +1,33 @@
+<li class="list-group-item list-group-item-action mobile-list-top-border" id="setting_<%= setting.id %>">
+  <%= form_with(model: setting, url: setting_path(setting.id), method: :patch) do |form| %>
+    <div class="row">
+      <div class="col-12 col-md-2 mb-3 mb-md-0">
+        <%= setting.variable %>
+      </div>
+
+      <div class="col-12 col-md-3 mb-3 mb-md-0">
+        <% if setting.variable == 'main_font' %>
+          <%= form.file_field :font, class: 'form-control' %>
+        <% else %>
+          <%= form.text_field :value, value: setting.value, class: 'form-control' %>
+        <% end %>
+      </div>
+
+      <div class="col-12 col-md-6 mb-3 mb-md-0">
+        <% if setting.variable == 'main_font' %>
+          <% if setting.font.attached? %>
+            <%= form.text_field :description, value: "Главный шрифт задан: #{setting.font.blob.filename}", class: 'form-control' %>
+          <% else %>
+            <%= form.text_field :description, value: 'Главный шрифт не указан!', class: 'form-control' %>
+          <% end %>
+        <% else %>
+          <%= form.text_field :description, value: setting.description, class: 'form-control' %>
+        <% end %>
+      </div>
+
+      <div class="col-12 col-md-1">
+        <%= form.submit 'Save', class: 'btn btn-warning', style: 'width: 100%;' %>
+      </div>
+    </div>
+  <% end %>
+</li>

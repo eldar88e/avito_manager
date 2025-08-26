@@ -1,0 +1,9 @@
+<% content_for :title do %>
+  Редактирование магазина <%= @store.manager_name %>
+<% end %>
+
+<%= turbo_frame_tag @store do %>
+  <div class="container">
+    <%= render partial: '/stores/form', locals: { url: store_path(@store), method: :patch } %>
+  </div>
+<% end %>

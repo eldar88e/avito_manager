@@ -1,0 +1,22 @@
+<li class="list-group-item list-group-item-action" id="settings_new">
+  <%= form_with(model: @setting, url: '/settings', method: :post,
+                data: { controller: "clear-form", action: "turbo:submit-end->clear-form#clearForm" }) do |form| %>
+    <div class="row">
+      <div class="col-12 col-md-2">
+        <%= form.text_field :var, placeholder: 'Ввведите имя переменной', class: 'form-control' %>
+      </div>
+
+      <div class="col-12 col-md-3">
+        <%= form.text_field :value, placeholder: 'Ввведите значение переменной', class: 'form-control' %>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <%= form.text_field :description, placeholder: 'Ввведите описание переменной', class: 'form-control' %>
+      </div>
+
+      <div class="col-12 col-md-1">
+        <%= form.submit 'Add', class: 'btn btn-primary', style: 'width: 100%;' %>
+      </div>
+    </div>
+  <% end %>
+</li>

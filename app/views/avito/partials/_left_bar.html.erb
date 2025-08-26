@@ -1,0 +1,9 @@
+<div class="col-12 col-md-3 mb-3">
+  <ul class="list-group list-accounts">
+    <% @stores.each do |store| %>
+      <li class="list-group-item list-group-item-action<%= ' active' if store['id'] == @store.id %>">
+        <%= link_to "Чат #{store['manager_name']}", send(path, store['id']) %>
+      </li>
+    <% end %>
+  </ul>
+</div>

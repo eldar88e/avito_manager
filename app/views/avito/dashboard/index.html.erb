@@ -1,0 +1,138 @@
+<% content_for :title do %>
+  Управление avito аккаунтом <%= @store.manager_name %>
+<% end %>
+
+<div class="container">
+  <div class="row">
+    <%= render partial: '/avito/partials/left_bar', locals: { path: :store_avito_dashboard_path } %>
+
+    <div class="col-12 col-md-9">
+      <h3 class="mt-3 mb-3">Информация об аккаунте</h3>
+      <ul class="list-group">
+        <% @account.each do |key, val| %>
+          <% next if key == 'profile_url' %>
+
+          <li class="list-group-item list-group-item-action">
+            <div class="row" style="overflow: hidden;">
+              <div class="fw-bold col-6 col-md-3">
+                <%= t("avito.autoload.#{key}") %>:
+              </div>
+              <div class="col-6 col-md-9">
+                <% if key == 'name' %>
+                  <%= link_to val, @account['profile_url'], target: '_blank' %>
+                <% else %>
+                  <%= val %>
+                <% end %>
+              </div>
+            </div>
+          </li>
+        <% end %>
+        <li class="list-group-item list-group-item-action">
+          <div class="row">
+            <div class="fw-bold col-6 col-md-3">Рейтинг</div>
+            <div class="col-6 col-md-9 d-flex align-items-center">
+              <span class="d-flex align-items-center">
+                <span style="font-size: 1.2em; margin-right: 3px;"><%= "#{@rate['rating']['score']}" %></span>
+                <span style="display: inline-block; width: 28px; height: 28px; padding-right: 10px;">
+                  <svg class="Icon-svg-Nue9W" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#ffb021" d="M10 14.9901L5.07814 18.249C4.82603 18.4159 4.4864 18.3467 4.31954 18.0945C4.23209 17.9623 4.20618 17.7987 4.24852 17.6459L5.82561 11.956L1.20664 8.28007C0.970049 8.09178 0.930825 7.74726 1.11904 7.51057C1.21768 7.38651 1.36522 7.3113 1.52353 7.30438L7.42009 7.04662L9.48727 1.51595C9.59316 1.23266 9.90855 1.08888 10.1917 1.19481C10.3402 1.25033 10.4572 1.36747 10.5127 1.51595L12.5799 7.04662L18.4765 7.30438C18.7785 7.31758 19.0127 7.57324 18.9995 7.8754C18.9925 8.03378 18.9174 8.18138 18.7934 8.28007L14.1744 11.956L15.7515 17.6459C15.8323 17.9374 15.6616 18.2392 15.3703 18.32C15.2176 18.3624 15.054 18.3364 14.9219 18.249L10 14.9901Z"></path>
+                  </svg>
+                </span>
+              </span>
+              <div>
+                <span class="d-md-inline-block d-block me-0 me-md-2">
+                <%= "Голосов: #{@rate['rating']['reviewsWithScoreCount']}" %>
+              </span>
+                <span class="d-md-inline-block d-block">
+                Отзывов: <span style="<%= @rate['rating']['reviewsCount'] < 30 ? 'color: red; ' : '' %>">
+                           <%= @rate['rating']['reviewsCount'] %>
+                         </span>
+              </span>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item list-group-item-action">
+          <div class="row">
+            <div class="fw-bold col-6 col-md-3">Кошелёк</div>
+            <div class="col-6 col-md-9">
+              <%= "#{@balance['real']}₽" %>&nbsp;&nbsp;
+              <%= "Бонусы: #{@balance['bonus']}" %>
+            </div>
+          </div>
+        </li>
+
+        <li class="list-group-item list-group-item-action">
+          <div class="row">
+            <div class="fw-bold col-6 col-md-3">Баланс тарифа</div>
+            <div class="col-6 col-md-9">
+              <% balance = @bal['balance'] ? @bal['balance'] / 100 : 0 %>
+              <span style="font-size: 1.2em; <%= balance < 100 ? 'color: red; ' : '' %>margin-right: 10px;">
+                <%= "#{balance}₽" %>
+              </span>
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <h3 class="mt-3 mb-3">Информация об автозагрузке</h3>
+      <%= render partial: '/avito/autoload/show' %>
+
+      <% if @report.present? %>
+        <h3 class="mt-3 mb-3">Отчет по последней загрузке</h3>
+        <ul class="list-group">
+          <% @report.to_a[0..4].to_h.each do |key, val| %>
+            <% next if key == 'finished_at' || val.is_a?(Array) || val.is_a?(Hash) %>
+
+            <li class="list-group-item list-group-item-action">
+              <div class="row">
+                <div class="fw-bold col-6 col-md-3">
+                  <%= t("avito.autoload.report.#{key}") %>:
+                </div>
+                <div class="col-6 col-md-9">
+                  <% if key == 'report_id' %>
+                    <%= link_to val, "/stores/#{@store.id}/avito/reports/#{val}?sections=nil",
+                                data: { turbo_prefetch: false } %>
+                  <% elsif key == 'status' %>
+                    <div class="row">
+                      <span class="badge bg-<%= if val.match?(/warning/)
+                                                  'warning text-dark'
+                                                elsif val.match?(/error/)
+                                                  'danger'
+                                                elsif val.match?(/success/)
+                                                  'success'
+                                                else
+                                                  'primary'
+                                                end %>">
+                        <%= t("avito.autoload.report.#{val}") %>
+                      </span>
+                    </div>
+                  <% elsif key == 'started_at' %>
+                    <%= format_date val %>
+                  <% else %>
+                    <%= val %>
+                  <% end %>
+                </div>
+              </div>
+            </li>
+          <% end %>
+
+          <div class="list-group-item list-group-item-action">
+            <div class="row">
+              <div class="fw-bold col-6 col-md-3">Обработано объявлений</div>
+              <div class="col-6 col-md-9"><%= @report.dig('section_stats', 'sections')&.sum { |i| i['count'] } || 0 %></div>
+            </div>
+          </div>
+
+          <div class="list-group-item list-group-item-action">
+            <% deleted = @report.dig('section_stats', 'sections')&.find { |i| i['slug'] == 'removed_from_file' }.try(:[], 'count') || 0 %>
+            <div class="row">
+              <div class="ps-3 ps-md-3 fw-bold col-6 col-md-3">Объявлений в файле</div>
+              <div class="col-6 col-md-9"><%= @report['section_stats']['count'] - deleted %></div>
+            </div>
+          </div>
+        </ul>
+      <% end %>
+    </div>
+  </div>
+</div>

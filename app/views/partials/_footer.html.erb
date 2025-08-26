@@ -1,0 +1,24 @@
+<footer>
+  <div class="container mx-auto px-5 mb-3 mt-4">
+    <h3><%= link_to 'PsAvito', root_path, title: 'На главную' %></h3>
+  </div>
+</footer>
+<div class="mobile-bar bg-light">
+  <ul data-controller="mobile-bar">
+    <li class="btn-left-bar">
+      <a data-action="click->mobile-bar#showLeftBar"><i class="bi bi-arrow-right-square"></i></a>
+    </li>
+    <li>
+      <a href="/" title="На главную"><i class="bi bi-house"></i></a>
+    </li>
+    <li>
+      <a data-action="click->mobile-bar#showMainMenu">
+        <i class="bi bi-list"></i>
+      </a>
+    </li>
+    <li>
+      <a data-action="click->mobile-bar#up" id="scroller"><i class="bi bi-arrow-up-circle"></i></a>
+    </li>
+  </ul>
+</div>
+<%= render '/partials/modal' %>

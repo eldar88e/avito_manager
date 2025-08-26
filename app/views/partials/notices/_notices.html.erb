@@ -1,0 +1,7 @@
+<%= turbo_frame_tag :notices do %>
+  <% flash.each do |key, value| %>
+    <% [value].flatten.each do |notices| %>
+      <%= render partial: '/partials/notices/notice', locals: { notices: notices, key: key } %>
+    <% end %>
+  <% end %>
+<% end %>

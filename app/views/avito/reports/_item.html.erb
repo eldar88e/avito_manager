@@ -1,0 +1,20 @@
+<li class="list-group-item list-group-item-action">
+  <div class="report-item">
+    <div><%= item['ad_id'] %></div>
+    <% if item['avito_id'] %>
+      <div><%= link_to item['avito_id'], item['url'], target: '_blank' %></div>
+    <% end %>
+    <div class="badge <%= badge_style item['section']['slug'] %>"><%= item['section']['title'] %></div>
+    <% if item['messages'].present? %>
+      <div class="description" data-controller="expand_text">
+        <div class="message" data-expand_text-target="message">
+          <%= sanitize_reports item['messages'][0]['title'] %> Актуально на <%= format_date item['messages'][0]['updated_at'] %>
+          <%= sanitize_reports item['messages'][0]['description'] %>
+        </div>
+        <div class="hidden-button" data-action="click->expand_text#call" data-expand_text-target="button">
+          <span>Скрыть подробности</span>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</li>

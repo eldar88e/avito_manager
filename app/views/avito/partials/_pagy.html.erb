@@ -1,0 +1,18 @@
+<nav aria-label="Page navigation items">
+  <ul class="pagination mt-3">
+    <% paginator(end_page, starts).each do |page| %>
+      <li class="page-item<%= ' disabled' if page.is_a?(String) %><%= ' active' if page == (params['page'] || starts).to_i %>">
+        <% if page.is_a?(Integer) && page != params['page'].to_i %>
+          <%= link_to (starts.zero? ? page + 1 : page), "/stores/#{@store.id}/avito/#{path}?page=#{page}",
+                      data: { turbo_prefetch: false, turbo_frame: turbo_frame }, class: "page-link" %>
+        <% else %>
+          <a class="page-link"><%= if page.is_a?(Integer)
+                                     starts.zero? ? page.to_i + 1 : page.to_i
+                                   else
+                                     page
+                                   end %></a>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</nav>

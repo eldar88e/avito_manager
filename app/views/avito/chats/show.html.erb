@@ -1,0 +1,15 @@
+<% content_for :title do %>
+  Сообщения
+<% end %>
+
+<div class="container">
+  <div class="row">
+    <%= render partial: '/avito/partials/left_bar', locals: { path: :store_avito_chats_path } %>
+
+    <div class="col-12 col-md-9">
+      <%= turbo_frame_tag :store do %>
+        <%= render partial: '/avito/chats/messages' %>
+      <% end %>
+    </div>
+  </div>
+</div>

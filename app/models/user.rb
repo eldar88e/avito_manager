@@ -5,8 +5,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :ad_imports, dependent: :destroy
-  # has_many :stores, dependent: :destroy
-  # has_many :settings, dependent: :destroy
+  has_many :stores, dependent: :destroy
+  has_many :settings, dependent: :destroy
   # has_many :products, dependent: :destroy
   # has_many :ads, dependent: :destroy
   # has_many :cache_reports, dependent: :destroy
@@ -22,7 +22,7 @@ class User < ApplicationRecord
   def create_default_settings
     Setting.transaction do
       default_settings_params.each do |params|
-        settings.create!(params)
+        settings.create!(params.merge(user: self))
       end
     end
   rescue ActiveRecord::RecordInvalid => e
@@ -31,13 +31,13 @@ class User < ApplicationRecord
 
   def default_settings_params
     [
-      { var: 'game_img_size', value: 1080 },
-      { var: 'telegram_chat_id', value: 'example_chat_id' },
-      { var: 'telegram_bot_token', value: 'example_bot_token' },
-      { var: 'quantity_games', value: 10 },
-      { var: 'avito_img_width', value: 1920 },
-      { var: 'avito_img_height', value: 1440 },
-      { var: 'avito_back_color', value: '#FFFFFF' }
+      { variable: 'game_img_size', value: 1080 },
+      { variable: 'telegram_chat_id', value: 'example_chat_id' },
+      { variable: 'telegram_bot_token', value: 'example_bot_token' },
+      { variable: 'quantity_games', value: 10 },
+      { variable: 'avito_img_width', value: 1920 },
+      { variable: 'avito_img_height', value: 1440 },
+      { variable: 'avito_back_color', value: '#FFFFFF' }
     ]
   end
 end

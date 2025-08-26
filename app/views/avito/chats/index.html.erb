@@ -1,0 +1,25 @@
+<% content_for :title do %>
+  Чаты <%= @store.manager_name %>
+<% end %>
+
+<div class="container">
+ <div class="row">
+   <%= render partial: '/avito/partials/left_bar', locals: { path: :store_avito_chats_path } %>
+
+   <div class="col-12 col-md-9">
+     <%= turbo_frame_tag :chats do %>
+       <% if @chats.present? %>
+         <ul class="list-group list-chats">
+           <% @chats.each do |chat| %>
+             <%= render partial: 'chat', locals: { chat: chat } %>
+           <% end %>
+         </ul>
+         <%= render partial: '/avito/partials/pagy', locals: { end_page: @end_page, starts: 0,
+                                                               path: "chats", turbo_frame: 'chats' } %>
+       <% else %>
+         <p>Записей не найдено!</p>
+       <% end %>
+     <% end %>
+   </div>
+ </div>
+</div>

@@ -1,0 +1,10 @@
+<li class="list-group-item list-group-item-action">
+  <div class="row">
+    <div class="col-12 col-md-1"><%= link_to item['id'], item['url'], target: '_blank' %></div>
+    <div class="col-12 col-md-3"><%= item['title'] %></div>
+    <div class="col-6 col-md-1"><%= item['status'] %></div>
+    <div class="col-6 col-md-1"><%= item['price'] %></div>
+    <div class="col-12 col-md-4 address"><%= item['address'] %></div>
+    <div class="col-12 col-md-2 category"><%= item['category']['name'] %></div>
+  </div>
+</li>

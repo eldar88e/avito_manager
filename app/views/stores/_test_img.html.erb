@@ -1,0 +1,7 @@
+<% if @store.test_img.attached? %>
+  <h5>Тестовая картинка</h5>
+  <%= link_to '', data: { controller: "fancybox", fancybox: "gallery-test", src: storage_path(@store.test_img) } do %>
+    <div style="background-image: url(<%= storage_path(@store.test_img) %>); background-size: contain;
+      width: 198px; height: 144px; background-repeat: no-repeat;"></div>
+  <% end %>
+<% end %>

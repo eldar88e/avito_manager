@@ -1,0 +1,71 @@
+<% content_for :title do %>
+  Отчет <%= @report['report_id'] %>
+<% end %>
+
+<div class="container">
+  <div class="mb-3">
+    <% @report.slice('report_id', 'started_at', 'status').each do |key, val| %>
+      <span class="me-3">
+        <%= t("avito.autoload.report.#{key}") %>:
+        <% if key == 'status' %>
+          <span class="badge bg-<%= badge_status(val) %>">
+            <%= t("avito.autoload.report.#{val}") %>
+          </span>
+        <% elsif key == 'started_at' %>
+          <%= format_date val %>
+        <% else %>
+          <%= val %>
+        <% end %>
+      </span>
+    <% end %>
+
+    <% if @cached %>
+      <span class="mb-3 badge bg-success">Cached</span>
+    <% end %>
+  </div>
+
+  <div class="row">
+    <div class="col-12 col-md-3">
+      <ul class="list-sections">
+        <li class="list-group-item">
+          <%= link_to "/stores/#{@store.id}/avito/reports/#{@items['report_id']}?sections=nil",
+                      data: { turbo_prefetch: false, turbo_frame: "reports" } do %>
+            <div class="fw-bold ">Обработано объявлений <%= @report['section_stats']['count'] %></div>
+          <% end %>
+        </li>
+
+        <% sections = @report['section_stats']['sections'] || [] %>
+
+        <li class="list-group-item">
+          <% deleted = sections.find { |i| i['slug'] == 'removed_from_file' }.try(:[], 'count') || 0 %>
+          <div class="ps-3 ps-md-3 fw-bold ">Объявлений в файле <%= @report['section_stats']['count'] - deleted %></div>
+        </li>
+
+        <% sections.each do |section| %>
+          <% if section['slug'] == 'removed_from_file' %>
+            <li class="list-group-item"><div class="ps-3 ps-md-3 fw-bold">Удалено</div></li>
+          <% end %>
+
+          <%= render partial: '/avito/reports/list_item', locals: { section: section } %>
+
+          <% section['sections'].each do |sec| %>
+            <%= render partial: '/avito/reports/list_item', locals: { section: sec, second: true } %>
+          <% end %>
+        <% end %>
+
+        <% if sections.find { |i| i['slug'] == 'successful' } %>
+          <li class="list-group-item"><div class="fw-bold">Платные услуги</div></li>
+          <li class="list-group-item">
+            <div class="ps-3 ps-md-3 fw-bold">Размещение из пакета <%= @money['meta']['total'] %></div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div class="col-12 col-md-9">
+      <%= turbo_frame_tag :reports do %>
+        <%= render '/avito/reports/item_page' %>
+      <% end %>
+    </div>
+  </div>
+</div>

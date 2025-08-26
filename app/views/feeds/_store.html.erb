@@ -1,0 +1,19 @@
+<li class="list-group-item list-group-item-action mobile-list-top-border">
+  <div class="row">
+    <div class="col=12 col-md-2">
+      <%= link_to store.manager_name, store_path(store), data: { turbo_prefetch: false },
+                  title: "Перейти к управлению магазином #{store.manager_name}" %>
+    </div>
+    <div class="col=12 col-md-6">
+      <a href="/game_lists/top_1000_<%= store.var %>.xlsx" target="_blank">
+        top_1000_<%= store.var %>.xlsx
+      </a>
+    </div>
+    <div class="col=12 col-md-4">
+      <% file_path = Rails.root.join('game_lists', "top_1000_#{store.var}.xlsx") %>
+      <% if File.exist?(file_path) %>
+        <%= File.mtime(file_path).strftime('%H:%M %d.%m.%Yг.') %>
+      <% end %>
+    </div>
+  </div>
+</li>

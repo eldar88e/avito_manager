@@ -1,0 +1,43 @@
+<li class="list-group-item list-group-item-action">
+  <b><%= review.dig('sender', 'name') %></b> — <%= parse_date review.dig('createdAt') %><br/>
+  <b>Объявление: </b> <%= review.dig('item', 'title') %><br/>
+  <div class="score d-flex gap-1">
+    <% review['score'].to_i.times do %>
+      <div style="width: 16px; display: block;">
+        <svg class="Icon-svg-Nue9W" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" fill="#ffb021" d="M10 14.9901L5.07814 18.249C4.82603 18.4159 4.4864 18.3467 4.31954 18.0945C4.23209 17.9623 4.20618 17.7987 4.24852 17.6459L5.82561 11.956L1.20664 8.28007C0.970049 8.09178 0.930825 7.74726 1.11904 7.51057C1.21768 7.38651 1.36522 7.3113 1.52353 7.30438L7.42009 7.04662L9.48727 1.51595C9.59316 1.23266 9.90855 1.08888 10.1917 1.19481C10.3402 1.25033 10.4572 1.36747 10.5127 1.51595L12.5799 7.04662L18.4765 7.30438C18.7785 7.31758 19.0127 7.57324 18.9995 7.8754C18.9925 8.03378 18.9174 8.18138 18.7934 8.28007L14.1744 11.956L15.7515 17.6459C15.8323 17.9374 15.6616 18.2392 15.3703 18.32C15.2176 18.3624 15.054 18.3364 14.9219 18.249L10 14.9901Z"></path></svg>
+      </div>
+    <% end %>
+  </div>
+  <%= review['text'] %><br/>
+  <% if review['images'].present? %>
+    <div class="d-flex gap-1">
+      <% review['images'].each do |img| %>
+        <a data-fancybox="gallery" data-src="<%= img['sizes'].find { |i| i['size'] == '1280x960' }['url'] %>">
+          <div class="loading-image" style='width: 50px; height: 37px'>
+            <div class="image-thumbnail" style="background-image: url(<%= img['sizes'].find { |i| i['size'] == '180x135' }['url'] %>);"></div>
+          </div>
+        </a>
+      <% end %>
+    </div>
+  <% end %>
+  <% if review['answer'].present? %>
+    <div class="d-flex gap-3 mt-3">
+      <div>
+        <b>Ответ:</b>
+        <%= button_to store_avito_review_path(id: review['answer']['id']),
+                      method: :delete, class: 'btn btn-danger btn-sm mt-2',
+                      data: { confirm: 'Вы уверены, что хотите удалить данный ответ на коментарий?',
+                              controller: 'confirm', action: 'click->confirm#call' } do %>
+          <i class="bi bi-trash"></i>
+        <% end %>
+      </div>
+      <div>
+        <div><%= review['answer']['text'] %></div>
+        <div><%= parse_date review.dig('answer', 'createdAt') %></div>
+      </div>
+    </div>
+  <% else %>
+    <%= link_to 'Ответить', edit_store_avito_review_path(id: review['id']),
+                class: "btn btn-primary btn-sm mt-2", data: { bs_toggle: "modal", bs_target: "#mainModal" } %>
+  <% end %>
+</li>

@@ -1,0 +1,81 @@
+<% content_for :title do %>
+  Магазин <%= @store.manager_name %>
+  <% if !@store.percent.zero? %>
+    <span class="percent"><%= '+' if @store.percent.positive?  %><%= "#{@store.percent}" %>%</span>
+  <% end %>
+<% end %>
+
+<% content_for :head do %>
+  <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=369d354e-0df0-4d9d-bb3a-08bc6a532a15" type="text/javascript"></script>
+<% end %>
+
+<%= turbo_frame_tag @store do %>
+  <div class="container">
+    <div class="d-flex gap-3">
+      <%= button_to 'Обновить feed', store_update_feed_path(@store),
+                    class: 'loader-btn btn btn-success btn-upd-feed',
+                    data: { controller: 'btn_preloader', action: 'click->btn_preloader#call' } %>
+
+      <%= button_to 'Обновить Black list', store_update_ban_list_path(@store),
+                    class: 'loader-btn btn btn-dark' %>
+      <%= link_to 'Авито', store_avito_dashboard_path(@store), class: 'btn btn-primary', data: { turbo: false } %>
+    </div>
+
+    <ul class="nav nav-tabs mt-2 mt-md-3" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Основная информация</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="address-tab" data-bs-toggle="tab" data-bs-target="#address" type="button" role="tab" aria-controls="address" aria-selected="false">Адреса магазина</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Слои картинки</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="adss-tab" data-bs-toggle="tab" data-bs-target="#adss" type="button" role="tab" aria-controls="adss-block" aria-selected="false">Объявления</button>
+      </li>
+    </ul>
+
+    <div class="tab-content mt-3" id="myTabContent">
+      <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <a href="<%= edit_store_path(@store.id) %>" class='mb-3 btn btn-warning'>Edite</a>
+
+        <ul class="list-group">
+          <% @store.attributes.each do |key, value| %>
+            <% next if key.match?(/^id|created_at|updated_at/) %>
+
+            <li class="list-group-item list-group-item-action overflow-hidden">
+              <strong><%= key %>: </strong>
+              <%= key.match?(/description|desc_game|desc_product/) ? sanitize_description(value) : value %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
+        <%= render partial: '/addresses/new_address_btn', locals: { store: @store } %>
+
+        <ul class="list-group mb-3" id="addresses">
+          <%= render @addresses %>
+        </ul>
+        <%= turbo_frame_tag :test_img do %>
+          <%= render partial: '/stores/test_img' %>
+        <% end %>
+      </div>
+
+      <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <%= render partial: '/image_layers/new_image_layer_btn', locals: { store: @store } %>
+
+        <ol class="list-group list-group-numbered" id="image_layers">
+          <%= render @image_layers %>
+        </ol>
+      </div>
+
+      <div class="tab-pane fade" id="adss" role="tabpanel" aria-labelledby="adss-tab">
+        <%= turbo_frame_tag :ads do %>
+          <%= render partial: '/ads/ads_list' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

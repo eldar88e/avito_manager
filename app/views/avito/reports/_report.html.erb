@@ -1,0 +1,14 @@
+<li class="list-group-item list-group-item-action">
+  <div class="row">
+    <div class="col-6 col-md-3">
+      <%= link_to report['id'], "/stores/#{@store.id}/avito/reports/#{report['id']}?sections=nil", data: { turbo_prefetch: false } %>
+    </div>
+    <div class="col-6 col-md-3"><%= format_date report['started_at'] %></div>
+    <div class="col-6 col-md-3"><%= format_date report['finished_at'] %></div>
+    <div class="col-6 col-md-3">
+      <span class="badge bg-<%= badge_status report['status'] %>">
+        <%= t("avito.autoload.report.#{report['status']}") %>
+      </span>
+    </div>
+  </div>
+</li>

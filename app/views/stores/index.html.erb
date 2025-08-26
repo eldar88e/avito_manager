@@ -1,0 +1,10 @@
+<% content_for :title do %>
+  Магазины
+<% end %>
+
+<div class="container">
+  <a href="<%= new_store_path %>" class="btn btn-success mb-3">Add</a>
+  <ol class="list-group list-group-numbered">
+    <%= render @stores %>
+  </ol>
+</div>

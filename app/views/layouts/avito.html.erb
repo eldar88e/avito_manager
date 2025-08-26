@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <title>Avito Manager</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= vite_client_tag %>
+    <%= vite_stylesheet_tag 'application' %>
+    <%= vite_javascript_tag 'application' %>
+
+    <%= yield :head %>
+  </head>
+
+  <body class="avito">
+    <%= render 'partials/notices/notices' %>
+    <header>
+      <%= render 'partials/header' %>
+    </header>
+    <main>
+      <%= render 'partials/left_bar' %>
+      <div class="container mx-auto px-5">
+        <h1 class="mb-3 mt-3"><%= yield :title %></h1>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <%#= render_breadcrumbs tag: 'li', separator: ' / ', class: 'breadcrumb-item' %>
+          </ol>
+        </nav>
+      </div>
+
+      <div class="container mx-auto px-5">
+        <%= yield %>
+      </div>
+    </main>
+    <%= render 'partials/footer' %>
+  </body>
+</html>

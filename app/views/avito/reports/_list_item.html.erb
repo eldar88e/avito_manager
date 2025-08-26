@@ -1,0 +1,7 @@
+<li class="list-group-item">
+    <div class="<%= defined?(second) && second ? 'ps-4 ps-md-5' : 'fw-bold ps-4 ps-md-4' %>">
+      <%= link_to "#{section['title']}: #{section['count']}",
+                  "/stores/#{@store.id}/avito/reports/#{@items['report_id']}?sections=#{section['slug']}",
+                  data: { turbo_prefetch: false, turbo_frame: "reports" } %>
+    </div>
+</li>

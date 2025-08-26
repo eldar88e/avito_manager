@@ -1,0 +1,111 @@
+<%= form_with(model: @store, url: url, method: method) do |form| %>
+  <div class="mb-3">
+    <%= form.label :manager_name, class: 'form-label' %>
+    <%= form.text_field :manager_name, class: 'form-control', placeholder: 'Manager name' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :var, class: 'form-label' %>
+    <%= form.text_field :var, class: 'form-control', placeholder: 'var' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :ad_status, class: 'form-label' %>
+    <%= form.text_field :ad_status, class: 'form-control', placeholder: 'Ad status' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :category, class: 'form-label' %>
+    <%= form.text_field :category, value: @store.category || 'Игры, приставки и программы',
+                        class: 'form-control', placeholder: 'Category' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :goods_type, class: 'form-label' %>
+    <%= form.text_field :goods_type, value: @store.goods_type || 'Игры для приставок',
+                        class: 'form-control', placeholder: 'Игры для приставок' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :ad_type, class: 'form-label' %>
+    <%= form.text_field :ad_type, value: @store.ad_type || 'Товар приобретен на продажу',
+                        class: 'form-control', placeholder: 'Товар приобретен на продажу' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :type, class: 'form-label' %>
+    <%= form.text_field :type, value: @store.type || 'Другое', class: 'form-control', placeholder: 'Другое' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :description, 'Общее описание', class: 'form-label' %>
+    <%= form.rich_text_area :description, size: '50x7', class: 'form-control', placeholder: 'Description' %>
+  </div>
+
+  <div class="mb-3">
+    <label for="desc_game" class="form-label">Описание для Игр</label>
+    <%= form.rich_text_area :desc_game, size: '50x5', class: 'form-control', placeholder: 'Описание для Игр' %>
+  </div>
+
+  <div class="mb-3">
+    <label for="desc_product" class="form-label">Описание для других объявлений</label>
+    <%= form.rich_text_area :desc_product, size: '50x5',
+                            class: 'form-control', placeholder: 'Описание для других объявлений' %>
+  </div>
+
+  <div class="mb-3">
+    <label for="condition" class="form-label">Condition</label>
+    <%= form.text_field :condition, value: @store.condition || 'Новое', class: 'form-control', placeholder: 'Новое' %>
+  </div>
+
+  <div class="mb-3">
+    <label for="allow_email" class="form-label">Allow email</label>
+    <%= form.text_field :allow_email, value: @store.allow_email || 'Нет', class: 'form-control', placeholder: 'Нет' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :contact_phone, class: 'form-label' %>
+    <%= form.text_field :contact_phone, class: 'form-control', placeholder: 'Телефон' %>
+  </div>
+
+  <div class="mb-3">
+    <label for="contact_method" class="form-label">Способ связи</label>
+    <%= form.select :contact_method, options_for_select(['По телефону и в сообщениях', 'По телефону', 'В сообщениях'],
+                                                        @store.contact_method), {}, class: 'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <label for="game_img_params" class="form-label">Параметры картинки игры</label>
+    <%= form.text_field :game_img_params, class: 'form-control',
+                       placeholder: "Нужно указать ввиде json: { pos_x: 448, pos_y: 208, row: 1024, column: 1024 }" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :menuindex, 'Расположение картинки в слоях изображения для авито', class: 'form-label' %>
+    <%= form.number_field :menuindex, class: 'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :client_id, class: 'form-label' %>
+    <%= form.text_field :client_id, class: 'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :client_secret, class: 'form-label' %>
+    <%= form.text_field :client_secret, class: 'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :percent, class: 'form-label' %>
+    <%= form.number_field :percent, class: 'form-control', min: -100, max: 100 %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.check_box :active, { checked: @store.active, class: 'form-check-input' } %>
+    <%= form.label :active, class: 'form-check-label' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.submit (method == :patch ? 'Save' : 'Add'), class: 'btn btn-primary' %>
+  </div>
+<% end %>

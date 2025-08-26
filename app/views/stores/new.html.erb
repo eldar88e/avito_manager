@@ -1,0 +1,7 @@
+<% content_for :title do %>
+  Создать новый магазин
+<% end %>
+
+<div class="container">
+  <%= render partial: '/stores/form', locals: { url: stores_path, method: :past } %>
+</div>

@@ -1,0 +1,42 @@
+<% content_for :title do %>
+  Отчеты
+<% end %>
+
+<div class="container">
+  <div class="row">
+    <%= render partial: '/avito/partials/left_bar', locals: { path: :store_avito_reports_path } %>
+
+    <div class="col-12 col-md-9">
+      <ul class="list-group">
+        <li class="list-group-item list-group-item-action active">
+          <div class="row">
+            <div class="col-3">Номер отчета</div>
+            <div class="col-3">Начато</div>
+            <div class="col-3">Завершено</div>
+            <div class="col-3">Статус</div>
+          </div>
+        </li>
+
+        <% if @reports['reports'].present? %>
+          <% @reports['reports'].each do |report| %>
+            <%= render partial: '/avito/reports/report', locals: { report: report } %>
+          <% end %>
+        <% else %>
+          Записей не найдено!
+        <% end %>
+      </ul>
+
+      <% if @reports['meta']['pages'] > 1 %>
+        <%= render partial: '/avito/partials/pagy', locals: { end_page: @reports['meta']['pages']-1, starts: 0,
+                                                              path: "reports/#{@reports['report_id']}",
+                                                              turbo_frame: 'reports' } %>
+      <% end %>
+
+      <div class="mt-3 mb-3">
+        <% @reports['meta'].each do |k, v| %>
+          <span class="px-2"><%= t("avito.autoload.report.#{k}") + ": #{v}" %></span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

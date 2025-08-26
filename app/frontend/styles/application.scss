@@ -8,8 +8,7 @@ body {
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
-  color: #3D4453;
-  background-color: #f9f9f9;
+  @apply text-gray-900 dark:text-white bg-white dark:bg-gray-900;
 }
 
 h1 {
@@ -19,3 +18,12 @@ h1 {
   margin-bottom: 16px;
   margin-top: 4px;
 }
+
+.navbar-nav {
+  li {
+    a {
+      @apply text-gray-900 dark:text-white;
+    }
+  }
+}
+
