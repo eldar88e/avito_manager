@@ -332,6 +332,7 @@ GEM
     rmagick (6.1.4)
       observer (~> 0.1)
       pkg-config (~> 1.4)
+    rollbar (3.6.2)
     rouge (4.5.2)
     rubocop (1.80.0)
       json (~> 2.3)
@@ -463,6 +464,7 @@ DEPENDENCIES
   rails-i18n
   ransack (~> 4.2)
   rmagick
+  rollbar
   rubocop-performance
   rubocop-rails
   slim-rails
