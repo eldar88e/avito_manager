@@ -71,8 +71,8 @@ module Avito
     end
 
     def set_breadcrumb
-      add_breadcrumb @store.manager_name, store_avito_dashboard_path(@store)
-      add_breadcrumb 'Reports', :store_avito_reports_path
+      # add_breadcrumb @store.manager_name, store_avito_dashboard_path(@store)
+      # add_breadcrumb 'Reports', :store_avito_reports_path
     end
   end
 end

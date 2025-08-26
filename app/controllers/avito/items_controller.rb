@@ -39,8 +39,8 @@ module Avito
     end
 
     def index_breadcrumbs
-      add_breadcrumb @store.manager_name, store_avito_dashboard_path
-      add_breadcrumb 'Items', store_avito_items_path
+      # add_breadcrumb @store.manager_name, store_avito_dashboard_path
+      # add_breadcrumb 'Items', store_avito_items_path
     end
   end
 end

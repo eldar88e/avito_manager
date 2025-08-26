@@ -2,6 +2,7 @@
 
 @import "./colors";
 @import "./fonts";
+@import "./old_style.scss";
 
 body {
   font-family: 'Montserrat', sans-serif;
@@ -27,3 +28,10 @@ h1 {
   }
 }
 
+.left-bar {
+  @apply bg-white dark:bg-gray-800;
+
+  .left-bar-menu {
+
+  }
+}
