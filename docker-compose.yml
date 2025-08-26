@@ -1,16 +1,16 @@
 services:
   base: &base
-    image: app
+    image: rails
     build: .
     env_file: ./.env
     volumes:
       - gems:/usr/local/bundle
       - .:/app
 
-  app:
+  rails:
     <<: *base
-    container_name: app
-    hostname: app
+    container_name: rails
+    hostname: rails
     depends_on:
       - pg
     command: ['bundle', 'exec', 'rails', 's', '-p', '3000', '-b', '0.0.0.0']
@@ -22,7 +22,7 @@ services:
 
   worker:
     <<: *base
-    container_name: app-worker
+    container_name: rails-worker
     hostname: worker
     depends_on:
       - pg
@@ -33,7 +33,7 @@ services:
 
   pg:
     image: postgres:16.10-alpine3.22
-    container_name: app-pg
+    container_name: rails-pg
     hostname: pg
     environment:
       POSTGRES_USER: ${DB_USER}
