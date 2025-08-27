@@ -2,17 +2,19 @@ class ImportProductsJob < ApplicationJob
   queue_as :default
   KEYS = %w[id name].freeze
 
-  def perform(**args)
-    products = fetch_products(args[:user])['products']
+  def perform(user_id)
+    user     = find_user(user_id)
+    result   = fetch_products(user)
+    products = result['products']
     run_id   = 1 # Run.last_id
-    count  = [0, 0]
+    count    = [0, 0]
     products.each { |game| process_game(game, run_id, count) }
-    Game.where(deleted: 0).where.not(touched_run_id: run_id).update_all(deleted: 1, updated_at: Time.current)
+    AdImport.where(deleted: 0).where.not(touched_run_id: run_id).update_all(deleted: 1, updated_at: Time.current)
     # Run.finish
-    send_notify(args[:user], count[1], count[0], games.size)
+    send_notify(user, count[1], count[0], result['pagination']['total_count'])
     count[1]
   rescue StandardError => e
-    handle_error(args[:user], e)
+    handle_error(user, e)
   end
 
   private
@@ -26,7 +28,7 @@ class ImportProductsJob < ApplicationJob
   end
 
   def send_notify(user, created, edited, size)
-    msg = "✅ Обновлено ТОП #{size} игр."
+    msg = "✅ Обновлено #{size} объявлений."
     msg += "\n#{I18n.t('jobs.top_games.add', count: created)}" if created.positive?
     msg += "\n#{I18n.t('jobs.top_games.price', count: edited)}" if edited.positive?
     broadcast_notify(msg)
