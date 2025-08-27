@@ -1,0 +1,6 @@
+<div class="py-4 px-6 text-gray-500 dark:text-gray-400">
+  <% if @pagy.pages > 1 %>
+    <div class="mb-3"><%== pagy_nav(@pagy) %></div>
+  <% end %>
+  <%== pagy_info(@pagy) %>
+</div>

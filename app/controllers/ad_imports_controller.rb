@@ -5,7 +5,8 @@ class AdImportsController < ApplicationController
 
   def index
     # add_breadcrumb 'Игры'
-    @pagy, @ad_imports = pagy(@q.result, items: 12)
+    ad_imports = current_user.ad_imports
+    @pagy, @ad_imports = pagy(ad_imports, limit: 30)
   end
 
   def show

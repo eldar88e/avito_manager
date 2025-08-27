@@ -1,17 +1,17 @@
 class ImportProductsJob < ApplicationJob
   queue_as :default
-  KEYS = %w[id name].freeze
+  KEYS = %i[id title].freeze
 
   def perform(user_id)
-    user     = find_user(user_id)
+    user     = find_user(user_id: user_id)
     result   = fetch_products(user)
-    products = result['products']
+    products = result[:products]
     run_id   = 1 # Run.last_id
     count    = [0, 0]
     products.each { |game| process_game(game, run_id, count) }
     AdImport.where(deleted: 0).where.not(touched_run_id: run_id).update_all(deleted: 1, updated_at: Time.current)
     # Run.finish
-    send_notify(user, count[1], count[0], result['pagination']['total_count'])
+    send_notify(user, count[1], count[0], result[:pagination][:total_count])
     count[1]
   rescue StandardError => e
     handle_error(user, e)
@@ -76,8 +76,8 @@ class ImportProductsJob < ApplicationJob
         "total_count": 1,
         "total_pages": 1,
         "current_page": 1,
-        "next_page": null,
-        "prev_page": null
+        "next_page": nil,
+        "prev_page": nil
       }
     }
   end

@@ -1,0 +1,9 @@
+- content_for :title, 'Импортированные объявления'
+
+.container.mx-auto.px-5
+  - @ad_imports.each do |ad_import|
+    .mb-3.flex.justify-between
+      div = ad_import.name
+      div = ad_import.price
+      div = ad_import.description
+  = render 'partials/pagy'
