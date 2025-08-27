@@ -6,7 +6,8 @@ class DescriptionService
       name: @model.name,
       description: @store.description,
       manager: @store.manager_name,
-      addr_desc: option[:address_desc].to_s
+      addr_desc: option[:address_desc].to_s,
+      desc_product: @model.description
     }
   end
 
@@ -26,7 +27,7 @@ class DescriptionService
   end
 
   def handle_product_desc
-    build_description(@store.desc_product.to_s, desc_product: @model.description)
+    build_description @store.desc_product.to_s
   end
 
   def build_description(description, **replacements)
