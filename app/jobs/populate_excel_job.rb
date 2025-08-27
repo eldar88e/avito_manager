@@ -1,8 +1,10 @@
 class PopulateExcelJob < ApplicationJob
-  include Rails.application.routes.url_helpers
   queue_as :default
-  COLUMNS_NAME = %w[Id AvitoId DateBegin AdStatus Category GoodsType AdType Type Platform Localization Address Title
-                    Description Condition Price AllowEmail ManagerName	ContactPhone ContactMethod ImageUrls].freeze
+
+  include Rails.application.routes.url_helpers
+
+  COLUMNS_NAME = %w[Id AvitoId DateBegin AdStatus Category GoodsType AdType Type Address Title
+                    Description Condition Price AllowEmail ManagerName ContactPhone ContactMethod ImageUrls].freeze
 
   def perform(**args)
     store     = Store.find(args[:store_id])
@@ -49,9 +51,9 @@ class PopulateExcelJob < ApplicationJob
 
     worksheet.append_row(
       [ad.id, ad.avito_id, current_time, store.ad_status, store.category, store.goods_type, store.ad_type,
-       store.type, '', '', ad.full_address || address.store_address,
-       game.name, make_description(game, store, address), store.condition, game.price, store.allow_email,
-       store.manager_name, store.contact_phone, store.contact_method, img_url]
+       store.type, ad.full_address || address.store_address, game.name, make_description(game, store, address),
+       store.condition, game.price, store.allow_email, store.manager_name, store.contact_phone,
+       store.contact_method, img_url]
     )
   end
 

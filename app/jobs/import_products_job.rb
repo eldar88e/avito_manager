@@ -52,8 +52,6 @@ class ImportProductsJob < ApplicationJob
 
     row[:run_id] = run_id
     user.ad_imports.create(row) && count[1] += 1
-  rescue StandardError => e
-    binding.pry
   end
 
   def update_product(user, row, edited)

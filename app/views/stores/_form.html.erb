@@ -38,23 +38,23 @@
   </div>
 
   <div class="mb-5">
-    <%= form.label :description, 'Общее описание', class: 'form-label' %>
+    <%= form.label :description, 'Общее описание' %>
     <%= form.rich_text_area :description, size: '50x7', class: 'form-control', placeholder: 'Description' %>
   </div>
 
   <div class="mb-5">
-    <label for="desc_game" class="form-label">Описание для Игр</label>
-    <%= form.rich_text_area :desc_game, size: '50x5', class: 'form-control', placeholder: 'Описание для Игр' %>
+    <%= form.label :desc_ad_import, 'Описание для Импортов' %>
+    <%= form.rich_text_area :desc_ad_import, size: '50x5', class: 'form-control', placeholder: 'Описание для Игр' %>
   </div>
 
   <div class="mb-5">
-    <label for="desc_product" class="form-label">Описание для других объявлений</label>
+    <%= form.label :desc_product, 'Описание для других объявлений' %>
     <%= form.rich_text_area :desc_product, size: '50x5',
                             class: 'form-control', placeholder: 'Описание для других объявлений' %>
   </div>
 
   <div class="mb-5">
-    <label for="condition" class="form-label">Condition</label>
+    <%= form.label :condition %>
     <%= form.text_field :condition, value: @store.condition || 'Новое', class: 'form-control', placeholder: 'Новое' %>
   </div>
 

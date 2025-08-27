@@ -80,8 +80,6 @@ class WatermarkService
     img  = Magick::Image.from_blob(image_data).first # Image.read(layer[:img]).first
     resize_image!(img, layer[:params])
     @new_image.composite!(img, layer[:params]['pos_x'] || 0, layer[:params]['pos_y'] || 0, OverCompositeOp)
-  rescue StandardError => e
-    binding.pry
   end
 
   def resize_image!(img, params)

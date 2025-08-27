@@ -11,7 +11,7 @@ class DescriptionService
   end
 
   def make_description
-    method_name = :"handle_#{@model.class.name.downcase}_desc"
+    method_name = :"handle_#{@model.class.name.underscore}_desc"
     send(method_name)
   end
 
