@@ -1,0 +1,6 @@
+<li class="list-group-item list-group-item-action list-group-item-success" id="new_address">
+  <h5>Новый адрес</h5>
+  <%= render partial: '/addresses/form',
+             locals: { address: @address, url: store_addresses_path(store_id: @address.store), method: :post } %>
+
+</li>

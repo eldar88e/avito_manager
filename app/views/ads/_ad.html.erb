@@ -1,0 +1,42 @@
+<%= content_tag(:li, class: 'list-group-item list-group-item-action', id: dom_id(ad),
+                title: "created_at: #{format_date ad.created_at}, updated_at: #{format_date ad.updated_at}") do %>
+  <div class="row">
+    <div class="col-4 col-md-1"><%= ad.id %></div>
+    <div class="col-4 col-md-1"><%= ad.avito_id %></div>
+    <div class="col-4 col-md-1">
+      <% if ad.image.attached? %>
+        <a data-fancybox="gallery_ad" data-src="<%= storage_path(ad.image) %>" data-caption="<%= ad.file_id %>">
+          <div class="loading-image" style='width: 50px; height: 37px'>
+            <div class="image-thumbnail"
+                 style="background-image: url(<%= img_resize(ad.image, width: 80, height: 57) %>);"></div>
+          </div>
+        </a>
+      <% end %>
+    </div>
+    <div class="col-12 col-md-4 mt-3 mb-3 mb-md-0 mt-md-0" style="font-size: 0.8rem">
+      <%= ad.file_id %><br>
+      <span class="mt-1"><%= ad.full_address %></span>
+    </div>
+    <div class="col-6 col-md-1">
+      <% if ad.deleted == 'deleted' %>
+        <i class="bi bi-check-square"></i>
+      <% else %>
+        <i class="bi bi-app"></i>
+      <% end %>
+    </div>
+    <div class="col-6 col-md-1">
+      <% if ad.banned %>
+        <i class="bi bi-check-square"></i>
+      <% else %>
+        <i class="bi bi-app"></i>
+      <% end %>
+    </div>
+    <div class="col-12 col-md-2 mt-3 mt-md-0 text-end"><%= format_date ad.banned_until %></div>
+    <div class="col-6 col-md-1">
+      <%= link_to edit_store_ad_path(ad, store_id: @store), class: 'btn btn-warning btn-sm', title: 'Править',
+                  data: { bs_toggle: 'modal', bs_target: '#mainModal' } do %>
+        <i class="bi bi-pen"></i>
+      <% end %>
+    </div>
+  </div>
+<% end %>

@@ -3,8 +3,7 @@ class AddWatermarkJob < ApplicationJob
 
   def perform(**args)
     user     = find_user(args)
-    settings = args[:settings]
-    model    = args[:model]
+    model    = args[:model].camelize.constantize
     products = fetch_product(model, user)
     stores   = make_stores(args, user)
     id       = model == AdImport ? :external_id : :id
@@ -22,7 +21,7 @@ class AddWatermarkJob < ApplicationJob
           ad      = find_or_create_ad(product, file_id, address)
           next if ad.image.attached? && !args[:clean]
 
-          SaveImageJob.send(job_method, ad:, product:, store:, address:, id:, file_id:, user:, settings:)
+          SaveImageJob.send(job_method, ad_id: ad.id, id:, file_id:)
           count += 1
         end
       end
@@ -41,14 +40,14 @@ class AddWatermarkJob < ApplicationJob
   private
 
   def fetch_product(model, user)
-    raw_products = user.send("#{model}s".downcase.to_sym)
+    raw_products = user.send("#{model}s".underscore)
     raw_products.active.includes(ads: { image_attachment: :blob })
   end
 
   def make_stores(args, user)
     return user.stores.includes(:addresses).active if args[:all]
 
-    [args[:store]].compact
+    [user.stores.find(args[:store_id])]
   end
 
   def find_or_create_ad(product, file_id, address)

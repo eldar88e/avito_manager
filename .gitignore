@@ -46,3 +46,5 @@ node_modules
 .DS_Store
 /vendor/gems/*
 !/vendor/gems/.keep
+/public/adverts_list/*
+!/public/adverts_list/.keep

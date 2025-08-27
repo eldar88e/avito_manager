@@ -5,8 +5,8 @@ class PopulateExcelJob < ApplicationJob
                     Description Condition Price AllowEmail ManagerName	ContactPhone ContactMethod ImageUrls].freeze
 
   def perform(**args)
-    store     = args[:store]
-    user      = args[:store].user
+    store     = Store.find(args[:store_id])
+    user      = store.user
     settings  = user.settings.all_cached
     workbook  = FastExcel.open
     worksheet = workbook.add_worksheet('list')
@@ -21,7 +21,7 @@ class PopulateExcelJob < ApplicationJob
     end
 
     content   = workbook.read_string
-    xlsx_path = "./adverts_list/#{store.var}.xlsx"
+    xlsx_path = "./public/adverts_list/#{store.var}.xlsx"
     File.binwrite(xlsx_path, content) # FtpService.call(xlsx_path) if settings['send_ftp']
     url = Rails.env.production? ? "https://#{ENV.fetch('HOST')}" : 'http://localhost:3000'
     msg = "✅ File #{url}#{xlsx_path[1..]} is updated!"
@@ -73,20 +73,7 @@ class PopulateExcelJob < ApplicationJob
   end
 
   def make_image(image)
-    return if image.nil? || image.blob.nil?
-
-    if image.blob.service_name == 'minio'
-      return "https://#{ENV.fetch('MINIO_HOST')}:9000/#{ENV.fetch('MINIO_BUCKET')}/#{image.blob.key}"
-      # return "https://#{ENV.fetch('MINIO_HOST')}/api/v1/buckets/#{ENV.fetch('MINIO_BUCKET')}/objects/download?prefix=#{image.blob.key}"
-    end
-
-    #TODO: Добавить для BEGET
-
-    params = Rails.env.production? ? { host: ENV.fetch('HOST') } : { host: 'localhost', port: 3000 }
-    return rails_blob_url(image, params) if image.blob.service_name != 'amazon'
-
-    bucket = Rails.application.credentials.dig(:aws, :bucket)
-    "https://#{bucket}.s3.amazonaws.com/#{image.blob.key}"
+    AttachmentUrlBuilderService.storage_path(image)
   end
 
   def make_description(model, store, address)

@@ -1,0 +1,8 @@
+<%= search_form_for @q_ads, url: store_path(@store), method: :get do |f| %>
+  <div class="mb-3 d-flex gap-1">
+    <%= f.search_field :file_id_cont_any, class: 'form-control' %>
+    <%= button_tag(type: 'submit', class: 'btn btn-primary') do %>
+      <i class="bi bi-search"></i>
+    <% end %>
+  </div>
+<% end %>

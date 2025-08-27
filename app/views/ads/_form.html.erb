@@ -1,0 +1,45 @@
+<div class="modal-header">
+  <h5 class="modal-title" id="exampleModalLabel">Редактировать объявление</h5>
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<%= form_with(model: @ad, url: store_ad_path(params[:id], store_id: @store), method: :patch) do |form| %>
+  <div class="modal-body">
+    <div class="mb-3">
+      <%= form.label :avito_id, class: 'form-label' %>
+      <%= form.number_field :avito_id, class: 'form-control' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :full_address, class: 'form-label' %>
+      <%= form.text_field :full_address, class: 'form-control' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :file_id, class: 'form-label' %>
+      <%= form.text_field :file_id, class: 'form-control' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.check_box :deleted, class: 'form-check-input', checked: (form.object.deleted == 'deleted') %>
+      <%= form.label :deleted, class: 'form-check-label me-3' %>
+      <%= form.check_box :banned, class: 'form-check-input' %>
+      <%= form.label :banned, class: 'form-check-label' %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :banned_until, class: 'form-label' %>
+      <div data-controller="datepicker">
+        <%= form.text_field :banned_until, placeholder: 'Выберите дату', data: { datepicker_target: 'input' },
+                            class: 'form-control', value: (@ad.banned_until || Time.current).strftime('%Y-%m-%d') %>
+        <span class="calendar-btn" data-datepicker-target="toggle">
+          <i class="bi bi-calendar-date"></i>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <%= form.submit 'Save', class: "btn btn-primary" %>
+  </div>
+<% end %>

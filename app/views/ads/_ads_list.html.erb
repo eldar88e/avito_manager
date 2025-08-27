@@ -1,0 +1,28 @@
+<%= button_to 'Очистить бан лист', store_update_all_path(@store.id), class: 'btn btn-danger mb-3', method: :patch,
+              data: { confirm: t('confirm.ad'), controller: 'confirm', action: 'click->confirm#call' } %>
+<%= render partial: '/ads/search' %>
+<% if @ads.present? %>
+  <ul class="list-group" data-controller="fancybox" class="ads">
+    <li class="list-group-item list-group-item-action active d-none d-md-block">
+      <div class="row sort_ads">
+        <div class="col-1"><%= sort_link(@q_ads, :id, 'Файл ИД', data: { turbo_prefetch: false }) %></div>
+        <div class="col-1"><%= sort_link(@q_ads, :avito_id, 'Авито ИД', data: { turbo_prefetch: false }) %></div>
+        <div class="col-1">Img</div>
+        <div class="col-4"><%= sort_link(@q_ads, :file_id, 'Sony ID', data: { turbo_prefetch: false }) %></div>
+        <div class="col-1"><%= sort_link(@q_ads, :deleted, 'Удалено', data: { turbo_prefetch: false }) %></div>
+        <div class="col-1"><%= sort_link(@q_ads, :baned, 'Бан', data: { turbo_prefetch: false }) %></div>
+        <div class="col-2"><%= sort_link(@q_ads, :baned_until, 'Заблокировано до', data: { turbo_prefetch: false }) %></div>
+        <div class="col-1"></div>
+      </div>
+    </li>
+    <%= render @ads %>
+  </ul>
+
+  <div data-controller="pagy-initializer" class="mt-3 mb-3">
+    <%== pagy_bootstrap_nav_js(@pagy, data: { turbo_prefetch: false }) if @pagy.pages > 1 %>
+  </div>
+
+  <%== pagy_info(@pagy) %>
+<% else %>
+  <p>Записей не найдено!</p>
+<% end %>

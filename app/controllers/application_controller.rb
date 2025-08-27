@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_search_ads
-    # @q_ads = @store.ads.includes(image_attachment: :blob).order(created_at: :desc).ransack(params[:q])
+    @q_ads = @store.ads.includes(image_attachment: :blob).order(created_at: :desc).ransack(params[:q])
   end
 
   def send_notice(msg, key)

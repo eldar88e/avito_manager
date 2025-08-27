@@ -1,0 +1,34 @@
+<li class="list-group-item list-group-item-action" id="address_<%= @address.id %>">
+  <div class="row mb-2">
+    <div class="col-11">
+      <h5>Покрытие <%= @address.city %>:</h5>
+    </div>
+    <div class="col-1">
+      <div class="d-flex justify-content-end">
+        <%= link_to store_address_path(id: @address, store_id: @address.store), title: 'Назад',
+                    class: 'btn btn-primary btn-sm', data: { turbo_prefetch: false } do %>
+          <i class="bi bi-backspace"></i>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div data-controller="map">
+    <div data-map-target="addresses" style="display: none">
+      <% if @all_store.present? %>
+        <% @all_store.each do |store| %>
+          <% store.addresses.active.each do |address| %>
+            <% address.streets.each do |street| %>
+              <span><%= "#{address.city}, #{street.title}" %></span>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% else %>
+        <% @address.streets.each do |street| %>
+          <span><%= "#{@address.city}, #{street.title}" %></span>
+        <% end %>
+      <% end %>
+    </div>
+    <div id="map" class="mb-3" data-map-target="map"></div>
+  </div>
+</li>

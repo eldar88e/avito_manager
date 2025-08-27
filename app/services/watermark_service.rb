@@ -17,7 +17,7 @@ class WatermarkService
     @width     = (@settings[:avito_img_width] || DEFAULT_WIDTH).to_i
     @height    = (@settings[:avito_img_height] || DEFAULT_HEIGHT).to_i
     @new_image = initialize_first_layer
-    @main_img  = @game&.image&.blob
+    @main_img  = @game.is_a?(AdImport) ? @game.images['first'] : @game&.image&.blob
     handle_layers(args[:address])
   end
 
@@ -75,10 +75,13 @@ class WatermarkService
   end
 
   def add_img(layer)
-    file = cached_blob(layer[:img])
-    img  = Magick::Image.from_blob(file).first # Image.read(layer[:img]).first
+    url        = layer[:img] # cached_blob(layer[:img])
+    image_data = URI.open(url).read
+    img  = Magick::Image.from_blob(image_data).first # Image.read(layer[:img]).first
     resize_image!(img, layer[:params])
     @new_image.composite!(img, layer[:params]['pos_x'] || 0, layer[:params]['pos_y'] || 0, OverCompositeOp)
+  rescue StandardError => e
+    binding.pry
   end
 
   def resize_image!(img, params)

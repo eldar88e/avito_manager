@@ -11,7 +11,7 @@
 
 <%= turbo_frame_tag @store do %>
   <div class="container mx-auto px-5">
-    <div class="d-flex gap-3">
+    <div class="flex gap-3">
       <%= button_to 'Обновить feed', store_update_feed_path(@store),
                     class: 'loader-btn btn btn-success btn-upd-feed',
                     data: { controller: 'btn_preloader', action: 'click->btn_preloader#call' } %>
@@ -21,60 +21,91 @@
       <%= link_to 'Авито', store_avito_dashboard_path(@store), class: 'btn btn-primary', data: { turbo: false } %>
     </div>
 
-    <ul class="nav nav-tabs mt-2 mt-md-3" id="myTab" role="tablist">
-      <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Основная информация</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="address-tab" data-bs-toggle="tab" data-bs-target="#address" type="button" role="tab" aria-controls="address" aria-selected="false">Адреса магазина</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Слои картинки</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="adss-tab" data-bs-toggle="tab" data-bs-target="#adss" type="button" role="tab" aria-controls="adss-block" aria-selected="false">Объявления</button>
-      </li>
-    </ul>
+    <div data-controller="tabs" data-tabs-active-tab-classes="border-b-2 border-indigo-600 text-indigo-600" data-tabs-inactive-tab-classes="text-gray-500 hover:text-gray-700">
+      <!-- Tabs (buttons) -->
+      <div role="tablist" aria-label="Store sections" class="flex flex-wrap gap-2 border-b">
+        <button type="button"
+                role="tab"
+                data-action="click->tabs#switch"
+                data-tabs-target="tab"
+                aria-selected="true"
+                class="px-3 py-2 text-sm font-medium -mb-px border-b-2 border-transparent focus:outline-none">
+          Основная информация
+        </button>
 
-    <div class="tab-content mt-3" id="myTabContent">
-      <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-        <a href="<%= edit_store_path(@store.id) %>" class='mb-3 btn btn-warning'>Edite</a>
+        <button type="button"
+                role="tab"
+                data-action="click->tabs#switch"
+                data-tabs-target="tab"
+                aria-selected="false"
+                class="px-3 py-2 text-sm font-medium -mb-px border-b-2 border-transparent focus:outline-none">
+          Адреса магазина
+        </button>
 
-        <ul class="list-group">
-          <% @store.attributes.each do |key, value| %>
-            <% next if key.match?(/^id|created_at|updated_at/) %>
+        <button type="button"
+                role="tab"
+                data-action="click->tabs#switch"
+                data-tabs-target="tab"
+                aria-selected="false"
+                class="px-3 py-2 text-sm font-medium -mb-px border-b-2 border-transparent focus:outline-none">
+          Слои картинки
+        </button>
 
-            <li class="list-group-item list-group-item-action overflow-hidden">
-              <strong><%= key %>: </strong>
-              <%= key.match?(/description|desc_game|desc_product/) ? sanitize_description(value) : value %>
-            </li>
+        <button type="button"
+                role="tab"
+                data-action="click->tabs#switch"
+                data-tabs-target="tab"
+                aria-selected="false"
+                class="px-3 py-2 text-sm font-medium -mb-px border-b-2 border-transparent focus:outline-none">
+          Объявления
+        </button>
+      </div>
+
+      <!-- Panels -->
+      <div class="mt-3">
+        <!-- 1 -->
+        <section role="tabpanel" data-tabs-target="panel" class="">
+          <a href="<%= edit_store_path(@store.id) %>" class="mb-3 inline-flex items-center rounded-lg bg-yellow-500 px-3 py-2 text-white hover:bg-yellow-600">Edite</a>
+
+          <ul class="divide-y rounded-lg border">
+            <% @store.attributes.each do |key, value| %>
+              <% next if key.match?(/^id|created_at|updated_at/) %>
+              <li class="p-3 overflow-hidden">
+                <strong class="font-semibold"><%= key %>:</strong>
+                <span class="ml-1"><%= key.match?(/description|desc_game|desc_product/) ? value.html_safe : value %></span>
+              </li>
+            <% end %>
+          </ul>
+        </section>
+
+        <!-- 2 -->
+        <section role="tabpanel" data-tabs-target="panel" class="hidden">
+          <%= render partial: '/addresses/new_address_btn', locals: { store: @store } %>
+
+          <ul class="mb-3 divide-y rounded-lg border" id="addresses">
+            <%= render @addresses %>
+          </ul>
+
+          <%= turbo_frame_tag :test_img do %>
+            <%= render partial: '/stores/test_img' %>
           <% end %>
-        </ul>
-      </div>
+        </section>
 
-      <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
-        <%= render partial: '/addresses/new_address_btn', locals: { store: @store } %>
+        <!-- 3 -->
+        <section role="tabpanel" data-tabs-target="panel" class="hidden">
+          <%= render partial: '/image_layers/new_image_layer_btn', locals: { store: @store } %>
 
-        <ul class="list-group mb-3" id="addresses">
-          <%= render @addresses %>
-        </ul>
-        <%= turbo_frame_tag :test_img do %>
-          <%= render partial: '/stores/test_img' %>
-        <% end %>
-      </div>
+          <ol class="list-decimal rounded-lg border p-3" id="image_layers">
+            <%= render @image_layers %>
+          </ol>
+        </section>
 
-      <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-        <%= render partial: '/image_layers/new_image_layer_btn', locals: { store: @store } %>
-
-        <ol class="list-group list-group-numbered" id="image_layers">
-          <%= render @image_layers %>
-        </ol>
-      </div>
-
-      <div class="tab-pane fade" id="adss" role="tabpanel" aria-labelledby="adss-tab">
-        <%= turbo_frame_tag :ads do %>
-          <%= render partial: '/ads/ads_list' %>
-        <% end %>
+        <!-- 4 -->
+        <section role="tabpanel" data-tabs-target="panel" class="hidden">
+          <%= turbo_frame_tag :ads do %>
+            <%= render partial: '/ads/ads_list' %>
+          <% end %>
+        </section>
       </div>
     </div>
   </div>

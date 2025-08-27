@@ -1,0 +1,6 @@
+<li class="list-group-item list-group-item-action list-group-item-success" id="new_image_layers">
+  <b>Новый слой</b>
+  <%= render partial: '/image_layers/form', locals: { image_layer: @image_layer,
+                                                      url: image_layers_path(store_id: @image_layer.store),
+                                                      method: :post } %>
+</li>
