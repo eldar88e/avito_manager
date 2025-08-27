@@ -40,6 +40,7 @@ class ImportProductsJob < ApplicationJob
     row[:md5_hash]       = md5_hash(filtered_row)
     row[:touched_run_id] = run_id
     row[:deleted]        = 0
+    row[:name]           = row.delete(:title)
     result               = update_product(row, count)
     return if result
 
