@@ -7,8 +7,8 @@ class User < ApplicationRecord
   has_many :ad_imports, dependent: :destroy
   has_many :stores, dependent: :destroy
   has_many :settings, dependent: :destroy
+  has_many :ads, dependent: :destroy
   # has_many :products, dependent: :destroy
-  # has_many :ads, dependent: :destroy
   # has_many :cache_reports, dependent: :destroy
 
   after_create :create_default_settings

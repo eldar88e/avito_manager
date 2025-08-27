@@ -1,7 +1,7 @@
 class AdImport < ApplicationRecord
   belongs_to :user
 
-  # has_many :ads, as: :adable, dependent: :destroy
+  has_many :ads, as: :adable, dependent: :destroy
   # has_one :game_black_list, primary_key: 'sony_id'
 
   validates :name, presence: true

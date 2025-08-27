@@ -1,18 +1,19 @@
 class ImportProductsJob < ApplicationJob
   queue_as :default
-  KEYS = %i[id title].freeze
+  KEYS = %w[external_id name].freeze
 
-  def perform(user_id)
-    user     = find_user(user_id: user_id)
+  def perform(**args)
+    user     = find_user(args)
     result   = fetch_products(user)
-    products = result[:products]
+    products = result['products']
     run_id   = 1 # Run.last_id
     count    = [0, 0]
-    products.each { |game| process_game(game, run_id, count) }
-    AdImport.where(deleted: 0).where.not(touched_run_id: run_id).update_all(deleted: 1, updated_at: Time.current)
+    products.each { |product| process_product(user, product, run_id, count) }
+    user.ad_imports.where(deleted: 0).where.not(touched_run_id: run_id).update_all(deleted: 1, updated_at: Time.current)
     # Run.finish
-    send_notify(user, count[1], count[0], result[:pagination][:total_count])
+    send_notify(user, count[1], count[0], result['pagination']['total_count'])
     count[1]
+    raise "Страниц #{result['pagination']['total_pages']} обработано 1" if result['pagination']['total_pages'] > 1
   rescue StandardError => e
     handle_error(user, e)
   end
@@ -35,21 +36,28 @@ class ImportProductsJob < ApplicationJob
     TelegramService.call(user, msg)
   end
 
-  def process_game(row, run_id, count)
+  def process_product(user, row, run_id, count)
+    row['name']          = row.delete('title').capitalize
+    row['external_id']   = row.delete('id')
     filtered_row         = row.slice(*KEYS)
     row[:md5_hash]       = md5_hash(filtered_row)
+    # row['name']          = "#{row.delete('category')} #{row['name']}"
+    row.delete('category')
+    # ###
+    row['images']        = { first: row.delete('first_image'), other: row.delete('images') }
     row[:touched_run_id] = run_id
     row[:deleted]        = 0
-    row[:name]           = row.delete(:title)
-    result               = update_product(row, count)
+    result               = update_product(user, row, count)
     return if result
 
     row[:run_id] = run_id
-    AdImport.create(row) && count[1] += 1
+    user.ad_imports.create(row) && count[1] += 1
+  rescue StandardError => e
+    binding.pry
   end
 
-  def update_product(row, edited)
-    advert = AdImport.find_by(external_id: row[:id])
+  def update_product(user, row, edited)
+    advert = user.ad_imports.find_by(external_id: row['external_id'].to_s)
     return if advert.nil?
 
     if advert.md5_hash != row[:md5_hash]
@@ -60,27 +68,10 @@ class ImportProductsJob < ApplicationJob
     true
   end
 
-  def fetch_products(_user)
-    {
-      "products": [
-        {
-          "id": 13,
-          "title": "Комплект Грет",
-          "price": 10000,
-          "description": "Lorem ipsum dolor sit amet consectetur.",
-          "images": [
-            "https://s3.ru1.storage.beget.cloud/5d45320015cb-disorderly-elder/rjp93uaqjf17dhgwdv1xfalrxqsm"
-          ]
-        }
-      ],
-      "pagination": {
-        "total_count": 1,
-        "total_pages": 1,
-        "current_page": 1,
-        "next_page": nil,
-        "prev_page": nil
-      }
-    }
+  def fetch_products(user)
+    url   = user.settings.fetch_value(:okki_api_url)
+    token = user.settings.fetch_value(:okki_api_token)
+    OkkiApiService.call(url, token)
   end
 
   def md5_hash(hash)

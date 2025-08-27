@@ -15,14 +15,15 @@ class WatermarksSheetsJob < ApplicationJob
 
   def fetch_settings(user)
     set_row              = user.settings
-    settings             = set_row.pluck(:var, :value).to_h.transform_keys(&:to_sym)
-    blob                 = set_row.find_by(var: 'main_font')&.font&.blob
+    settings             = set_row.all_cached
+    blob                 = set_row.find_by(variable: 'main_font')&.font&.blob
     settings[:main_font] = blob if blob
     settings
   end
 
   def process_store(user, store, settings, clean)
-    [Game, Product].each { |model| AddWatermarkJob.perform_now(user:, model:, store:, settings:, clean:) }
+    # [AdImport, Product]
+    [AdImport].each { |model| AddWatermarkJob.perform_now(user:, model:, store:, settings:, clean:) }
     PopulateExcelJob.perform_now(store:)
   end
 end

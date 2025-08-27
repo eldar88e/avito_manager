@@ -2,9 +2,9 @@ class MainPopulateJob < ApplicationJob
   queue_as :default
 
   def perform(**args)
-    user = find_user(args)
-    ImportProductsJob.perform_now(user.id)
-    WatermarksSheetsJob.perform_later(user.id)
-    Avito::UpdatePriceJob.perform_later(user.id) if Rails.env.production?
+    user_id = find_user(args)
+    ImportProductsJob.perform_now(user_id:)
+    WatermarksSheetsJob.perform_later(user_id:)
+    Avito::UpdatePriceJob.perform_later(user_id:) if Rails.env.production?
   end
 end

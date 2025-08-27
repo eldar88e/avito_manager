@@ -7,16 +7,16 @@ class AddWatermarkJob < ApplicationJob
     model    = args[:model]
     products = fetch_product(model, user)
     stores   = make_stores(args, user)
-    id       = model == Game ? :sony_id : :id
+    id       = model == AdImport ? :external_id : :id
 
     stores.each do |store|
       count     = 0
       addresses = store.addresses.active
       addresses = addresses.where(id: args[:address_id].to_i) if args[:address_id]
       addresses.each do |address|
-        products = products.limit(address.total_games) if model == Game
+        products = products.limit(address.total_games) if model == AdImport
         products.each do |product|
-          next if product.is_a?(Game) && product.game_black_list
+          # next if product.is_a?(AdImport) && product.game_black_list
 
           file_id = "#{product.send(id)}_#{store.id}_#{address.id}"
           ad      = find_or_create_ad(product, file_id, address)
@@ -41,7 +41,7 @@ class AddWatermarkJob < ApplicationJob
   private
 
   def fetch_product(model, user)
-    raw_products = model == Game ? model.order(:top) : user.send("#{model}s".downcase.to_sym)
+    raw_products = user.send("#{model}s".downcase.to_sym)
     raw_products.active.includes(ads: { image_attachment: :blob })
   end
 

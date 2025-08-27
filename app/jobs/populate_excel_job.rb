@@ -11,11 +11,11 @@ class PopulateExcelJob < ApplicationJob
     workbook  = FastExcel.open
     worksheet = workbook.add_worksheet('list')
     worksheet.append_row(COLUMNS_NAME)
-    products = user.products.active.with_attached_image
+    # products = user.products.active.with_attached_image
     store.addresses.where(active: true).find_each do |address|
-      # game_ads = address.ads.active_ads.for_game
-      games    = active_game(address, settings)
-      # games.each { |game| process_game(game, address, game_ads, worksheet) }
+      ad_imports_ads = address.ads.active_ads.for_ad_import
+      ad_imports     = active_ad_import(address, settings)
+      ad_imports.each { |ad_import| process_game(ad_import, address, ad_imports_ads, worksheet) }
       # product_ads = address.ads.active_ads.for_product
       # products.each { |product| process_product(product, address, product_ads, worksheet) }
     end
@@ -34,7 +34,7 @@ class PopulateExcelJob < ApplicationJob
 
   private
 
-  def active_game(address, settings)
+  def active_ad_import(address, settings)
     AdImport.active.limit(address.total_games || settings['quantity_games']) # .includes(:game_black_list)
   end
 

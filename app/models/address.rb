@@ -4,7 +4,7 @@ class Address < ApplicationRecord
   has_one_attached :image, dependent: :purge
   belongs_to :store
   has_many :streets, dependent: :destroy
-  # has_many :ads, dependent: :destroy
+  has_many :ads, dependent: :destroy
 
   before_validation :check_slogan_params_blank
 
