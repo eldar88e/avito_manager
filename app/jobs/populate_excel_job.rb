@@ -3,8 +3,11 @@ class PopulateExcelJob < ApplicationJob
 
   include Rails.application.routes.url_helpers
 
-  COLUMNS_NAME = %w[Id AvitoId DateBegin AdStatus Category GoodsType AdType Type Address Title
-                    Description Condition Price AllowEmail ManagerName ContactPhone ContactMethod ImageUrls].freeze
+  COLUMNS_NAME = %w[
+    Id AvitoId DateBegin AdStatus Category GoodsType AdType Type Address Title Description Condition Price AllowEmail
+    ManagerName ContactPhone ContactMethod ImageUrls
+    Color ColorName GoodsSubType FurnitureType UpholsteryMaterial Width Depth Height
+  ].freeze
 
   def perform(**args)
     store     = Store.find(args[:store_id])
@@ -24,7 +27,7 @@ class PopulateExcelJob < ApplicationJob
 
     content   = workbook.read_string
     xlsx_path = "./public/adverts_list/#{store.var}.xlsx"
-    File.binwrite(xlsx_path, content) # FtpService.call(xlsx_path) if settings['send_ftp']
+    File.binwrite(xlsx_path, content)
     url = Rails.env.production? ? "https://#{ENV.fetch('HOST')}" : 'http://localhost:3000'
     msg = "✅ File #{url}#{xlsx_path[1..]} is updated!"
     broadcast_notify(msg)
@@ -50,29 +53,29 @@ class PopulateExcelJob < ApplicationJob
     return if img_url.blank?
 
     worksheet.append_row(
-      [ad.id, ad.avito_id, current_time, store.ad_status, store.category, store.goods_type, store.ad_type,
-       store.type, ad.full_address || address.store_address, game.name, make_description(game, store, address),
-       store.condition, game.price, store.allow_email, store.manager_name, store.contact_phone,
-       store.contact_method, img_url]
+      [ad.id, ad.avito_id, current_time, store.ad_status, store.category, game.category || store.goods_type,
+       store.ad_type, store.type, ad.full_address || address.store_address, game.name,
+       make_description(game, store, address), store.condition, game.price, store.allow_email, store.manager_name,
+       store.contact_phone, store.contact_method, img_url]
     )
   end
 
-  def process_product(product, address, ads, worksheet)
-    store   = address.store
-    ad      = ads.find { |i| i[:file_id] == "#{product.id}_#{store.id}_#{address.id}" }
-    img_url = make_image(ad&.image)
-    return if img_url.blank?
-
-    current_time = Time.current.strftime('%d.%m.%y')
-    worksheet.append_row(
-      [ad.id, ad.avito_id, current_time, product.ad_status || store.ad_status, product.category || store.category,
-       product.goods_type || store.goods_type, product.ad_type || store.ad_type, product.type || store.type,
-       product.platform, product.localization, ad.full_address || address.store_address, product.title,
-       make_description(product, store, address), product.condition || store.condition, product.price,
-       product.allow_email || store.allow_email, store.manager_name, store.contact_phone,
-       product.contact_method || store.contact_method, img_url]
-    )
-  end
+  # def process_product(product, address, ads, worksheet)
+  #   store   = address.store
+  #   ad      = ads.find { |i| i[:file_id] == "#{product.id}_#{store.id}_#{address.id}" }
+  #   img_url = make_image(ad&.image)
+  #   return if img_url.blank?
+  #
+  #   current_time = Time.current.strftime('%d.%m.%y')
+  #   worksheet.append_row(
+  #     [ad.id, ad.avito_id, current_time, product.ad_status || store.ad_status, product.category || store.category,
+  #      product.goods_type || store.goods_type, product.ad_type || store.ad_type, product.type || store.type,
+  #      product.platform, product.localization, ad.full_address || address.store_address, product.title,
+  #      make_description(product, store, address), product.condition || store.condition, product.price,
+  #      product.allow_email || store.allow_email, store.manager_name, store.contact_phone,
+  #      product.contact_method || store.contact_method, img_url]
+  #   )
+  # end
 
   def make_image(image)
     AttachmentUrlBuilderService.storage_path(image)

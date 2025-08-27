@@ -72,7 +72,7 @@
               <% next if key.match?(/^id|created_at|updated_at/) %>
               <li class="p-3 overflow-hidden">
                 <strong class="font-semibold"><%= key %>:</strong>
-                <span class="ml-1"><%= key.match?(/description|desc_game|desc_product/) ? value.html_safe : value %></span>
+                <span class="ml-1"><%= key.match?(/description|desc_ad_import|desc_product/) ? value.html_safe : value %></span>
               </li>
             <% end %>
           </ul>

@@ -10,7 +10,7 @@ class ExampleImageService
   end
 
   def assemble
-    game      = Game.active.order(:top).first
+    game      = AdImport.active.order(:top).first
     w_service = WatermarkService.new(store: @store, address: @address, settings: @settings, game:)
     return unless w_service.image_exist?
 
@@ -30,9 +30,8 @@ class ExampleImageService
 
   def settings
     set_row              = @store.user.settings
-    settings             = set_row.pluck(:var, :value).to_h.transform_keys(&:to_sym)
-    blob                 = set_row.find_by(var: 'main_font')&.font&.blob
-    # settings[:main_font] = blob.service.path_for(blob.key) if blob
+    settings             = set_row.all_cached
+    blob                 = set_row.find_by(variable: 'main_font')&.font&.blob
     settings[:main_font] = blob if blob
     settings
   end

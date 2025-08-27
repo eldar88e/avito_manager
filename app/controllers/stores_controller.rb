@@ -64,9 +64,9 @@ class StoresController < ApplicationController
   def store_params
     params.expect(
       store: %i[
-        manager_name var ad_status category goods_type ad_type type desc_ad_import menuindex active contact_method
-        description condition desc_product percent allow_email contact_phone img_params table_id client_id
-        client_secret
+        manager_name var ad_status category goods_type ad_type availability desc_ad_import menuindex active
+        contact_method description condition desc_product percent allow_email contact_phone img_params table_id
+        client_id client_secret
       ]
     )
   end

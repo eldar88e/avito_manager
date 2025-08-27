@@ -41,9 +41,6 @@ class ImportProductsJob < ApplicationJob
     row['external_id']   = row.delete('id')
     filtered_row         = row.slice(*KEYS)
     row[:md5_hash]       = md5_hash(filtered_row)
-    # row['name']          = "#{row.delete('category')} #{row['name']}"
-    row.delete('category')
-    # ###
     row['images']        = { first: row.delete('first_image'), other: row.delete('images') }
     row[:touched_run_id] = run_id
     row[:deleted]        = 0

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_27_132941) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_27_214959) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -67,6 +67,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_27_132941) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "external_id"
+    t.string "category"
     t.index ["md5_hash"], name: "index_ad_imports_on_md5_hash", unique: true
     t.index ["run_id"], name: "index_ad_imports_on_run_id"
     t.index ["touched_run_id"], name: "index_ad_imports_on_touched_run_id"
@@ -157,12 +158,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_27_132941) do
     t.string "contact_method"
     t.text "desc_ad_import"
     t.text "desc_product"
-    t.string "type"
+    t.string "availability"
     t.string "client_id"
     t.string "client_secret"
     t.integer "percent", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "color"
     t.index ["contact_phone"], name: "index_stores_on_contact_phone", unique: true
     t.index ["user_id", "var"], name: "index_stores_on_user_id_and_var", unique: true
     t.index ["user_id"], name: "index_stores_on_user_id"

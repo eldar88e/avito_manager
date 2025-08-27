@@ -16,7 +16,7 @@ class JobsController < ApplicationController
     store  = params[:product] ? nil : current_user.stores.active.find(store_id)
     clean  = params[:clean].present?
     models = []
-    models << Game if params[:game]
+    models << AdImport if params[:ad_import]
     models << Product if params[:product] || current_user.products.active.exists?
 
     models.each do |model|
@@ -56,8 +56,8 @@ class JobsController < ApplicationController
 
   def set_settings
     settings              = current_user.settings
-    @settings             = settings.pluck(:var, :value).to_h.transform_keys(&:to_sym)
-    blob                  = settings.find_by(var: 'main_font')&.font&.blob
+    @settings             = settings.all_cached
+    blob                  = settings.find_by(variable: 'main_font')&.font&.blob
     # @settings[:main_font] = blob.service.path_for(blob.key) if blob
     @settings[:main_font] = blob if blob
   end
