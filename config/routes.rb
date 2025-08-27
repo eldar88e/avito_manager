@@ -2,6 +2,11 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: 'registrations' }
   get 'up' => 'rails/health#show', as: :rails_health_check
 
+  authenticate :user do
+    mount SolidQueueDashboard::Engine, at: '/solid-queue'
+    # mount PgHero::Engine, at: 'pghero'
+  end
+
   get 'manifest' => 'rails/pwa#manifest', as: :pwa_manifest
   get 'service-worker' => 'rails/pwa#service_worker', as: :pwa_service_worker if Rails.env.production?
 

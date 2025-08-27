@@ -6,6 +6,7 @@ gem 'bootsnap', require: false
 gem 'jbuilder'
 gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'
+gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[windows jruby]
@@ -14,6 +15,7 @@ gem 'vite_rails'
 gem 'solid_cable'
 gem 'solid_cache'
 gem 'solid_queue'
+gem 'solid_queue_dashboard'
 
 # gem 'thruster', require: false
 
