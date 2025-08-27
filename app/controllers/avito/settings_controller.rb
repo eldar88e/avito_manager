@@ -28,7 +28,7 @@ module Avito
     private
 
     def set_webhook_url
-      @webhook_url = "http://server.open-ps.ru/stores/#{@store.id}/avito/webhooks/receive"
+      @webhook_url = "https://#{ENV.fetch('HOST')}/stores/#{@store.id}/avito/webhooks/receive"
     end
   end
 end
