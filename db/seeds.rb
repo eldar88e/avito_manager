@@ -4,7 +4,7 @@ if Rails.env.development?
   AdImport.create(name: 'Диван', run_id: 1, touched_run_id: 1, price: 8600, md5_hash: 'a248d22ae9c2')
 
   user.stores.create(
-    var: 'test_ps',
+    var: 'test_store',
     category: 'Test',
     goods_type: 'Под тест',
     ad_type: 'Продаю свое',

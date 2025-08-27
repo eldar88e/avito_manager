@@ -1,5 +1,7 @@
 @import "../styles/application.scss";
 @import "../styles/notice.scss";
+@import "trix/dist/trix.css";
+@import "../styles/actiontext.scss";
 
 @source "../../../app/components/**/*.html.slim";
 @source "../../../app/views/**/*.html.erb";

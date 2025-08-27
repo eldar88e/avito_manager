@@ -10,7 +10,7 @@
 <% end %>
 
 <%= turbo_frame_tag @store do %>
-  <div class="container">
+  <div class="container mx-auto px-5">
     <div class="d-flex gap-3">
       <%= button_to 'Обновить feed', store_update_feed_path(@store),
                     class: 'loader-btn btn btn-success btn-upd-feed',

@@ -39,7 +39,7 @@ class WatermarkService
   def handle_layers(address)
     @layers = make_layers_row
     @layers << { img: @main_img, menuindex: @store.menuindex,
-                 params: @store.game_img_params.presence || {}, layer_type: 'img' }
+                 params: @store.img_params.presence || {}, layer_type: 'img' }
     @layers.sort_by! { |layer| layer[:menuindex] }
     @layers << make_slogan(address)
   end
