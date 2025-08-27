@@ -11,7 +11,7 @@ class SettingsController < ApplicationController
     if @setting.save
       render turbo_stream: [
         turbo_stream.before('settings_new', partial: 'settings/setting', locals: { setting: @setting }),
-        success_notice(t('.success', var: @setting.var))
+        success_notice(t('.success', var: @setting.variable))
       ]
     else
       error_notice(@setting.errors.full_messages)
