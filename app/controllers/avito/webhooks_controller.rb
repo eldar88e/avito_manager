@@ -34,7 +34,7 @@ module Avito
       Turbo::StreamsChannel.broadcast_append_to(
         :notify,
         target: :notices,
-        partial: '/notices/notice',
+        partial: '/partials/notices/notice',
         locals: { notices: message, key: }
       )
     end
