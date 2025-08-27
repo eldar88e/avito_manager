@@ -19,7 +19,7 @@
   </ul>
 
   <div data-controller="pagy-initializer" class="mt-3 mb-3">
-    <%== pagy_bootstrap_nav_js(@pagy, data: { turbo_prefetch: false }) if @pagy.pages > 1 %>
+    <%== pagy_nav(@pagy, data: { turbo_prefetch: false }) if @pagy.pages > 1 %>
   </div>
 
   <%== pagy_info(@pagy) %>
