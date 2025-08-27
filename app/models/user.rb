@@ -31,7 +31,7 @@ class User < ApplicationRecord
 
   def default_settings_params
     [
-      { variable: 'game_img_size', value: 1080 },
+      { variable: 'product_img_size', value: 1080 },
       { variable: 'telegram_chat_id', value: 'example_chat_id' },
       { variable: 'telegram_bot_token', value: 'example_bot_token' },
       { variable: 'quantity_games', value: 10 },
