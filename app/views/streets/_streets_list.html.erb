@@ -1,0 +1,22 @@
+<li class="list-group-item list-group-item-action list-group-item-info steets-wrap" id="address_<%= address.id %>">
+  <div class="row">
+    <h5>Улицы для города <%= address.city %>:</h5>
+
+    <div class="steets-wrap-scroll mb-1">
+      <%= render partial: '/streets/form',
+                 locals: { street: address.streets.build, method: :post, url: store_streets_path(address_id: address) } %>
+    </div>
+
+    <div id="streets_<%= address.id %>" class="steets-wrap-scroll">
+      <% if address.streets.any? %>
+        <% address.streets.order(:created_at).each do |street| %>
+          <% next if street.id.nil? %>
+
+          <%= render partial: '/streets/form',
+                     locals: { street: street, method: :patch,
+                               url: store_street_path(id: street, address_id: address) } %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</li>

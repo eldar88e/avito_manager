@@ -1,0 +1,29 @@
+<div class="steets-item mb-2 mt-1" id="street_<%= street.id || 'new' %>">
+  <%= form_with(model: street, url: url, method: method,
+                data: { controller: "clear-form", action: "turbo:submit-end->clear-form#clearForm" }) do |form| %>
+    <div class="steets-item-form">
+        <%= form.text_field :title, value: street&.title, class: 'form-control form-control-sm',
+                            placeholder: 'Введите название улицы и номер дома...' %>
+
+        <% if method == :patch %>
+          <%= form.submit 'Save', class: 'btn btn-warning btn-sm' %>
+        <% else %>
+          <%= form.submit 'Add', class: 'btn btn-primary btn-sm' %>
+        <% end %>
+    </div>
+  <% end %>
+
+  <% if method == :patch %>
+    <%= button_to store_street_path(id: street, address_id: street.address), title: 'Удалить',
+                  method: :delete, class: 'btn btn-danger btn-sm',
+                  data: { confirm: 'Вы уверены, что хотите удалить данную улицу?',
+                          controller: 'confirm', action: 'click->confirm#call' } do %>
+      <i class="bi bi-trash"></i>
+    <% end %>
+  <% else %>
+    <%= link_to store_address_path(id: street.address, address_id: street.address),
+                title: 'Назад', class: 'btn btn-primary btn-sm', data: { turbo_prefetch: false } do %>
+      <i class="bi bi-backspace"></i>
+    <% end %>
+  <% end %>
+</div>
