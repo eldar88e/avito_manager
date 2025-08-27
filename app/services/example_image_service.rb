@@ -1,16 +1,17 @@
 class ExampleImageService
-  def initialize(address)
+  def initialize(user, address)
     @store    = address.store
     @address  = address
     @settings = settings
+    @user     = user
   end
 
-  def self.call(address)
-    new(address).assemble
+  def self.call(user, address)
+    new(user, address).assemble
   end
 
   def assemble
-    game      = AdImport.active.order(:top).first
+    game      = @user.ad_imports.active.order(:created_at).first
     w_service = WatermarkService.new(store: @store, address: @address, settings: @settings, game:)
     return unless w_service.image_exist?
 
@@ -29,10 +30,6 @@ class ExampleImageService
   end
 
   def settings
-    set_row              = @store.user.settings
-    settings             = set_row.all_cached
-    blob                 = set_row.find_by(variable: 'main_font')&.font&.blob
-    settings[:main_font] = blob if blob
-    settings
+    @store.user.settings.all_cached
   end
 end
