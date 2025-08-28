@@ -29,7 +29,7 @@ class PopulateExcelJob < ApplicationJob
     xlsx_path = "./public/adverts_list/#{store.var}.xlsx"
     File.binwrite(xlsx_path, content)
     url = Rails.env.production? ? "https://#{ENV.fetch('HOST')}" : 'http://localhost:3000'
-    msg = "✅ File #{url}#{xlsx_path[1..]} is updated!"
+    msg = "✅ File #{url}#{xlsx_path.sub('./public', '')} is updated!"
     broadcast_notify(msg)
     TelegramService.call(user, msg)
   rescue StandardError => e
