@@ -45,7 +45,7 @@ class SaveImageJob < ApplicationJob
 
   def save_image(item, name, image)
     Tempfile.open(%w[image .jpg]) do |temp_img|
-      image.write(temp_img.path)
+      image.write_to_file(temp_img.path)
       temp_img.flush
       item.image.attach(io: File.open(temp_img.path), filename: name, content_type: 'image/jpeg')
     end
