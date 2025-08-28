@@ -5,7 +5,9 @@ class JobsController < ApplicationController
   def update_store_test_img
     @store  = current_user.stores.active.find(store_id)
     address = @store.addresses.find(params[:address_id])
-    ExampleImageService.call(current_user, address)
+    result  = ExampleImageService.call(current_user, address)
+    return error_notice('Не удалось создать тестовую картинку.') if result[:error]
+
     render turbo_stream: [
       turbo_stream.update(:test_img, partial: '/stores/test_img'),
       success_notice('Тестовая картинка успешна обновлена!')

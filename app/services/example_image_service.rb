@@ -16,6 +16,10 @@ class ExampleImageService
     return unless w_service.image_exist?
 
     save_image(w_service)
+    { success: true }
+  rescue StandardError => e
+    Rails.logger.error e.message
+    { error: e.message }
   end
 
   private
