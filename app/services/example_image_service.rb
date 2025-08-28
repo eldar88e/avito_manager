@@ -2,7 +2,6 @@ class ExampleImageService
   def initialize(user, address)
     @store    = address.store
     @address  = address
-    @settings = settings
     @user     = user
   end
 
@@ -11,8 +10,9 @@ class ExampleImageService
   end
 
   def assemble
-    game      = @user.ad_imports.active.order(:created_at).first
-    w_service = WatermarkService.new(store: @store, address: @address, settings: @settings, game:)
+    product   = @user.ad_imports.active.order(:created_at).first
+    main_img  = product.images['first']
+    w_service = WatermarkService.new(store: @store, address: @address, settings: settings, main_img: main_img)
     return unless w_service.image_exist?
 
     save_image(w_service)
@@ -23,7 +23,7 @@ class ExampleImageService
   def save_image(w_service)
     image = w_service.add_watermarks
     Tempfile.open(%w[image .jpg]) do |temp_img|
-      image.write(temp_img.path)
+      image.write_to_file(temp_img.path)
       temp_img.flush
       @store.test_img.attach(io: File.open(temp_img.path), filename: 'test.jpg', content_type: 'image/jpeg')
     end

@@ -8,7 +8,7 @@
                     method: :delete, class: 'btn btn-danger mt-3 mt-md-0 btn-sm',
                     data: { confirm: 'Вы уверены, что хотите удалить данный адрес и все с ним связанные картинки?',
                             controller: 'confirm', action: 'click->confirm#call' } do %>
-        <i class="bi bi-trash"></i>
+        <%= render IconComponent.new name: :trash, width: 20 %>
       <% end %>
 
       <%= button_to update_img_path(store_id: address.store, address_id: address, game: true), title: "Создать картинки",
@@ -36,9 +36,9 @@
       <% end %>
     </div>
 
-<div>
-      <%= button_to 'Обновить тестовую картинку', store_update_store_test_img_path(store_id: address.store, address_id: address),
-                    class: 'btn btn-danger btn-sm btn-update-img', title: "Пересоздать тестовую картинку" %>
-</div>
+    <div>
+        <%= button_to 'Обновить тестовую картинку', store_update_store_test_img_path(store_id: address.store, address_id: address),
+                      class: 'btn btn-danger btn-sm btn-update-img', title: "Пересоздать тестовую картинку" %>
+    </div>
   </div>
 </li>

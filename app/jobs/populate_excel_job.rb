@@ -4,7 +4,7 @@ class PopulateExcelJob < ApplicationJob
   include Rails.application.routes.url_helpers
 
   COLUMNS_NAME = %w[
-    Id AvitoId DateBegin AdStatus Category GoodsType AdType Type Address Title Description Condition Price AllowEmail
+    Id AvitoId DateBegin AdStatus Category GoodsType AdType Availability Address Title Description Condition Price AllowEmail
     ManagerName ContactPhone ContactMethod ImageUrls
     Color ColorName GoodsSubType FurnitureType UpholsteryMaterial Width Depth Height
   ].freeze
@@ -54,7 +54,7 @@ class PopulateExcelJob < ApplicationJob
 
     worksheet.append_row(
       [ad.id, ad.avito_id, current_time, store.ad_status, store.category, game.category || store.goods_type,
-       store.ad_type, store.type, ad.full_address || address.store_address, game.name,
+       store.ad_type, store.availability, ad.full_address || address.store_address, game.name,
        make_description(game, store, address), store.condition, game.price, store.allow_email, store.manager_name,
        store.contact_phone, store.contact_method, img_url]
     )

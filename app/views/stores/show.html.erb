@@ -80,9 +80,11 @@
 
         <!-- 2 -->
         <section role="tabpanel" data-tabs-target="panel" class="hidden">
-          <%= render partial: '/addresses/new_address_btn', locals: { store: @store } %>
+          <div class="flex justify-end">
+            <%= render partial: '/addresses/new_address_btn', locals: { store: @store } %>
+          </div>
 
-          <ul class="mb-3 divide-y rounded-lg border" id="addresses">
+          <ul class="mb-3 divide-y rounded-lg border p-3 mt-3" id="addresses">
             <%= render @addresses %>
           </ul>
 

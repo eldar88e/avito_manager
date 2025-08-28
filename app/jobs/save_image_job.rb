@@ -11,19 +11,20 @@ class SaveImageJob < ApplicationJob
     process_image(args, options, name, ad)
   rescue StandardError => e
     Rails.logger.error "#{e.class} || #{e.message}\nID: #{product.send(args[:id])}"
-    msg  = "Аккаунт: #{store.manager_name}\nID: #{product.send(args[:id])}\nТовар: #{name}\nError: #{e.message}"
+    msg = "Аккаунт: #{store.manager_name}\nID: #{product.send(args[:id])}\nТовар: #{name}\nError: #{e.message}"
     TelegramService.call(user, msg)
     raise e
   end
 
   private
 
-  def make_options(user, ad)
+  def make_options(user, adv)
+    product = adv.adable
     {
-      store: ad.store,
-      address: ad.address,
+      store: adv.store,
+      address: adv.address,
       settings: fetch_settings(user),
-      game: ad.adable
+      main_img: product.is_a?(AdImport) ? product.images['first'] : product&.image&.blob
     }
   end
 
@@ -35,13 +36,13 @@ class SaveImageJob < ApplicationJob
     settings
   end
 
-  def process_image(args, options, name, ad)
+  def process_image(args, options, name, adv)
     w_service = WatermarkService.new(**options)
     return Rails.logger.error("Not exist main image for #{name}") unless w_service.image_exist?
 
     image = w_service.add_watermarks
     name  = "#{args[:file_id]}.jpg"
-    save_image(ad, name, image)
+    save_image(adv, name, image)
   end
 
   def save_image(item, name, image)

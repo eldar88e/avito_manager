@@ -10,7 +10,7 @@ class Setting < ApplicationRecord
   def self.all_cached
     Rails.cache.fetch(:settings, expires_in: 6.hours) do
       settings             = pluck(:variable, :value).to_h.symbolize_keys
-      blob                 = set_row.find_by(variable: 'main_font')&.font&.blob
+      blob                 = find_by(variable: 'main_font')&.font&.blob
       settings[:main_font] = blob if blob
       settings
     end
