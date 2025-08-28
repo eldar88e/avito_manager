@@ -2,7 +2,6 @@ require 'vips'
 
 class WatermarkService
   include Rails.application.routes.url_helpers
-  include Magick
 
   BLOB_CACHE_EXPIRES = 30.minutes
   DEFAULT_WIDTH      = 1920

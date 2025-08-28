@@ -31,7 +31,7 @@
         <%= link_to  store_map_path(store_id: address.store, address_id: address, all: params[:all]),
                      title: 'Отобразить на карте покрытие адреса',
                      class: 'mt-3 mt-md-0 btn btn-primary btn-sm', data: { turbo_prefetch: false } do %>
-          <i class="bi bi-geo-alt"></i>
+          <%= render IconComponent.new name: :map, width: 20 %>
         <% end %>
       <% end %>
     </div>
