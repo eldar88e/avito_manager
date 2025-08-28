@@ -4,9 +4,9 @@ class PopulateExcelJob < ApplicationJob
   include Rails.application.routes.url_helpers
 
   COLUMNS_NAME = %w[
-    Id AvitoId DateBegin AdStatus Category GoodsType AdType Availability Address Title Description Condition Price AllowEmail
-    ManagerName ContactPhone ContactMethod ImageUrls
-    Color ColorName GoodsSubType FurnitureType UpholsteryMaterial Width Depth Height
+    Id AvitoId DateBegin AdStatus Category GoodsType AdType Availability Address Title Description Condition Price
+    AllowEmail ManagerName ContactPhone ContactMethod ImageUrls Color ColorName GoodsSubType FurnitureType
+    UpholsteryMaterial Width Depth Height
   ].freeze
 
   def perform(**args)

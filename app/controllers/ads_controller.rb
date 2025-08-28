@@ -36,6 +36,6 @@ class AdsController < ApplicationController
   end
 
   def ad_params
-    params.require(:ad).permit(:avito_id, :full_address, :file_id, :banned_until, :banned, :deleted)
+    params.expect(ad: %i[avito_id full_address file_id banned_until banned deleted])
   end
 end

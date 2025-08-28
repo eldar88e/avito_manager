@@ -50,7 +50,7 @@ class AddressesController < ApplicationController
   end
 
   def address_params
-    params.require(:address).permit(:city, :slogan, :slogan_params, :active, :image, :description, :total_games)
+    params.expect(address: %i[city slogan slogan_params active image description total_games])
   end
 
   def handle_successful_save

@@ -3,17 +3,17 @@ class ImportProductsJob < ApplicationJob
   KEYS = %w[external_id name].freeze
 
   def perform(**args)
-    user     = find_user(args)
-    result   = fetch_products(user)
-    products = result['products']
-    run_id   = 1 # Run.last_id
-    count    = [0, 0]
-    products.each { |product| process_product(user, product, run_id, count) }
+    user   = find_user(args)
+    result = fetch_products(user)
+    run_id = 1 # Run.last_id
+    count  = [0, 0]
+    result['products'].each { |product| process_product(user, product, run_id, count) }
     user.ad_imports.where(deleted: 0).where.not(touched_run_id: run_id).update_all(deleted: 1, updated_at: Time.current)
     # Run.finish
     send_notify(user, count[1], count[0], result['pagination']['total_count'])
-    count[1]
     raise "Страниц #{result['pagination']['total_pages']} обработано 1" if result['pagination']['total_pages'] > 1
+
+    count[1]
   rescue StandardError => e
     handle_error(user, e)
   end
@@ -39,8 +39,7 @@ class ImportProductsJob < ApplicationJob
   def process_product(user, row, run_id, count)
     row['name']          = row.delete('title').capitalize
     row['external_id']   = row.delete('id')
-    filtered_row         = row.slice(*KEYS)
-    row[:md5_hash]       = md5_hash(filtered_row)
+    row[:md5_hash]       = md5_hash(row.slice(*KEYS))
     row['images']        = { first: row.delete('first_image'), other: row.delete('images') }
     row[:touched_run_id] = run_id
     row[:deleted]        = 0

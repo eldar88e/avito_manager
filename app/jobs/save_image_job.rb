@@ -2,28 +2,26 @@ class SaveImageJob < ApplicationJob
   queue_as :default
 
   def perform(**args)
-    ad      = Ad.find(args[:ad_id])
-    user    = ad.user
-    product = ad.adable
-    store   = ad.store
+    adv     = Ad.find(args[:ad_id])
+    product = adv.adable
     name    = product.is_a?(AdImport) ? product.name : product.title
-    options = make_options(user, ad)
-    process_image(args, options, name, ad)
+    options = make_options(adv)
+    process_image(args, options, name, adv)
   rescue StandardError => e
     Rails.logger.error "#{e.class} || #{e.message}\nID: #{product.send(args[:id])}"
-    msg = "Аккаунт: #{store.manager_name}\nID: #{product.send(args[:id])}\nТовар: #{name}\nError: #{e.message}"
-    TelegramService.call(user, msg)
+    msg = "Аккаунт: #{adv.store.manager_name}\nID: #{product.send(args[:id])}\nТовар: #{name}\nError: #{e.message}"
+    TelegramService.call(adv.user, msg)
     raise e
   end
 
   private
 
-  def make_options(user, adv)
+  def make_options(adv)
     product = adv.adable
     {
       store: adv.store,
       address: adv.address,
-      settings: fetch_settings(user),
+      settings: fetch_settings(adv.user),
       main_img: product.is_a?(AdImport) ? product.images['first'] : product&.image&.blob
     }
   end

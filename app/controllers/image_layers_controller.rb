@@ -39,7 +39,7 @@ class ImageLayersController < ApplicationController
   end
 
   def image_layer_params
-    params.require(:image_layer).permit(:layer_type, :title, :menuindex, :layer_params, :layer, :active)
+    params.expect(image_layer: %i[layer_type title menuindex layer_params layer active])
   end
 
   def handle_successful_save
