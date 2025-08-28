@@ -1,4 +1,4 @@
-<%= form_with(model: address, url: url, method: method) do |form| %>
+<%= form_with model: address, url: url, method: method, class: 'admin-form' do |form| %>
   <div class="row">
     <div class="col-12 mb-3">
       <%= form.label :city, 'Адрес', class: 'form-label', style: "font-weight: bold;" %>
