@@ -6,7 +6,7 @@ class PopulateExcelJob < ApplicationJob
   COLUMNS_NAME = %w[
     Id AvitoId DateBegin AdStatus Category GoodsType AdType Availability Address Title Description Condition Price
     AllowEmail ManagerName ContactPhone ContactMethod ImageUrls GoodsSubType Color ColorName FurnitureShape
-    FurnitureType UpholsteryMaterial Width Depth Height
+    SleepingPlace FurnitureType UpholsteryMaterial Width Depth Height
   ].freeze
 
   def perform(**args)
