@@ -4,12 +4,12 @@ class SaveImageJob < ApplicationJob
   def perform(**args)
     adv     = Ad.find(args[:ad_id])
     product = adv.adable
-    name    = product.is_a?(AdImport) ? product.name : product.title
+    title   = product.title
     options = make_options(adv)
-    process_image(args, options, name, adv)
+    process_image(args, options, title, adv)
   rescue StandardError => e
     Rails.logger.error "#{e.class} || #{e.message}\nID: #{product.send(args[:id])}"
-    msg = "Аккаунт: #{adv.store.manager_name}\nID: #{product.send(args[:id])}\nТовар: #{name}\nError: #{e.message}"
+    msg = "Аккаунт: #{adv.store.manager_name}\nID: #{product.send(args[:id])}\nТовар: #{title}\nError: #{e.message}"
     TelegramService.call(adv.user, msg)
     raise e
   end

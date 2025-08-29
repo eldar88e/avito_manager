@@ -11,13 +11,13 @@ class AdImportsController < ApplicationController
 
   def show
     # add_breadcrumb 'Игры', ad_imports_path
-    # add_breadcrumb @ad_imports.name
+    # add_breadcrumb @ad_imports.title
     @ads = @ad_imports.ads.includes(image_attachment: :blob)
   end
 
   def destroy
     @ad_imports.destroy
-    flash[:notice] = "Объявление #{@ad_imports.name} было успешно удалено."
+    flash[:notice] = "Объявление #{@ad_imports.title} было успешно удалено."
     redirect_to ad_imports_path
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_29_120917) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_29_160253) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -54,7 +54,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_29_120917) do
 
   create_table "ad_imports", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.string "name"
+    t.string "title"
     t.string "description"
     t.bigint "price"
     t.bigint "old_price"

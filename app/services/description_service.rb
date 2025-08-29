@@ -3,7 +3,7 @@ class DescriptionService
     @model = option[:model]
     @store = option[:store]
     @default_replacements = {
-      name: @model.name,
+      title: @model.title,
       description: @store.description,
       manager: @store.manager_name,
       addr_desc: option[:address_desc].to_s,

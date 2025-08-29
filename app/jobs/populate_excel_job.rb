@@ -54,7 +54,7 @@ class PopulateExcelJob < ApplicationJob
 
     worksheet.append_row(
       [ad.id, ad.avito_id, current_time, store.ad_status, store.category, store.goods_type,
-       store.ad_type, store.availability, ad.full_address || address.store_address, game.name,
+       store.ad_type, store.availability, ad.full_address || address.store_address, game.title,
        make_description(game, store, address), store.condition, game.price, store.allow_email, store.manager_name,
        store.contact_phone, store.contact_method, img_url, game.category, *form_extra(game)]
     )

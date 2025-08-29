@@ -1,6 +1,6 @@
 class ImportProductsJob < ApplicationJob
   queue_as :default
-  KEYS = %w[external_id name].freeze
+  KEYS = %w[external_id title].freeze
   COLORS = %w[
     Белый Бежевый Коричневый Чёрный Серый Золотой Серебристый Зелёный Синий Оранжевый Красный Розовый
     Жёлтый Бирюзовый Бордовый Голубой Фиолетовый Разноцветный Прозрачный Другой
