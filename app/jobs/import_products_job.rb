@@ -3,7 +3,7 @@ class ImportProductsJob < ApplicationJob
   KEYS = %w[external_id title].freeze
   COLORS = %w[
     Белый Бежевый Коричневый Чёрный Серый Золотой Серебристый Зелёный Синий Оранжевый Красный Розовый
-    Жёлтый Бирюзовый Бордовый Голубой Фиолетовый Разноцветный Прозрачный Другой
+    Жёлтый Бирюзовый Бордовый Голубой Фиолетовый Разноцветный Прозрачный
   ].freeze
 
   def perform(**args)
@@ -43,8 +43,9 @@ class ImportProductsJob < ApplicationJob
   def process_product(user, row, run_id, count)
     row[:md5_hash]             = md5_hash(row.slice(*KEYS))
     row[:images]               = { first: row.delete('first_image'), other: row.delete('images') }
-    row['extra']['color']      = COLORS.include?(row['extra']['color']) ? row['extra']['color'] : 'Другой'
-    row['extra']['color_name'] = row['extra']['color'] == 'Другой' ? row['extra']['color'] : nil
+    color                      = row['extra']['color']
+    row['extra']['color']      = COLORS.include?(color) ? color : 'Другой'
+    row['extra']['color_name'] = row['extra']['color'] == 'Другой' ? color : nil
     row[:touched_run_id]       = run_id
     row[:deleted]              = 0
     result                     = update_product(user, row, count)
