@@ -8,6 +8,7 @@ class PopulateExcelJob < ApplicationJob
     AllowEmail ManagerName ContactPhone ContactMethod ImageUrls GoodsSubType Color ColorName FurnitureShape
     SleepingPlace FurnitureType UpholsteryMaterial Width Depth Height
   ].freeze
+  EXTRA_COLUMNS_SIZE = 9
 
   def perform(**args)
     store     = Store.find(args[:store_id])
@@ -78,7 +79,7 @@ class PopulateExcelJob < ApplicationJob
   # end
 
   def form_extra(game)
-    COLUMNS_NAME.last(7).map do |column|
+    COLUMNS_NAME.last(EXTRA_COLUMNS_SIZE).map do |column|
       column_underscored = column.underscore
       if %w[sleeping_place folding_mechanism].include?(column_underscored)
         game.extra&.dig(column_underscored) ? 'Eсть' : 'Нет'
