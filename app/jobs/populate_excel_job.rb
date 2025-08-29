@@ -8,7 +8,7 @@ class PopulateExcelJob < ApplicationJob
     AllowEmail ManagerName ContactPhone ContactMethod ImageUrls GoodsSubType Color ColorName FurnitureShape Modular
     FoldingMechanism TypeOfFoldingMechanism SleepingPlace UpholsteryMaterial Width Depth Height
   ].freeze
-  EXTRA_COLUMNS_SIZE = 10
+  EXTRA_COLUMNS_SIZE = 11
 
   def perform(**args)
     store     = Store.find(args[:store_id])
