@@ -1,6 +1,10 @@
 class ImportProductsJob < ApplicationJob
   queue_as :default
   KEYS = %w[external_id name].freeze
+  COLORS = %w[
+    Белый Бежевый Коричневый Чёрный Серый Золотой Серебристый Зелёный Синий Оранжевый Красный Розовый
+    Жёлтый Бирюзовый Бордовый Голубой Фиолетовый Разноцветный Прозрачный Другой
+  ].freeze
 
   def perform(**args)
     user   = find_user(args)
@@ -37,13 +41,13 @@ class ImportProductsJob < ApplicationJob
   end
 
   def process_product(user, row, run_id, count)
-    row['name']          = row.delete('title').capitalize
-    row['external_id']   = row.delete('id')
-    row[:md5_hash]       = md5_hash(row.slice(*KEYS))
-    row['images']        = { first: row.delete('first_image'), other: row.delete('images') }
-    row[:touched_run_id] = run_id
-    row[:deleted]        = 0
-    result               = update_product(user, row, count)
+    row[:md5_hash]             = md5_hash(row.slice(*KEYS))
+    row[:images]               = { first: row.delete('first_image'), other: row.delete('images') }
+    row['extra']['color']      = COLORS.include?(row['extra']['color']) ? row['extra']['color'] : 'Другой'
+    row['extra']['color_name'] = row['extra']['color'] == 'Другой' ? row['extra']['color'] : nil
+    row[:touched_run_id]       = run_id
+    row[:deleted]              = 0
+    result                     = update_product(user, row, count)
     return if result
 
     row[:run_id] = run_id
