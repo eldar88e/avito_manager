@@ -78,7 +78,14 @@ class PopulateExcelJob < ApplicationJob
   # end
 
   def form_extra(game)
-    COLUMNS_NAME.last(7).map { |column| game.extra&.dig(column.underscore) }
+    COLUMNS_NAME.last(7).map do |column|
+      column_underscored = column.underscore
+      if %w[sleeping_place folding_mechanism].include?(column_underscored)
+        game.extra&.dig(column_underscored) ? 'Eсть' : 'Нет'
+      else
+        game.extra&.dig(column_underscored)
+      end
+    end
   end
 
   def make_image(image)
