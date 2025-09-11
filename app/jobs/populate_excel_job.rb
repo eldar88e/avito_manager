@@ -83,7 +83,7 @@ class PopulateExcelJob < ApplicationJob
     COLUMNS_NAME.last(EXTRA_COLUMNS_SIZE).map do |column|
       column_underscored = column.underscore
       if %w[sleeping_place folding_mechanism].include?(column_underscored)
-        game.extra&.dig(column_underscored) ? 'Eсть' : 'Нет'
+        game.extra&.dig(column_underscored) ? 'Есть' : 'Нет'
       elsif column_underscored == 'modular'
         game.extra&.dig(column_underscored) ? 'Да' : 'Нет'
       else

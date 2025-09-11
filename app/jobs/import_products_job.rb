@@ -53,7 +53,7 @@ class ImportProductsJob < ApplicationJob
     row['extra']['length']     = row['extra']['depth'] if row['category'] == 'Кровати'
     row['extra']['furniture_type']           = 'Двуспальная' if row['category'] == 'Кровати'
     row['extra']['condition_sleeping_place'] = 'Ровное' if row['extra']['sleeping_place'].present?
-    row['extra']['mechanism_condition']      = 'Всё в порядке' if row['extra']['folding_mechanism'] != 'Без механизма'
+    row['extra']['mechanism_condition']      = 'Всё в порядке' if row['extra']['folding_mechanism'].present? && row['extra']['folding_mechanism'] != 'Без механизма'
     row['category']      = 'Комоды и тумбы' if row['category'] == 'Тумбы'
     row[:touched_run_id] = run_id
     row[:deleted]        = 0
