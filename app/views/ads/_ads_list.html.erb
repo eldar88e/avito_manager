@@ -4,15 +4,15 @@
 <% if @ads.present? %>
   <ul class="list-group" data-controller="fancybox" class="ads">
     <li class="list-group-item list-group-item-action active d-none d-md-block">
-      <div class="row sort_ads">
-        <div class="col-1"><%= sort_link(@q_ads, :id, 'Файл ИД', data: { turbo_prefetch: false }) %></div>
-        <div class="col-1"><%= sort_link(@q_ads, :avito_id, 'Авито ИД', data: { turbo_prefetch: false }) %></div>
-        <div class="col-1">Img</div>
-        <div class="col-4"><%= sort_link(@q_ads, :file_id, 'Sony ID', data: { turbo_prefetch: false }) %></div>
-        <div class="col-1"><%= sort_link(@q_ads, :deleted, 'Удалено', data: { turbo_prefetch: false }) %></div>
-        <div class="col-1"><%= sort_link(@q_ads, :baned, 'Бан', data: { turbo_prefetch: false }) %></div>
-        <div class="col-2"><%= sort_link(@q_ads, :baned_until, 'Заблокировано до', data: { turbo_prefetch: false }) %></div>
-        <div class="col-1"></div>
+      <div class="flex flex-wrap sort_ads">
+        <div class="w-1/12"><%= sort_link(@q_ads, :id, 'Файл ИД', data: { turbo_prefetch: false }) %></div>
+        <div class="w-1/12"><%= sort_link(@q_ads, :avito_id, 'Авито ИД', data: { turbo_prefetch: false }) %></div>
+        <div class="w-1/12">Img</div>
+        <div class="w-4/12"><%= sort_link(@q_ads, :file_id, 'External ID', data: { turbo_prefetch: false }) %></div>
+        <div class="w-1/12"><%= sort_link(@q_ads, :deleted, 'Удалено', data: { turbo_prefetch: false }) %></div>
+        <div class="w-1/12"><%= sort_link(@q_ads, :baned, 'Бан', data: { turbo_prefetch: false }) %></div>
+        <div class="w-2/12"><%= sort_link(@q_ads, :baned_until, 'Заблокировано до', data: { turbo_prefetch: false }) %></div>
+        <div class="w-1/12"></div>
       </div>
     </li>
     <%= render @ads %>

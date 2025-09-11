@@ -1,7 +1,7 @@
 if Rails.env.development?
   user = User.find_or_create_by(email: 'test@test.tt') { |i| i.password = 12_345_678 }
 
-  AdImport.create(name: 'Диван', run_id: 1, touched_run_id: 1, price: 8600, md5_hash: 'a248d22ae9c2')
+  AdImport.create(title: 'Диван', run_id: 1, touched_run_id: 1, price: 8600, md5_hash: 'a248d22ae9c2')
 
   user.stores.create(
     var: 'test_store',
