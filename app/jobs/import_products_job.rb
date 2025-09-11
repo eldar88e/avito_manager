@@ -11,7 +11,11 @@ class ImportProductsJob < ApplicationJob
     result = fetch_products(user)
     run_id = 1 # Run.last_id
     count  = [0, 0]
-    result['products'].each { |product| process_product(user, product, run_id, count) }
+    result['products'].each do |product|
+      next if product['width'].blank?
+
+      process_product(user, product, run_id, count)
+    end
     user.ad_imports.where(deleted: 0).where.not(touched_run_id: run_id).update_all(deleted: 1, updated_at: Time.current)
     # Run.finish
     send_notify(user, count[1], count[0], result['pagination']['total_count'])

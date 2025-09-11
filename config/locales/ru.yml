@@ -42,10 +42,28 @@ ru:
         few: "✅ Для аккаунта %{name} добавлено %{count} объявления в бан."
         many: "✅ Для аккаунта %{name} добавлено %{count} объявлений в бан."
   pagy:
-    nav:
-      prev: "Предыдущая"
-      next: "Слудующая"
-      gap: "…"
+    aria_label:
+      nav:
+        one: "Страница"
+        few: "Страницы"
+        many: "Страниц"
+        other: "Страниц"
+      prev: "Назад"
+      next: "Вперёд"
+    prev: "&lt;"
+    next: "&gt;"
+    gap: "&hellip;"
+    item_name:
+      one: "запись"
+      few: "записи"
+      many: "записей"
+      other: "записей"
+    info:
+      no_items: "Пока %{item_name} нет"
+      single_page: "%{count} %{item_name}"
+      multiple_pages: "Всего %{count} %{item_name}, показаны с %{from} по %{to}"
+    combo_nav_js: "Страница %{page_input} из %{pages}"
+    limit_selector_js: "Показать %{limit_input} %{item_name} на странице"
   settings:
     create:
       success: "Настройка %{var} была успешно добавлена."
@@ -71,7 +89,7 @@ ru:
       error:
     avito:
       autoload:
-        update: "Запущен процес обновления параметров автозагрузки Авито аккаунта %{name}"
+        update: "Запущен процесс обновления параметров автозагрузки Авито аккаунта %{name}"
       settings:
         success: "Успешно обновлены настройки webhook."
         error: "Ошибка обновления webhook."
