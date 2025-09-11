@@ -46,6 +46,7 @@ class ImportProductsJob < ApplicationJob
     color                      = row['extra']['color']
     row['extra']['color']      = COLORS.include?(color) ? color : 'Другой'
     row['extra']['color_name'] = row['extra']['color'] == 'Другой' ? color : nil
+    row['category']            = 'Комоды и тумбы' if row['category'] == 'Тумбы'
     row[:touched_run_id]       = run_id
     row[:deleted]              = 0
     result                     = update_product(user, row, count)
