@@ -51,6 +51,7 @@ class ImportProductsJob < ApplicationJob
     row['extra']['color']      = COLORS.include?(color) ? color : 'Другой'
     row['extra']['color_name'] = row['extra']['color'] == 'Другой' ? color : nil
     row['extra']['length']     = row['extra']['depth'] if row['category'] == 'Кровати'
+    row['extra']['furniture_type']           = 'Двуспальная' if row['category'] == 'Кровати'
     row['extra']['condition_sleeping_place'] = 'Ровное' if row['extra']['sleeping_place'] == 'Eсть'
     row['category']      = 'Комоды и тумбы' if row['category'] == 'Тумбы'
     row[:touched_run_id] = run_id
