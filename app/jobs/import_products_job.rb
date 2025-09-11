@@ -12,7 +12,7 @@ class ImportProductsJob < ApplicationJob
     run_id = 1 # Run.last_id
     count  = [0, 0]
     result['products'].each do |product|
-      next if product['width'].blank?
+      next if product['extra']['width'].blank?
 
       process_product(user, product, run_id, count)
     end
