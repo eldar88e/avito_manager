@@ -6,9 +6,9 @@ class PopulateExcelJob < ApplicationJob
   COLUMNS_NAME = %w[
     Id AvitoId DateBegin AdStatus Category GoodsType AdType Availability Address Title Description Condition Price
     AllowEmail ManagerName ContactPhone ContactMethod ImageUrls GoodsSubType Color ColorName FurnitureShape Modular
-    FoldingMechanism TypeOfFoldingMechanism SleepingPlace UpholsteryMaterial Width Depth Height
+    FoldingMechanism TypeOfFoldingMechanism SleepingPlace UpholsteryMaterial Width Depth Height Length
   ].freeze
-  EXTRA_COLUMNS_SIZE = 11
+  EXTRA_COLUMNS_SIZE = 12
 
   def perform(**args)
     store     = Store.find(args[:store_id])
