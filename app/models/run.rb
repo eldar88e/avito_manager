@@ -5,7 +5,7 @@ class Run < ApplicationRecord
 
   def self.last_id
     last = last_run
-    last && last.status != :finish ? last.id : set_new_id
+    last && last.status != 'finish' ? last.id : set_new_id
   end
 
   def self.status
@@ -18,7 +18,7 @@ class Run < ApplicationRecord
   end
 
   def self.finish
-    last_run.update status: :finish
+    last_run.update status: 'finish'
   end
 
   def self.last_run
