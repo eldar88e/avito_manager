@@ -19,7 +19,8 @@ class JobsController < ApplicationController
     clean  = params[:clean].present?
     models = []
     models << AdImport if params[:ad_import]
-    models << Product if params[:product] || current_user.products.active.exists?
+    # models << Product if params[:product] || current_user.products.active.exists?
+    # TODO: uncomment when Product will be added
 
     models.each do |model|
       AddWatermarkJob.perform_later(
