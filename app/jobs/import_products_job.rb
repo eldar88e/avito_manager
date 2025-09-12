@@ -1,6 +1,6 @@
 class ImportProductsJob < ApplicationJob
   queue_as :default
-  KEYS = %w[external_id title].freeze
+  KEYS   = %w[external_id title].freeze
   COLORS = %w[
     Белый Бежевый Коричневый Чёрный Серый Золотой Серебристый Зелёный Синий Оранжевый Красный Розовый
     Жёлтый Бирюзовый Бордовый Голубой Фиолетовый Разноцветный Прозрачный
@@ -9,15 +9,16 @@ class ImportProductsJob < ApplicationJob
   def perform(**args)
     user   = find_user(args)
     result = fetch_products(user)
-    run_id = 1 # Run.last_id
+    run_id = Run.last_id
     count  = [0, 0]
+    Run.status = :processing
     result['products'].each do |product|
       next if product['extra']['width'].blank?
 
       process_product(user, product, run_id, count)
     end
     user.ad_imports.where(deleted: 0).where.not(touched_run_id: run_id).update_all(deleted: 1, updated_at: Time.current)
-    # Run.finish
+    Run.finish
     send_notify(user, count[1], count[0], result['pagination']['total_count'])
     raise "Страниц #{result['pagination']['total_pages']} обработано 1" if result['pagination']['total_pages'] > 1
 
@@ -45,7 +46,7 @@ class ImportProductsJob < ApplicationJob
   end
 
   def process_product(user, row, run_id, count)
-    row[:md5_hash]             = md5_hash(row.slice(*KEYS))
+    row[:md5_hash]             = md5_hash(row.slice(*KEYS).merge(row['extra']))
     row[:images]               = { first: row.delete('first_image'), other: row.delete('images') }
     color                      = row['extra']['color']
     row['extra']['color']      = COLORS.include?(color) ? color : 'Другой'
@@ -73,7 +74,6 @@ class ImportProductsJob < ApplicationJob
       edited[0] += 1
     end
     advert.update(row)
-    true
   end
 
   def fetch_products(user)
