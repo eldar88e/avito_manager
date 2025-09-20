@@ -17,7 +17,8 @@ class ImportProductsJob < ApplicationJob
 
       process_product(user, product, run_id, count)
     end
-    user.ad_imports.where(deleted: 0).where.not(touched_run_id: run_id).update_all(deleted: 1, updated_at: Time.current)
+    user.ad_imports.where(deleted: false).where.not(touched_run_id: run_id)
+        .update_all(deleted: true, updated_at: Time.current)
     Run.finish
     send_notify(user, count[1], count[0], result['pagination']['total_count'])
     raise "Страниц #{result['pagination']['total_pages']} обработано 1" if result['pagination']['total_pages'] > 1
@@ -56,10 +57,10 @@ class ImportProductsJob < ApplicationJob
     row['extra']['condition_sleeping_place'] = 'Ровное' if row['extra']['sleeping_place'].present?
     row['extra']['mechanism_condition']      = 'Всё в порядке' if row['extra']['folding_mechanism'].present? && row['extra']['folding_mechanism'] != 'Без механизма'
     row['extra']['sofa_corner']              = 'Универсальный' if row['extra']['furniture_shape'] == 'Угловой'
-    row['category']      = 'Комоды и тумбы' if row['category'] == 'Тумбы'
-    row[:touched_run_id] = run_id
-    row[:deleted]        = 0
-    result               = update_product(user, row, count)
+    row['category']                          = 'Комоды и тумбы' if row['category'] == 'Тумбы'
+    row['extra']['furniture_frame']          = 'С обивкой' if row['category'] == 'Кровати'
+    row[:touched_run_id]                     = run_id
+    result                                   = update_product(user, row, count)
     return if result
 
     row[:run_id] = run_id

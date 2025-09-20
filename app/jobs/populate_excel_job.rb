@@ -7,9 +7,10 @@ class PopulateExcelJob < ApplicationJob
     Id AvitoId DateBegin AdStatus Category GoodsType AdType Availability Address Title Description Condition Price
     AllowEmail ManagerName ContactPhone ContactMethod ImageUrls GoodsSubType Color ColorName FurnitureShape Modular
     FoldingMechanism TypeOfFoldingMechanism SleepingPlace UpholsteryMaterial Width Depth Height Length
-    ConditionSleepingPlace FurnitureType MechanismCondition SofaCorner
+    ConditionSleepingPlace FurnitureType MechanismCondition SofaCorner FurnitureFrame
   ].freeze
   EXTRA_COLUMNS_SIZE = 16
+  PREFIX             = { 'Кровати' => 'Кровать', 'Диваны' => 'Диван', 'Тумбы' => 'Тумба' }.freeze
 
   def perform(**args)
     store     = Store.find(args[:store_id])
@@ -56,7 +57,7 @@ class PopulateExcelJob < ApplicationJob
 
     worksheet.append_row(
       [ad.id, ad.avito_id, current_time, store.ad_status, store.category, store.goods_type,
-       store.ad_type, store.availability, ad.full_address, game.title,
+       store.ad_type, store.availability, ad.full_address, formit_title(game),
        make_description(game, store, address), store.condition, game.price, store.allow_email, store.manager_name,
        store.contact_phone, store.contact_method, img_url, game.category, *form_extra(game)]
     )
@@ -98,5 +99,10 @@ class PopulateExcelJob < ApplicationJob
 
   def make_description(model, store, address)
     DescriptionService.call(model:, store:, address_desc: address.description)
+  end
+
+  def formit_title(game)
+    prefix = PREFIX[game.category]
+    prefix.present? ? "#{prefix} #{game.title}" : game.title
   end
 end
