@@ -9,7 +9,7 @@ class PopulateExcelJob < ApplicationJob
     FoldingMechanism TypeOfFoldingMechanism SleepingPlace UpholsteryMaterial Width Depth Height Length
     ConditionSleepingPlace FurnitureType MechanismCondition SofaCorner FurnitureFrame
   ].freeze
-  EXTRA_COLUMNS_SIZE = 16
+  EXTRA_COLUMNS_SIZE = 17
   PREFIX             = { 'Кровати' => 'Кровать', 'Диваны' => 'Диван', 'Тумбы' => 'Тумба' }.freeze
 
   def perform(**args)
