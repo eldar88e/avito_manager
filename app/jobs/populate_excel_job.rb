@@ -7,9 +7,9 @@ class PopulateExcelJob < ApplicationJob
     Id AvitoId DateBegin AdStatus Category GoodsType AdType Availability Address Title Description Condition Price
     AllowEmail ManagerName ContactPhone ContactMethod ImageUrls GoodsSubType Color ColorName FurnitureShape Modular
     FoldingMechanism TypeOfFoldingMechanism SleepingPlace UpholsteryMaterial Width Depth Height Length
-    ConditionSleepingPlace FurnitureType MechanismCondition SofaCorner FurnitureFrame
+    ConditionSleepingPlace FurnitureType MechanismCondition SofaCorner FurnitureFrame CabinetType Purpose
   ].freeze
-  EXTRA_COLUMNS_SIZE = 17
+  EXTRA_COLUMNS_SIZE = 19
   PREFIX             = { 'Кровати' => 'Кровать', 'Диваны' => 'Диван', 'Тумбы' => 'Тумба' }.freeze
 
   def perform(**args)
@@ -55,8 +55,9 @@ class PopulateExcelJob < ApplicationJob
     img_url      = make_image(ad&.image)
     return if img_url.blank?
 
+    goods_type = game.category == 'Тумбы' ? 'Подставки и тумбы' : store.goods_type
     worksheet.append_row(
-      [ad.id, ad.avito_id, current_time, store.ad_status, store.category, store.goods_type,
+      [ad.id, ad.avito_id, current_time, store.ad_status, store.category, goods_type,
        store.ad_type, store.availability, ad.full_address, formit_title(game),
        make_description(game, store, address), store.condition, game.price, store.allow_email, store.manager_name,
        store.contact_phone, store.contact_method, img_url, game.category, *form_extra(game)]
