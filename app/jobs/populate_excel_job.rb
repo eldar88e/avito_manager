@@ -3,13 +3,17 @@ class PopulateExcelJob < ApplicationJob
 
   include Rails.application.routes.url_helpers
 
-  COLUMNS_NAME = %w[
+  MAIN_COLUMNS = %w[
     Id AvitoId DateBegin AdStatus Category GoodsType AdType Availability Address Title Description Condition Price
-    AllowEmail ManagerName ContactPhone ContactMethod ImageUrls GoodsSubType Color ColorName FurnitureShape Modular
-    FoldingMechanism TypeOfFoldingMechanism SleepingPlace UpholsteryMaterial Width Depth Height Length
-    ConditionSleepingPlace FurnitureType MechanismCondition SofaCorner FurnitureFrame CabinetType Purpose
+    AllowEmail ManagerName ContactPhone ContactMethod ImageUrls GoodsSubType
   ].freeze
-  EXTRA_COLUMNS_SIZE = 19
+  ADDITIONAL_COLUMNS = %w[
+    Color ColorName FurnitureShape Modular FoldingMechanism TypeOfFoldingMechanism SleepingPlace UpholsteryMaterial
+    Width Depth Height Length ConditionSleepingPlace FurnitureType MechanismCondition SofaCorner FurnitureFrame
+    CabinetType Purpose Material
+  ].freeze
+  COLUMNS_NAME = MAIN_COLUMNS + ADDITIONAL_COLUMNS
+  EXTRA_COLUMNS_SIZE = ADDITIONAL_COLUMNS.size
   PREFIX             = { 'Кровати' => 'Кровать', 'Диваны' => 'Диван', 'Тумбы' => 'Тумба' }.freeze
 
   def perform(**args)

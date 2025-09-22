@@ -58,6 +58,7 @@ class ImportProductsJob < ApplicationJob
     row['extra']['mechanism_condition']      = 'Всё в порядке' if row['extra']['folding_mechanism'].present? && row['extra']['folding_mechanism'] != 'Без механизма'
     row['extra']['sofa_corner']              = 'Универсальный' if row['extra']['furniture_shape'] == 'Угловой'
     row['extra']['cabinet_type']             = 'Прикроватные тумбы' if row['category'] == 'Тумбы'
+    row['extra']['material']                 = 'МДФ|Дерево' if row['category'] == 'Тумбы'
     row['extra']['furniture_frame']          = 'С обивкой' if row['category'] == 'Кровати'
     row['extra']['purpose']                  = 'Гостиная' if row['category'] == 'Диваны'
     row[:touched_run_id]                     = run_id
