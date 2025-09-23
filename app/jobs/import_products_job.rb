@@ -13,7 +13,7 @@ class ImportProductsJob < ApplicationJob
     count  = [0, 0]
     Run.status = :processing
     result['products'].each do |product|
-      next if product['extra']['width'].blank?
+      next if product['extra']['width'].blank? || product['price'].blank?
 
       process_product(user, product, run_id, count)
     end
