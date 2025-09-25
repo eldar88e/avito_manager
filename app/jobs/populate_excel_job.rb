@@ -14,7 +14,7 @@ class PopulateExcelJob < ApplicationJob
   ].freeze
   COLUMNS_NAME = MAIN_COLUMNS + ADDITIONAL_COLUMNS
   EXTRA_COLUMNS_SIZE = ADDITIONAL_COLUMNS.size
-  PREFIX             = { 'Кровати' => 'Кровать', 'Диваны' => 'Диван', 'Тумбы' => 'Тумба' }.freeze
+  PREFIX = { 'Кровати' => 'Кровать', 'Диваны' => 'Диван', 'Тумбы' => 'Тумба', 'Мини-Диваны' => 'Мини-Диван' }.freeze
 
   def perform(**args)
     store     = Store.find(args[:store_id])
@@ -60,6 +60,7 @@ class PopulateExcelJob < ApplicationJob
     return if img_url.blank?
 
     goods_type = game.category == 'Тумбы' ? 'Подставки и тумбы' : store.goods_type
+    game.category = 'Диваны' if game.category == 'Мини-Диваны'
     worksheet.append_row(
       [ad.id, ad.avito_id, current_time, store.ad_status, store.category, goods_type,
        store.ad_type, store.availability, ad.full_address, formit_title(game),
