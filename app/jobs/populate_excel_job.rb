@@ -62,10 +62,10 @@ class PopulateExcelJob < ApplicationJob
     goods_type = game.category == 'Тумбы' ? 'Подставки и тумбы' : store.goods_type
     category = game.category == 'Мини-Диваны' ? 'Диваны' : store.category
     worksheet.append_row(
-      [ad.id, ad.avito_id, current_time, store.ad_status, category, goods_type, store.ad_type, store.availability,
+      [ad.id, ad.avito_id, current_time, store.ad_status, store.category, goods_type, store.ad_type, store.availability,
        ad.full_address, formit_title(game), make_description(game, store, address), store.condition, game.price,
        store.allow_email, store.manager_name, store.contact_phone, store.contact_method, img_url,
-       game.category, *form_extra(game)]
+       category, *form_extra(game)]
     )
   end
 
