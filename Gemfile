@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 8.0.2'
+gem 'rails', '~> 8.0'
 
 gem 'bootsnap', require: false
 gem 'jbuilder'
 gem 'pg', '~> 1.1'
-gem 'puma', '>= 5.0'
+gem 'puma', '~> 7.0'
 gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'turbo-rails'
@@ -29,7 +29,7 @@ gem 'i18n'
 gem 'image_processing'
 gem 'pagy'
 gem 'pghero'
-gem 'ransack', '~> 4.2'
+gem 'ransack'
 gem 'rollbar'
 gem 'slim-rails'
 gem 'telegram-bot-ruby', '~> 2.0'

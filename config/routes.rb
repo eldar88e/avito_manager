@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   authenticate :user do
     mount SolidQueueDashboard::Engine, at: '/solid-queue'
-    # mount PgHero::Engine, at: 'pghero'
+    mount PgHero::Engine, at: '/pghero'
   end
 
   get 'manifest' => 'rails/pwa#manifest', as: :pwa_manifest
