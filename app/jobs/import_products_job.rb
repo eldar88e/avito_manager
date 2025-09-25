@@ -12,16 +12,20 @@ class ImportProductsJob < ApplicationJob
     run_id = Run.last_id
     count  = [0, 0]
     Run.status = :processing
-    result['products'].each do |product|
-      next if product['extra']['width'].blank? || product['price'].blank?
+    result['pagination']['total_pages'].times do |page|
+      page += 1
+      result = page == 1 ? result : fetch_products(user, page)
+      result['products'].each do |product|
+        next if product['extra']['width'].blank? || product['price'].blank?
 
-      process_product(user, product, run_id, count)
+        process_product(user, product, run_id, count)
+      end
     end
     user.ad_imports.where(deleted: false).where.not(touched_run_id: run_id)
         .update_all(deleted: true, updated_at: Time.current)
     Run.finish
     send_notify(user, count[1], count[0], result['pagination']['total_count'])
-    raise "Страниц #{result['pagination']['total_pages']} обработано 1" if result['pagination']['total_pages'] > 1
+    # raise "Страниц #{result['pagination']['total_pages']} обработано 1" if result['pagination']['total_pages'] > 1
 
     count[1]
   rescue StandardError => e
@@ -80,10 +84,10 @@ class ImportProductsJob < ApplicationJob
     advert.update(row)
   end
 
-  def fetch_products(user)
+  def fetch_products(user, page = 1)
     url   = user.settings.fetch_value(:okki_api_url)
     token = user.settings.fetch_value(:okki_api_token)
-    OkkiApiService.call(url, token)
+    OkkiApiService.call(url, token, page)
   end
 
   def md5_hash(hash)
