@@ -60,7 +60,7 @@ class PopulateExcelJob < ApplicationJob
     return if img_url.blank?
 
     goods_type = game.category == 'Тумбы' ? 'Подставки и тумбы' : store.goods_type
-    category = game.category == 'Мини-Диваны' ? 'Диваны' : store.category
+    category = game.category == 'Мини-Диваны' ? 'Диваны' : game.category
     worksheet.append_row(
       [ad.id, ad.avito_id, current_time, store.ad_status, store.category, goods_type, store.ad_type, store.availability,
        ad.full_address, formit_title(game), make_description(game, store, address), store.condition, game.price,
