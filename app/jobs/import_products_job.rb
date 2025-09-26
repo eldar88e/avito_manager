@@ -65,6 +65,7 @@ class ImportProductsJob < ApplicationJob
     row['extra']['material']                 = 'МДФ|Дерево' if row['category'] == 'Тумбы'
     row['extra']['furniture_frame']          = 'С обивкой' if row['category'] == 'Кровати'
     row['extra']['purpose']                  = 'Гостиная' if row['category'] == 'Диваны'
+    row['extra']['purpose']                  = 'Гостиная|Детская|Кухня|Офис|Кафе и ресторан' if row['category'] == 'Мини-Диваны'
     row[:touched_run_id]                     = run_id
     result                                   = update_product(user, row, count)
     return if result
