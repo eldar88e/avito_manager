@@ -18,14 +18,14 @@
       <span class="mt-1"><%= ad.full_address %></span>
     </div>
     <div class="w-1/12">
-      <% if ad.deleted == 'deleted' %>
+      <% if ad.deleted? %>
         1
       <% else %>
         0
       <% end %>
     </div>
     <div class="w-1/12">
-      <% if ad.banned %>
+      <% if ad.banned? %>
         1
       <% else %>
         0

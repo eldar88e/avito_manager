@@ -21,7 +21,7 @@
     </div>
 
     <div class="mb-3">
-      <%= form.check_box :deleted, class: 'form-check-input', checked: (form.object.deleted == 'deleted') %>
+      <%= form.check_box :deleted, class: 'form-check-input', checked: (form.object.deleted?) %>
       <%= form.label :deleted, class: 'form-check-label me-3' %>
       <%= form.check_box :banned, class: 'form-check-input' %>
       <%= form.label :banned, class: 'form-check-label' %>
