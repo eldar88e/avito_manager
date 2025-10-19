@@ -14,32 +14,25 @@ export default [
           sourceType: "module"
         },
         globals: {
-          fetch: "readonly",
           window: "readonly",
           document: "readonly",
+          navigator: "readonly",
+          localStorage: "readonly",
+          sessionStorage: "readonly",
           confirm: "readonly",
           alert: "readonly",
           console: "readonly",
-          localStorage: "readonly",
-          sessionStorage: "readonly",
-          HTMLMetaElement: "readonly",
-          URLSearchParams: "readonly",
-          FileReader: "readonly",
-          IntersectionObserver: "readonly",
-          navigator: "readonly",
-          CustomEvent: "readonly",
           setTimeout: "readonly",
           setInterval: "readonly",
           clearTimeout: "readonly",
           clearInterval: "readonly",
+          Image: "readonly",
           closeModal: "readonly",
           openModal: "readonly",
+          ymaps: "readonly", // если используешь Яндекс.Карты
         },
       },
-      plugins: {
-        prettier,
-        import: importPlugin
-      },
+      plugins: ["prettier", "import"],
       rules: { "prettier/prettier": "error" },
       settings: {
         react: {
