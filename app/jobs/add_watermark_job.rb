@@ -23,8 +23,10 @@ class AddWatermarkJob < ApplicationJob
           ####
           ad.images.size > ad.adable.images['other'].size + 1
           ad.images.purge
+          ad.save!
           SaveImageJob.send(job_method, ad_id: ad.id, id:, file_id:)
           count += 1
+          next
           ####
           #
           next if ad.images.attached? && !args[:clean]
