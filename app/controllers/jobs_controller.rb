@@ -47,7 +47,7 @@ class JobsController < ApplicationController
 
   def update_ban_list
     store = current_user.stores.active.find(store_id)
-    Avito::CheckErrorsJob.perform_later(store:)
+    Avito::CheckErrorsJob.perform_later(user_id: current_user.id)
     render turbo_stream: success_notice(t('controllers.jobs.update_ban_list.success', name: store.manager_name))
   end
 
