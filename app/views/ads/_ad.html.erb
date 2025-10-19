@@ -5,6 +5,7 @@
     <div class="w-4/12 md:w-1/12"><%= ad.avito_id %></div>
     <div class="w-4/12 md:w-1/12 flex gap-1 overflow-x-auto">
       <% if ad.images.attached? %>
+        <%= ad.images.size %>
         <% ad.images.limit(3).each do |image| %>
           <a data-fancybox="gallery_ad" data-src="<%= storage_path(image) %>" data-caption="<%= ad.file_id %>">
             <div class="loading-image" style='width: 50px; height: 37px'>

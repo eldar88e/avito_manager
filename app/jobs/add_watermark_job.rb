@@ -21,7 +21,7 @@ class AddWatermarkJob < ApplicationJob
           ad      = find_or_create_ad(product, file_id, address)
           #
           ####
-          if ad.images.size > 10
+          if ad.images.size > 9
             ad.images.purge
             ad.save!
             SaveImageJob.send(job_method, ad_id: ad.id, id:, file_id:)
