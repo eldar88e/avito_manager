@@ -5,11 +5,11 @@ class Ad < ApplicationRecord
   belongs_to :store
   belongs_to :address
   belongs_to :adable, polymorphic: true
-  has_one_attached :image, dependent: :purge
+  has_many_attached :images, dependent: :purge
 
   scope :active,        -> { where(deleted: false) }
   scope :not_baned,     -> { where(banned: false).or(where(banned_until: ...Time.current)) }
-  scope :active_ads,    -> { not_baned.where(deleted: :active) }
+  scope :active_ads,    -> { not_baned.where(deleted: false) }
   scope :for_product,   -> { where(adable_type: 'Product') }
   scope :for_ad_import, -> { where(adable_type: 'AdImport') }
 

@@ -56,15 +56,15 @@ class PopulateExcelJob < ApplicationJob
     store        = address.store
     current_time = Time.current.strftime('%d.%m.%y')
     ad           = ads.find { |i| i[:file_id] == "#{game.external_id}_#{store.id}_#{address.id}" }
-    img_url      = make_image(ad&.image)
-    return if img_url.blank?
+    img_urls     = ad.images.map { |img| make_image(img) }.join('|')
+    return if img_urls.blank?
 
     goods_type = game.category == 'Тумбы' ? 'Подставки и тумбы' : store.goods_type
     category = game.category == 'Мини-Диваны' ? 'Диваны' : game.category
     worksheet.append_row(
       [ad.id, ad.avito_id, current_time, store.ad_status, store.category, goods_type, store.ad_type, store.availability,
        ad.full_address, formit_title(game), make_description(game, store, address), store.condition, game.price,
-       store.allow_email, store.manager_name, store.contact_phone, store.contact_method, img_url,
+       store.allow_email, store.manager_name, store.contact_phone, store.contact_method, img_urls,
        category, *form_extra(game)]
     )
   end

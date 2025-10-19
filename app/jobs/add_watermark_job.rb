@@ -19,7 +19,7 @@ class AddWatermarkJob < ApplicationJob
 
           file_id = "#{product.send(id)}_#{store.id}_#{address.id}"
           ad      = find_or_create_ad(product, file_id, address)
-          next if ad.image.attached? && !args[:clean]
+          next if ad.images.attached? && !args[:clean]
 
           SaveImageJob.send(job_method, ad_id: ad.id, id:, file_id:)
           count += 1
@@ -41,7 +41,7 @@ class AddWatermarkJob < ApplicationJob
 
   def fetch_product(model, user)
     raw_products = user.send("#{model}s".underscore)
-    raw_products.active.includes(ads: { image_attachment: :blob })
+    raw_products.active.includes(ads: { images_attachments: :blob })
   end
 
   def make_stores(args, user)

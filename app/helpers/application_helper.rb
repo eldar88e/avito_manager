@@ -2,8 +2,6 @@ module ApplicationHelper
   include Pagy::Frontend
 
   def img_resize(image, **args)
-    return unless image.attached?
-
     height  = args[:height] || args[:width]
     variant = image.variant(resize_to_limit: [args[:width], height]).processed
     storage_path(variant, true)
