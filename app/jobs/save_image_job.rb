@@ -1,6 +1,8 @@
 class SaveImageJob < ApplicationJob
   queue_as :default
 
+  IMG_LIMIT = 0..9
+
   def perform(**args)
     adv     = Ad.find(args[:ad_id])
     product = adv.adable
@@ -8,7 +10,7 @@ class SaveImageJob < ApplicationJob
     options = make_options(adv, image)
     process_image(args, options, adv)
     if product.is_a?(AdImport) && product.images['other'].present?
-      product.images['other'].each do |image|
+      product.images['other'][IMG_LIMIT].each do |image|
         options = make_options(adv, image)
         process_image(args, options, adv)
       end

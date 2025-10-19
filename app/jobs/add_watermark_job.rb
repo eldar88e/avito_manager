@@ -19,6 +19,20 @@ class AddWatermarkJob < ApplicationJob
 
           file_id = "#{product.send(id)}_#{store.id}_#{address.id}"
           ad      = find_or_create_ad(product, file_id, address)
+          #
+          ####
+          if ad.images.size > 10
+            ad.images.purge
+            ad.save!
+            SaveImageJob.send(job_method, ad_id: ad.id, id:, file_id:)
+            count += 1
+            puts '^' * 100
+            puts "Purged #{ad.images.size} images for #{ad.adable.title}"
+            puts '*' * 100
+            next
+          end
+          ####
+          #
           next if ad.images.attached? && !args[:clean]
 
           SaveImageJob.send(job_method, ad_id: ad.id, id:, file_id:)
