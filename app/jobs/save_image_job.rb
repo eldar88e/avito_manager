@@ -1,7 +1,7 @@
 class SaveImageJob < ApplicationJob
   queue_as :default
 
-  IMG_LIMIT = 0..9
+  IMG_LIMIT = 0..8
 
   def perform(**args)
     adv     = Ad.find(args[:ad_id])
