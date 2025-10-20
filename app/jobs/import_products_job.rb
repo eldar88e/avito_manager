@@ -57,16 +57,15 @@ class ImportProductsJob < ApplicationJob
     color                                    = row['extra']['color']
     row['extra']['color']                    = COLORS.include?(color) ? color : 'Другой'
     row['extra']['color_name']               = color if row['extra']['color'] == 'Другой'
-    row['extra']['length']                   = row['extra']['depth'] if row['category'] == 'Кровати'
-    row['extra']['furniture_type']           = 'Двуспальная' if row['category'] == 'Кровати'
     row['extra']['condition_sleeping_place'] = 'Ровное' if row['extra']['sleeping_place'].present?
     row['extra']['mechanism_condition']      = 'Всё в порядке' if row['extra']['folding_mechanism'].present? && row['extra']['folding_mechanism'] != 'Без механизма'
     row['extra']['sofa_corner']              = 'Универсальный' if row['extra']['furniture_shape'] == 'Угловой'
     row['extra']['cabinet_type']             = 'Прикроватные тумбы' if row['category'] == 'Тумбы'
     row['extra']['material']                 = 'МДФ|Дерево' if row['category'] == 'Тумбы'
-    row['extra']['furniture_frame']          = 'Дерево|ДСП|С обивкой' if row['category'] == 'Кровати'
     row['extra']['purpose']                  = 'Гостиная' if row['category'] == 'Диваны'
     row['extra']['purpose']                  = 'Гостиная|Детская|Кухня|Офис|Кафе и ресторан' if row['category'] == 'Мини-Диваны'
+
+    add_attributes_bed(row) if row['category'] == 'Кровати'
 
     row[:touched_run_id] = run_id
     result = update_product(user, row, count)
@@ -96,5 +95,19 @@ class ImportProductsJob < ApplicationJob
   def md5_hash(hash)
     str = hash.values.join
     Digest::MD5.hexdigest(str)
+  end
+
+  def add_attributes_bed(row)
+    row['extra']['length']              = row['extra']['depth']
+    row['extra']['furniture_type']      = 'Двуспальная' # TODO: добавить односпальная
+    row['extra']['furniture_frame']     = 'Дерево|ДСП|С обивкой'
+    row['extra']['SleepingPlaceWidth']  = build_sleeping_place(row['extra']['width'].to_i)
+    row['extra']['SleepingPlaceLength'] = 200
+  end
+
+  def build_sleeping_place(width)
+    return if width.zero?
+
+    [200, 180, 160, 140, 120, 100, 90].find { |size| width > size - 10 }
   end
 end
