@@ -68,7 +68,7 @@ class ImportProductsJob < ApplicationJob
 
     row[:md5_hash]       = md5_hash(row.slice(*KEYS).merge(row['extra']))
     row[:touched_run_id] = run_id
-    result = update_product(user, row, count)
+    result               = update_product(user, row, count)
     return if result
 
     row[:run_id] = run_id
@@ -98,11 +98,11 @@ class ImportProductsJob < ApplicationJob
   end
 
   def add_attributes_bed(row)
-    row['extra']['length']              = row['extra']['depth']
-    row['extra']['furniture_type']      = 'Двуспальная' # TODO: добавить односпальная
-    row['extra']['furniture_frame']     = 'Дерево|ДСП|С обивкой'
-    row['extra']['SleepingPlaceWidth']  = build_sleeping_place(row['extra']['width'].to_i)
-    row['extra']['SleepingPlaceLength'] = 200
+    row['extra']['length']                = row['extra']['depth']
+    row['extra']['furniture_type']        = 'Двуспальная' # TODO: добавить односпальная
+    row['extra']['furniture_frame']       = 'Дерево|ДСП|С обивкой'
+    row['extra']['sleeping_place_width']  = build_sleeping_place(row['extra']['width'].to_i)
+    row['extra']['sleeping_place_length'] = 200
   end
 
   def build_sleeping_place(width)
