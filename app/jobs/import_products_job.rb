@@ -51,8 +51,7 @@ class ImportProductsJob < ApplicationJob
   end
 
   def process_product(user, row, run_id, count)
-    row[:md5_hash] = md5_hash(row.slice(*KEYS).merge(row['extra']))
-    row[:images]   = { first: row.delete('first_image'), other: row.delete('images') }
+    row[:images] = { first: row.delete('first_image'), other: row.delete('images') }
 
     color                                    = row['extra']['color']
     row['extra']['color']                    = COLORS.include?(color) ? color : 'Другой'
@@ -67,6 +66,7 @@ class ImportProductsJob < ApplicationJob
 
     add_attributes_bed(row) if row['category'] == 'Кровати'
 
+    row[:md5_hash]       = md5_hash(row.slice(*KEYS).merge(row['extra']))
     row[:touched_run_id] = run_id
     result = update_product(user, row, count)
     return if result
