@@ -34,4 +34,7 @@ Rails.application.routes.draw do
     resources :addresses, only: %i[new create show update destroy]
     resources :ads, only: %i[edit update]
   end
+
+  match '*unmatched', to: 'pwa#not_found', via: :all,
+                      constraints: ->(req) { !req.path.start_with?('/rails/active_storage') }
 end
