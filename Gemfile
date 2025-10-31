@@ -5,7 +5,7 @@ gem 'rails', '~> 8.0'
 gem 'bootsnap', require: false
 gem 'jbuilder'
 gem 'pg', '~> 1.1'
-gem 'puma', '~> 7.0'
+gem 'puma', '~> 7.1'
 gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'turbo-rails'
