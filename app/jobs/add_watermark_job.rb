@@ -21,13 +21,13 @@ class AddWatermarkJob < ApplicationJob
           ad      = find_or_create_ad(product, file_id, address)
           #
           ####
-          if ad.images.size > 9
-            ad.images.purge
-            ad.save!
-            SaveImageJob.perform_now(ad_id: ad.id, id:, file_id:)
-            count += 1
-            next
-          end
+          # if ad.images.size > 9
+          #   ad.images.purge
+          #   ad.save!
+          #   SaveImageJob.perform_now(ad_id: ad.id, id:, file_id:)
+          #   count += 1
+          #   next
+          # end
           ####
           #
           next if ad.images.attached? && !args[:clean]
