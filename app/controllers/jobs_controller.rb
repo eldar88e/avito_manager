@@ -15,23 +15,20 @@ class JobsController < ApplicationController
   end
 
   def update_img
-    store  = params[:product] ? nil : current_user.stores.active.find(store_id)
     clean  = params[:clean].present?
     models = []
-    models << AdImport if params[:ad_import]
-    # models << Product if params[:product] || current_user.products.active.exists?
-    # TODO: uncomment when Product will be added
+    models << 'AdImport' if params[:ad_import]
+    # models << 'Product' if params[:product] || current_user.products.active.exists? TODO: uncomment for Product
 
     models.each do |model|
       AddWatermarkJob.perform_later(
-        user: current_user,
+        user_id: current_user.id,
         notify: !params[:product],
         model:,
-        store:,
+        store_id:,
         clean:,
         address_id: params[:address_id],
-        all: params[:product].present?,
-        settings: @settings
+        all: params[:product].present?
       )
     end
     job_type = clean ? 'пересозданию' : 'созданию'

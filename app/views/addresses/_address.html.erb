@@ -11,13 +11,13 @@
         <%= render IconComponent.new name: :trash, width: 20 %>
       <% end %>
 
-      <%= button_to update_img_path(store_id: address.store, address_id: address, game: true), title: "Создать картинки",
+      <%= button_to update_img_path(store_id: address.store, address_id: address, ad_import: true), title: "Создать картинки",
                     class: 'loader-btn mt-3 mt-md-0 btn btn-success btn-sm btn-create-img',
                     data: { controller: 'btn_preloader', action: 'click->btn_preloader#call' } do %>
         <span>Создать</span>
       <% end %>
 
-      <%= button_to 'Обновить', update_img_path(store_id: address.store, address_id: address, clean: true, game: true),
+      <%= button_to 'Обновить', update_img_path(store_id: address.store, address_id: address, clean: true, ad_import: true),
                     class: 'mt-3 mt-md-0 btn btn-danger btn-sm btn-update-img', title: "Пересоздать картинки",
                     data: { confirm: 'Вы уверены, что хотите удалить все старые картинки данного адреса и создать новые?',
                             controller: 'confirm', action: 'click->confirm#call' } %>
