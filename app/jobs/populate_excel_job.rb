@@ -63,10 +63,11 @@ class PopulateExcelJob < ApplicationJob
       next if img_urls.blank?
 
       goods_type = game.category == 'Тумбы' ? 'Подставки и тумбы' : store.goods_type
-      category = game.category.sub('Мини-', '')
+      category   = game.category.sub('Мини-', '')
+      title      = formit_title(game, ad)
       worksheet.append_row(
         [ad.id, ad.avito_id, current_time, store.ad_status, store.category, goods_type, store.ad_type, store.availability,
-         ad.full_address, formit_title(game, ad), make_description(game, store, address), store.condition, game.price,
+         ad.full_address, title, make_description(game, store, address, title), store.condition, game.price,
          store.allow_email, store.manager_name, store.contact_phone, store.contact_method, img_urls,
          category, *form_extra(game, ad)]
       )
@@ -107,8 +108,8 @@ class PopulateExcelJob < ApplicationJob
     AttachmentUrlBuilderService.storage_path(image)
   end
 
-  def make_description(model, store, address)
-    DescriptionService.call(model:, store:, address_desc: address.description)
+  def make_description(model, store, address, title)
+    DescriptionService.call(model:, store:, address_desc: address.description, title:)
   end
 
   def formit_title(product, adv)
