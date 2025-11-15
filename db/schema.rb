@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_12_120807) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_15_090324) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -69,6 +69,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_12_120807) do
     t.string "external_id"
     t.string "category"
     t.jsonb "extra"
+    t.jsonb "extra_sizes"
     t.index ["md5_hash"], name: "index_ad_imports_on_md5_hash", unique: true
     t.index ["run_id"], name: "index_ad_imports_on_run_id"
     t.index ["touched_run_id"], name: "index_ad_imports_on_touched_run_id"
@@ -102,6 +103,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_12_120807) do
     t.string "full_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "extra"
     t.index ["adable_type", "adable_id"], name: "index_ads_on_adable"
     t.index ["address_id"], name: "index_ads_on_address_id"
     t.index ["store_id"], name: "index_ads_on_store_id"

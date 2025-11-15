@@ -27,7 +27,7 @@ class PopulateExcelJob < ApplicationJob
     store.addresses.where(active: true).find_each do |address|
       ad_imports_ads = address.ads.active_ads.for_ad_import
       ad_imports     = active_ad_import(address, settings)
-      ad_imports.each { |ad_import| process_game(ad_import, address, ad_imports_ads, worksheet) }
+      ad_imports.each { |ad_import| process_ad_import(ad_import, address, ad_imports_ads, worksheet) }
       # product_ads = address.ads.active_ads.for_product
       # products.each { |product| process_product(product, address, product_ads, worksheet) }
     end
@@ -47,26 +47,30 @@ class PopulateExcelJob < ApplicationJob
   private
 
   def active_ad_import(address, settings)
-    AdImport.active.limit(address.total_games || settings['quantity_games']) # .includes(:game_black_list)
+    AdImport.active.order(created_at: :desc).limit(address.total_games || settings['quantity_games']) # .includes(:game_black_list)
   end
 
-  def process_game(game, address, ads, worksheet)
-    # return if game.game_black_list
+  def process_ad_import(game, address, ads, worksheet)
+    # return if ad_import.game_black_list
 
     store        = address.store
     current_time = Time.current.strftime('%d.%m.%y')
-    ad           = ads.find { |i| i[:file_id] == "#{game.external_id}_#{store.id}_#{address.id}" }
-    img_urls     = ad.images.map { |img| make_image(img) }.join('|')
-    return if img_urls.blank?
+    prefix       = "#{game.external_id}_#{store.id}_#{address.id}"
+    selected_ads = ads.select { |i| i[:file_id].start_with?(prefix) }
 
-    goods_type = game.category == 'Тумбы' ? 'Подставки и тумбы' : store.goods_type
-    category = game.category == 'Мини-Диваны' ? 'Диваны' : game.category
-    worksheet.append_row(
-      [ad.id, ad.avito_id, current_time, store.ad_status, store.category, goods_type, store.ad_type, store.availability,
-       ad.full_address, formit_title(game), make_description(game, store, address), store.condition, game.price,
-       store.allow_email, store.manager_name, store.contact_phone, store.contact_method, img_urls,
-       category, *form_extra(game)]
-    )
+    selected_ads.each do |ad|
+      img_urls = ad.images.map { |img| make_image(img) }.join('|')
+      next if img_urls.blank?
+
+      goods_type = game.category == 'Тумбы' ? 'Подставки и тумбы' : store.goods_type
+      category = game.category.sub('Мини-', '')
+      worksheet.append_row(
+        [ad.id, ad.avito_id, current_time, store.ad_status, store.category, goods_type, store.ad_type, store.availability,
+         ad.full_address, formit_title(game, ad), make_description(game, store, address), store.condition, game.price,
+         store.allow_email, store.manager_name, store.contact_phone, store.contact_method, img_urls,
+         category, *form_extra(game, ad)]
+      )
+    end
   end
 
   # def process_product(product, address, ads, worksheet)
@@ -86,15 +90,15 @@ class PopulateExcelJob < ApplicationJob
   #   )
   # end
 
-  def form_extra(game)
+  def form_extra(product, adv)
     COLUMNS_NAME.last(EXTRA_COLUMNS_SIZE).map do |column|
       column_underscored = column.underscore
       if %w[sleeping_place folding_mechanism].include?(column_underscored)
-        game.extra&.dig(column_underscored) ? 'Есть' : 'Нет'
+        product.extra&.dig(column_underscored) ? 'Есть' : 'Нет'
       elsif column_underscored == 'modular'
-        game.extra&.dig(column_underscored) ? 'Да' : 'Нет'
+        product.extra&.dig(column_underscored) ? 'Да' : 'Нет'
       else
-        game.extra&.dig(column_underscored)
+        adv.extra&.dig(column_underscored).presence || product.extra&.dig(column_underscored)
       end
     end
   end
@@ -107,8 +111,9 @@ class PopulateExcelJob < ApplicationJob
     DescriptionService.call(model:, store:, address_desc: address.description)
   end
 
-  def formit_title(game)
-    prefix = PREFIX[game.category]
-    prefix.present? ? "#{prefix} #{game.title}" : game.title
+  def formit_title(product, adv)
+    prefix = PREFIX[product.category]
+    prefix = "#{adv.extra['furniture_type']} #{prefix}" if product.category == 'Кровати' && adv.extra.present?
+    prefix.present? ? "#{prefix} #{product.title}" : product.title
   end
 end

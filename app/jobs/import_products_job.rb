@@ -99,7 +99,6 @@ class ImportProductsJob < ApplicationJob
 
   def add_attributes_bed(row)
     row['extra']['length']                = row['extra']['depth']
-    row['extra']['furniture_type']        = 'Двуспальная' # TODO: добавить односпальная
     row['extra']['furniture_frame']       = 'Дерево|ДСП|С обивкой'
     row['extra']['sleeping_place_width']  = build_sleeping_place(row['extra']['width'].to_i)
     row['extra']['sleeping_place_length'] = 200

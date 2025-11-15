@@ -19,21 +19,14 @@ class AddWatermarkJob < ApplicationJob
 
           file_id = "#{product.send(id)}_#{store.id}_#{address.id}"
           ad      = find_or_create_ad(product, file_id, address)
-          #
-          ####
-          # if ad.images.size > 9
-          #   ad.images.purge
-          #   ad.save!
-          #   SaveImageJob.perform_now(ad_id: ad.id, id:, file_id:)
-          #   count += 1
-          #   next
-          # end
-          ####
-          #
-          next if ad.images.attached? && !args[:clean]
 
-          SaveImageJob.perform_now(ad_id: ad.id, id:, file_id:)
-          count += 1
+          if !ad.images.attached? || args[:clean]
+            SaveImageJob.perform_now(ad_id: ad.id, id:, file_id: ad.file_id)
+            count += 1
+          end
+          next if product.category != 'Кровати' || product.extra_sizes.blank?
+
+          process_variants(product, address, ad, args[:clean])
         end
       end
       address = addresses.size == 1 ? addresses.first.city : addresses.map(&:city).join("\n")
@@ -63,11 +56,37 @@ class AddWatermarkJob < ApplicationJob
 
   def find_or_create_ad(product, file_id, address)
     product.ads.active.find_or_create_by(file_id:) do |new_ad|
-      store          = address.store
-      new_ad.user    = store.user
-      new_ad.address = address
-      new_ad.store   = store
+      store = address.store
+      new_ad.user         = store.user
+      new_ad.address      = address
+      new_ad.store        = store
       new_ad.full_address = address.store_address
+      new_ad.extra        = build_extra(product.extra) if product.is_a?(AdImport) && product.category == 'Кровати'
+    end
+  end
+
+  def build_extra(extra)
+    { 'furniture_type' => (extra['sleeping_place_width'] > 120 ? 'Двуспальная' : 'Односпальная') }
+  end
+
+  def process_variants(product, address, adv, clean)
+    variants = find_or_create_variants(product, address)
+    variants.each { |v| v.images.attach(adv.images.blobs) if !v.images.attached? || clean }
+  end
+
+  def find_or_create_variants(product, address)
+    store = address.store
+
+    product.extra_sizes.map.with_index do |params, index|
+      variant_file_id = "#{product.external_id}_#{store.id}_#{address.id}_#{index}"
+
+      product.ads.find_or_create_by(file_id: variant_file_id) do |ad|
+        ad.user         = store.user
+        ad.address      = address
+        ad.store        = store
+        ad.full_address = address.store_address
+        ad.extra        = params.merge(build_extra(params))
+      end
     end
   end
 end
