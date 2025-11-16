@@ -71,7 +71,13 @@ class AddWatermarkJob < ApplicationJob
 
   def process_variants(product, address, adv, clean)
     variants = find_or_create_variants(product, address)
-    variants.each { |v| v.images.attach(adv.images.blobs) if !v.images.attached? || clean }
+    variants.each do |variant|
+      next if variant.images.attached? && !clean
+
+      random_blob = adv.images.blobs.sample(2)
+      variant.images.attach(random_blob)
+      variant.images.attach(adv.images.blobs)
+    end
   end
 
   def find_or_create_variants(product, address)
