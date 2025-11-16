@@ -1,6 +1,8 @@
 class AddWatermarkJob < ApplicationJob
   queue_as :default
 
+  IMG_LIMIT_FOR_VARIANTS = 2..3
+
   def perform(**args)
     user     = find_user(args)
     model    = args[:model].camelize.constantize
@@ -74,9 +76,10 @@ class AddWatermarkJob < ApplicationJob
     variants.each do |variant|
       # next if variant.images.attached? && !clean
 
-      random_blob = adv.images.blobs.sample(2)
+      variant.images.purge # if clean
+
+      random_blob = adv.images.blobs.sample(rand(IMG_LIMIT_FOR_VARIANTS))
       variant.images.attach(random_blob)
-      variant.images.attach(adv.images.blobs)
     end
   end
 
