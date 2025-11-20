@@ -1,5 +1,5 @@
 module Avito
-  class UpdatePromotionStatusJob < ApplicationJob
+  class UpdatePromotionStatusJob < Avito::BaseApplicationJob
     queue_as :default
 
     AD_TYPES = 'AdImport'.freeze
