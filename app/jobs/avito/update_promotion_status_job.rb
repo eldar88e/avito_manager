@@ -9,7 +9,7 @@ module Avito
 
     def perform(user_id, store_id)
       user  = User.find(user_id)
-      store = user.stores.active.find_by!(store_id: store_id)
+      store = user.stores.active.find(store_id)
       process_store(store)
     end
 
