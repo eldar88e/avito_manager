@@ -32,6 +32,9 @@ module Avito
       item_id = adv.avito_id || fetch_avito_id(avito, adv)
       avito.connect_to(url, :post, { 'itemId' => item_id })
       adv.update(promotion: false)
+      msg = "❌ Объявление #{adv.adable.title} снято с ручного поднятия.\nАдрес: #{adv.full_address}"
+      msg += "\n\nhttps://www.avito.ru/#{adv.avito_id}"
+      TelegramService.call(adv.user, msg)
     end
 
     def update_promotion(avito, ads)
@@ -52,8 +55,8 @@ module Avito
       return unless result&.success?
 
       adv.update(promotion: true)
-      msg = "✅ Объявление #{adv.adable.title} поднято в ручном режиме."
-      msg += "\n\nСтоимость: #{value_penny / 100} ₽\n\nhttps://www.avito.ru/#{adv.avito_id}"
+      msg = "✅ Объявление #{adv.adable.title} поднято в ручном режиме.\nАдрес: #{adv.full_address}"
+      msg += "\nСтоимость: #{value_penny / 100} ₽\n\nhttps://www.avito.ru/#{adv.avito_id}"
       TelegramService.call(adv.user, msg)
     end
 
