@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_15_090324) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_20_110547) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -104,6 +104,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_15_090324) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "extra"
+    t.boolean "promotion", default: false, null: false
     t.index ["adable_type", "adable_id"], name: "index_ads_on_adable"
     t.index ["address_id"], name: "index_ads_on_address_id"
     t.index ["store_id"], name: "index_ads_on_store_id"

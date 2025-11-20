@@ -53,15 +53,5 @@ module Avito
       url     = "https://api.avito.ru/core/v1/items/#{item_id}/update_price"
       fetch_and_parse(avito, url, :post, { price: advert.adable.price })
     end
-
-    def fetch_avito_id(avito, item)
-      url      = "https://api.avito.ru/autoload/v2/items/avito_ids?query=#{item.id}"
-      response = fetch_and_parse(avito, url) || {}
-      item_id  = response['items']&.at(0)&.dig('avito_id')
-      return unless item_id
-
-      item.update(avito_id: item_id)
-      item_id
-    end
   end
 end

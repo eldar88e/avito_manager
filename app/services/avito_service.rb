@@ -3,8 +3,8 @@ require 'faraday'
 class AvitoService
   AVITO_TOKEN_URL = 'https://api.avito.ru/token'.freeze
 
-  def initialize(**args)
-    @store         = args[:store]
+  def initialize(store: nil)
+    @store         = store
     @client_id     = @store.client_id
     @client_secret = @store.client_secret
     @token_status  = nil

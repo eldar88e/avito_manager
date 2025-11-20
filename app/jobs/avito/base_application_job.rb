@@ -11,5 +11,15 @@ module Avito
       Rails.logger.error e.message
       nil
     end
+
+    def fetch_avito_id(avito, item)
+      url      = "https://api.avito.ru/autoload/v2/items/avito_ids?query=#{item.id}"
+      response = fetch_and_parse(avito, url) || {}
+      item_id  = response['items']&.at(0)&.dig('avito_id')
+      return unless item_id
+
+      item.update(avito_id: item_id)
+      item_id
+    end
   end
 end
