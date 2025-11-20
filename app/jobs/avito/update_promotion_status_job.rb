@@ -58,8 +58,10 @@ module Avito
     end
 
     def fetch_promotion(avito, adv)
-      url = "https://api.avito.ru/cpxpromo/1/getBids/#{adv.avito_id}"
-      avito.connect_to(url, :get)
+      item_id = adv.avito_id || fetch_avito_id(avito, adv)
+      url = "https://api.avito.ru/cpxpromo/1/getBids/#{item_id}"
+      response = avito.connect_to(url, :get)
+      JSON.parse(response.body)
     end
 
     def initialize_avito(store)
