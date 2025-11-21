@@ -1,0 +1,26 @@
+tr id=dom_id(ad) class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-100 hover:dark:bg-gray-700" title="created_at: #{format_date ad.created_at}, updated_at: #{format_date ad.updated_at}"
+  td.px-6.py-4
+    = ad.id
+  td.px-6.py-4
+    = ad.avito_id
+  td.px-6.py-4.flex.gap-2.items-center
+    - if ad.images.attached?
+      = "#{ad.images.size} шт."
+      .overflow-x-auto.flex.gap-1.w-40.md:w-60
+        - ad.images.limit(7).each do |image|
+          a data-fancybox="gallery_ad" data-src="#{storage_path(image)}" data-caption="#{ad.file_id}"
+            .loading-image.w-19.h-14
+              = image_tag img_resize(image, width: 80, height: 57), style: 'object-fit: cover;'
+  td.px-6.py-4
+    = ad.file_id
+    .mt-1 = ad.full_address
+  td.px-6.py-4
+    = ad.deleted? ? 'Да' : 'Нет'
+  td.px-6.py-4
+    = ad.banned? ? ad.banned_until : '—'
+  td.px-6.py-4
+    = ad.promotion? ? 'Да' : 'Нет'
+  td.px-6.py-4
+    = link_to edit_store_ad_path(ad, store_id: @store), class: 'btn inline-flex', title: 'Править',
+                  data: { bs_toggle: 'modal', bs_target: '#mainModal' } do
+      = render IconComponent.new name: :edit, width: 20

@@ -14,7 +14,7 @@ class Ad < ApplicationRecord
   scope :for_ad_import, -> { where(adable_type: 'AdImport') }
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[id avito_id file_id deleted banned banned_until]
+    %w[id avito_id file_id deleted banned banned_until promotion]
   end
 
   def self.ransackable_associations(_auth_object = nil)

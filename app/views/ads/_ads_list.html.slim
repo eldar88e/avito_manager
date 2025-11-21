@@ -1,0 +1,28 @@
+= button_to 'Очистить бан лист', store_update_all_path(@store.id), class: 'btn btn-danger mb-3', method: :patch,
+              data: { confirm: t('confirm.ad'), controller: 'confirm', action: 'click->confirm#call' }
+= render partial: '/ads/search'
+
+.relative.overflow-x-auto.shadow-md.sm:rounded-lg.mt-3
+  table.w-full.text-sm.text-left.rtl:text-right.text-gray-500.dark:text-gray-400
+    thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+      tr
+        th.px-6.py-3 scope="col"
+          = sort_link @q_ads, :id, 'ID', data: { turbo_prefetch: false }
+        th.px-6.py-3 scope="col" Avito ID
+        th.px-6.py-3 scope="col" Картинки
+        th.px-6.py-3 scope="col"
+          = sort_link(@q_ads, :file_id, "External\xa0ID", data: { turbo_prefetch: false })
+        th.px-6.py-3 scope="col"
+          = sort_link(@q_ads, :deleted, 'Удалено', data: { turbo_prefetch: false })
+        th.px-6.py-3 scope="col"
+          = sort_link(@q_ads, :banned, 'Бан', data: { turbo_prefetch: false })
+        th.px-6.py-3 scope="col"
+          = sort_link(@q_ads, :promotion, 'Реклама', data: { turbo_prefetch: false })
+        th scope="col" class="px-6 py-3 flex justify-end" Действия
+    tbody data-controller="fancybox" class="ads"
+      = render @ads
+
+  div data-controller="pagy-initializer" class="mt-3 mb-3"
+    == pagy_nav(@pagy, data: { turbo_prefetch: false }) if @pagy.pages > 1
+
+  == pagy_info(@pagy)
