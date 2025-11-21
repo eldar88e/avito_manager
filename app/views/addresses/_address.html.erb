@@ -1,4 +1,4 @@
-<li class="pb-3" id="address_<%= address.id %>">
+<li class="pb-3 mb-5" id="address_<%= address.id %>">
   <%= render partial: '/addresses/form',
              locals: { address: address, method: :patch,
                        url: store_address_path(id: address, store_id: address.store) } %>
