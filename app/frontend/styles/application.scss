@@ -71,9 +71,35 @@ trix-editor:focus, [multiple]:focus, [type=date]:focus, [type=datetime-local]:fo
   transition: all 0.5s;
 }
 
+.btn-success {
+  @apply bg-green-700 hover:bg-green-800 focus:ring-green-300
+  dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800;
+}
+
 .btn-danger {
   @apply bg-red-700 hover:bg-red-800 focus:ring-red-300
   dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800;
+}
+
+.loader-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  .loader {
+    border: 2px solid rgb(243 243 243 / 9%);
+    border-top: 2px solid #ffffff;
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
 }
 
 .pagy {
@@ -104,3 +130,6 @@ trix-editor:focus, [multiple]:focus, [type=date]:focus, [type=datetime-local]:fo
   }
 }
 
+.modal {
+  background: rgba(0, 0, 0, 0.5);
+}

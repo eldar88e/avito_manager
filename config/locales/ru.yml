@@ -113,3 +113,12 @@ ru:
   confirm:
     game: "Вы уверены, что хотите удалить объявление?"
     ad: "Вы уверены, что хотите очистить бан лист?"
+  activerecord:
+    models:
+      ad: "Объявление"
+    attributes:
+      ad:
+        banned: "Забанено"
+        deleted: "Удалено"
+        banned_until: "Бан до"
+        full_address: "Адрес"

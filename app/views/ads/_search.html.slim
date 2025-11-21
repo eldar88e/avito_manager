@@ -1,4 +1,4 @@
 = search_form_for @q_ads, url: store_path(@store), method: :get, class: 'flex items-center max-w-sm mx-auto space-x-2' do |f|
-  = f.search_field :file_id_cont_any, class: 'px-3 py-2.5 bg-neutral-secondary-medium border border-default-medium rounded-base text-heading text-sm focus:ring-brand focus:border-brand block w-full placeholder:text-body'
+  = f.search_field :file_id_cont_any, class: 'px-3 py-2.5 bg-neutral-secondary-medium border border-default-medium rounded-lg text-heading text-sm focus:ring-brand focus:border-brand block w-full placeholder:text-body'
   = button_tag(type: 'submit', class: 'btn btn-primary') do
     = render IconComponent.new name: :search, width: 20

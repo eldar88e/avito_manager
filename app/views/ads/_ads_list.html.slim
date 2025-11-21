@@ -18,7 +18,7 @@
           = sort_link(@q_ads, :banned, 'Бан', data: { turbo_prefetch: false })
         th.px-6.py-3 scope="col"
           = sort_link(@q_ads, :promotion, 'Реклама', data: { turbo_prefetch: false })
-        th scope="col" class="px-6 py-3 flex justify-end" Действия
+        th scope="col" class="px-6 py-3" Действия
     tbody data-controller="fancybox" class="ads"
       = render @ads
 

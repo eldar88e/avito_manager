@@ -1,0 +1,23 @@
+h3 class="text-lg" External ID: <span class="font-semibold">#{@ad.file_id}</span>
+
+= form_with model: @ad, url: store_ad_path(params[:id], store_id: @store), method: :patch, class: 'admin-form',
+              data: { controller: "modal", action: "submit->modal#close" } do |form|
+  .mb-5
+    = form.label :full_address
+    = form.text_field :full_address
+  .mb-5.flex.gap-3
+    .flex.gap-2
+      = form.check_box :deleted
+      = form.label :deleted, class: '!-mb-0'
+    .flex.gap-2
+      = form.check_box :banned
+      = form.label :banned, class: '!-mb-0'
+  .mb-5
+    = form.label :banned_until
+    div data-controller="datepicker"
+      = form.text_field :banned_until, placeholder: 'Выберите дату', data: { datepicker_target: 'input' },
+                            class: 'form-control', value: (@ad.banned_until || Time.current).strftime('%Y-%m-%d')
+      span class="calendar-btn" data-datepicker-target="toggle"
+        i class="bi bi-calendar-date"
+  .flex.justify-end
+    = form.submit 'Save', class: "btn btn-primary"

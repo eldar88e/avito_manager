@@ -16,7 +16,7 @@ module Avito
 
     def edit
       @id = params[:id]
-      render turbo_stream: turbo_stream.update(:main_modal_content, partial: 'avito/reviews/form')
+      render turbo_stream: turbo_stream.update(:modal_content, partial: 'avito/reviews/form')
     end
 
     def update

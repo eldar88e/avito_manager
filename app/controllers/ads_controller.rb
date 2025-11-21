@@ -3,19 +3,16 @@ class AdsController < ApplicationController
   before_action :set_ad, only: %i[edit update]
 
   def edit
-    render turbo_stream: turbo_stream.update(:main_modal_content, partial: '/ads/form')
+    render turbo_stream: [
+      turbo_stream.update(:modal_content, partial: '/ads/form'),
+      turbo_stream.update(:modal_title, 'Редактировать объявление')
+    ]
   end
 
   def update
-    ad = ad_params
-    ad[:deleted] = ad[:deleted] == '1' ? :deleted : :active
-    return unless @ad.update(ad)
+    return unless @ad.update(ad_params)
 
-    render turbo_stream: [
-      success_notice('Объявление было успешно обновлено.'),
-      turbo_stream.replace(@ad),
-      turbo_stream.append('mainModal', '<script>closeModal();</script>'.html_safe)
-    ]
+    render turbo_stream: [turbo_stream.replace(@ad), success_notice('Объявление было успешно обновлено.')]
   end
 
   def update_all
