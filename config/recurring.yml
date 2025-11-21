@@ -15,9 +15,9 @@ production:
     schedule: every hour at minute 12
 
   check_avito_errors:
-    class: Avito::CheckErrorsJob
+    command: Avito::CheckErrorsJob
     schedule: every day at "20:00"
 
   update_avito_promotion:
-    class: Avito::UpdatePromotionJob
+    command: Avito::UpdatePromotionJob
     schedule: every 15 minutes
