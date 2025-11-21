@@ -68,6 +68,7 @@ trix-editor:focus, [multiple]:focus, [type=date]:focus, [type=datetime-local]:fo
   text-white bg-blue-700 hover:bg-blue-800 focus:ring-blue-300
   dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800;
   cursor: pointer;
+  transition: all 0.5s;
 }
 
 .btn-danger {

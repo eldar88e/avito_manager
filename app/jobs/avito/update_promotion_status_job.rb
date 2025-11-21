@@ -11,6 +11,7 @@ module Avito
       user  = User.find(user_id)
       store = user.stores.active.find(store_id)
       process_store(store)
+      nil
     end
 
     private
@@ -30,7 +31,9 @@ module Avito
     def stop_promotion(avito, adv)
       url     = 'https://api.avito.ru/cpxpromo/1/remove'
       item_id = adv.avito_id || fetch_avito_id(avito, adv)
-      avito.connect_to(url, :post, { 'itemId' => item_id })
+      response = avito.connect_to(url, :post, { 'itemId' => item_id })
+      return unless response&.success?
+
       adv.update(promotion: false)
       msg = "❌ Объявление #{adv.adable.title} снято с ручного поднятия.\nАдрес: #{adv.full_address}"
       msg += "\n\nhttps://www.avito.ru/#{adv.avito_id}"

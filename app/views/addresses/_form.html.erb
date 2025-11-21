@@ -61,9 +61,9 @@
     </div>
 
     <div class="col-12 col-md-1 mt-0 mt-md-2 d-flex d-md-block justify-content-between">
-      <div>
-        <%= form.check_box :active, class: 'form-check-input', id: "active-checkbox-#{address.id}" %>
-        <%= form.label :active, class: 'form-check-label', for: "active-checkbox-#{address.id}" %>
+      <div class="flex gap-2 items-center mb-3">
+        <%= form.check_box :active, class: '', id: "active-checkbox-#{address.id}" %>
+        <%= form.label :active, class: '!mb-0', for: "active-checkbox-#{address.id}" %>
       </div>
       <%= form.submit method == :patch ?  'Save' : 'Add',
                       class: "btn #{method == :patch ? 'btn-warning' : 'btn-primary'} mt-md-2 mt-0 btn-sm" %>

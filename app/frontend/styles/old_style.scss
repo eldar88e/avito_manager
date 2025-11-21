@@ -159,6 +159,7 @@ ul.pagination {
   align-items: center;
   @media screen and (max-width: 568px) {
     align-items: end;
+    display: block;
   }
 
   button {
