@@ -81,6 +81,11 @@ trix-editor:focus, [multiple]:focus, [type=date]:focus, [type=datetime-local]:fo
   dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800;
 }
 
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .loader-btn {
   display: flex;
   align-items: center;
@@ -94,11 +99,6 @@ trix-editor:focus, [multiple]:focus, [type=date]:focus, [type=datetime-local]:fo
     width: 12px;
     height: 12px;
     animation: spin 1s linear infinite;
-  }
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
   }
 }
 
