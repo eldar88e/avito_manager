@@ -55,7 +55,7 @@ module Avito
         make_manual_promotion(avito, adv, best_min['valuePenny'])
       rescue StandardError => e
         Rails.logger.error "Error #############################"
-        Rails.logger.error "Error #{self.class} || #{e.message} || #{bids}"
+        Rails.logger.error "Error #{self.class} || #{e.message} || #{promotion['manual']}"
       end
     end
 
