@@ -38,6 +38,11 @@ RUN bundle clean --force
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
-# COPY . .
+COPY . .
+
+RUN bundle exec rails bootsnap precompile --gemfile app/ lib/ config/
+
+RUN addgroup -g 1000 deploy && adduser -u 1000 -G deploy -D -s /bin/sh deploy
+USER deploy:deploy
 
 EXPOSE 3000
