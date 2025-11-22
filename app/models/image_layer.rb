@@ -5,7 +5,7 @@ class ImageLayer < ApplicationRecord
   has_one_attached :layer, dependent: :purge
   belongs_to :store
 
-  enum :layer_type, { img: 0, platform: 1, text: 2, flag: 3 }
+  enum :layer_type, { img: 0, text: 1 }
 
   before_save :set_default_menuindex, :set_default_layer_params
 

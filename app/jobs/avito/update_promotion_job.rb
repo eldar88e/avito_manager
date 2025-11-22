@@ -6,19 +6,26 @@ module Avito
     MAX_PROMOTION = 2
     MIN_BID = 99
     UP_LIMIT_PENNY = 100
+    MAX_MONEY = 500
 
     def perform(user_id, store_id)
-      user  = User.find(user_id)
-      store = user.stores.active.find(store_id)
-      process_store(store)
+      user        = User.find(user_id)
+      store       = user.stores.active.find(store_id)
+      avito       = initialize_avito(store)
+      avito_ak_id = account_id(store, avito)
+      statistics  = fetch_statistics(avito, avito_ak_id)
+      TelegramService.call(user, statistics)
+      (statistics['presenceSpending'] / 100) < MAX_MONEY ? process_store(store) : stop_all_promotion(avito, store)
       nil
     end
 
     private
 
-    def process_store(store)
-      avito = initialize_avito(store)
+    def stop_all_promotion(avito, store)
+      store.ads.where(promotion: true).find_each { |ad| stop_promotion(avito, ad) }
+    end
 
+    def process_store(store, avito)
       store.addresses.active.each do |address|
         ads       = address.ads.active_ads.where(adable_type: AD_TYPES)
         promo_ads = ads.where(promotion: true)
@@ -75,6 +82,32 @@ module Avito
       raise StandardError, 'Failed to get token' if avito.token_status.present? && avito.token_status != 200
 
       avito
+    end
+
+    def account_id(store, avito)
+      result = Rails.cache.fetch("account_#{store.id}", expires_in: 6.hours) do
+        response = avito.connect_to('https://api.avito.ru/core/v1/accounts/self')
+        next nil if response&.status != 200
+
+        JSON.parse(response.body)
+      rescue JSON::ParserError => e
+        Rails.logger.error e.message
+        nil
+      end
+      Rails.cache.delete("account_#{store.id}") if result.nil?
+      result
+    end
+
+    def fetch_statistics(avito, account_id)
+      payload = {
+        'dateFrom' => Time.current.to_date.to_s,
+        'dateTo' => Time.current.to_date.to_s,
+        'metrics' => %w[views contacts favorites presenceSpending impressions],
+        'grouping' => 'day'
+      }
+      response = avito.connect_to("https://api.avito.ru/stats/v2/accounts/#{account_id}/items", :post, payload)
+      result = JSON.parse(response.body)
+      result['result']['groupings'].first['metrics'].to_h { |i| [i['slug'], i['value']] }
     end
   end
 end

@@ -1,8 +1,10 @@
-= button_to 'Очистить бан лист', store_update_all_path(@store.id), class: 'btn btn-danger mb-3', method: :patch,
-              data: { confirm: t('confirm.ad'), controller: 'confirm', action: 'click->confirm#call' }
+.flex.gap-3.mb-3
+  = button_to 'Очистить бан лист', store_update_all_path(@store.id), class: 'btn btn-danger', method: :patch,
+                data: { confirm: t('confirm.ad'), controller: 'confirm', action: 'click->confirm#call' }
+  = button_to 'Обновить рекламные объявления', store_update_promotion_path(@store.id), class: 'btn btn-primary', method: :patch
 = render partial: '/ads/search'
 
-.relative.overflow-x-auto.shadow-md.sm:rounded-lg.mt-3
+.relative.overflow-x-auto.shadow-md.sm:rounded-lg
   table.w-full.text-sm.text-left.rtl:text-right.text-gray-500.dark:text-gray-400
     thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
       tr

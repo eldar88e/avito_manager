@@ -122,3 +122,7 @@ ru:
         deleted: "Удалено"
         banned_until: "Бан до"
         full_address: "Адрес"
+  jobs:
+    update_promotion:
+      success: "Фоновая задача по обновлению рекламных объявлений успешно запущена."
+

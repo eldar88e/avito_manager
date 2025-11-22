@@ -11,9 +11,10 @@ module AvitoConcerns
 
   def fetch_and_parse(url, method = :get, payload = nil)
     response = @avito.connect_to(url, method, payload)
+    if response.nil? || !response.success?
+      return { 'error' => "Ошибка подключения к API Avito. Статус: #{response&.status}" }
+    end
 
-    # raise StandardError, "Ошибка подключения к API Avito. Status: #{response&.status}" if response&.status != 200
-    # return error_notice("Ошибка подключения к API Avito. Status: #{response&.status}") if response&.status != 200
     JSON.parse(response.body)
   rescue JSON::ParserError => e
     { 'error' => "Ошибка парсинга JSON: #{e.message}" }

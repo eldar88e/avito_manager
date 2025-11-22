@@ -1,61 +1,61 @@
 <%= form_with model: image_layer, url: url, method: method, class: 'admin-form' do |form| %>
-  <div class="row">
-    <div class="col-4 col-md-1">
-      <div style="max-height: 70px; overflow: hidden; color: green; word-wrap: break-word;">
-        <% if image_layer.layer.attached? %>
-          <% if image_layer.layer.blob.content_type.match?(/font/) %>
-            <%= image_layer.layer.blob.filename %>
-          <% else %>
-            <%= link_to '', data: { controller: "fancybox", fancybox: "gallery", src: storage_path(image_layer.layer) } do %>
-              <div style="background-image: url(<%= storage_path(image_layer.layer) %>); background-size: contain;
-                width: 100%; height: 70px; background-repeat: no-repeat;"></div>
-            <% end %>
-          <% end %>
+  <div class="mb-5">
+    <div style="max-height: 70px; overflow: hidden; color: green; word-wrap: break-word;">
+      <% if image_layer.layer.attached? %>
+        <% if image_layer.layer.blob.content_type.match?(/font/) %>
+          <%= image_layer.layer.blob.filename %>
         <% else %>
-          <span style="color: red; font-size: 0.8rem;">Шрифт или картинка не указан!</span>
+          <%= link_to '', data: { controller: "fancybox", fancybox: "gallery", src: storage_path(image_layer.layer) } do %>
+            <div style="background-image: url(<%= storage_path(image_layer.layer) %>); background-size: contain;
+              width: 100%; height: 70px; background-repeat: no-repeat;"></div>
+          <% end %>
         <% end %>
-      </div>
+      <% else %>
+        <span style="color: red; font-size: 0.8rem;">Шрифт или картинка не указан!</span>
+      <% end %>
     </div>
+  </div>
 
-    <div class="col-8 col-md-3">
-      <%= form.label :layer, 'Картинка или шрифт', class: 'form-label' %>
-      <%= form.file_field :layer, value: image_layer.layer.blob&.filename, class: 'form-control',
-                          accept: 'image/jpeg, image/png, image/webp, font/ttf' %>
-    </div>
+  <div class="mb-5">
+    <%= form.label :layer, 'Картинка или шрифт', class: 'form-label' %>
+    <%= form.file_field :layer, value: image_layer.layer.blob&.filename, class: 'form-control',
+                        accept: 'image/jpeg, image/png, image/webp, font/ttf' %>
+  </div>
 
-    <div class="col-8 col-md-2">
+  <div class="mb-5 flex flex-wrap -mx-3">
+    <div class="w-1/2 px-3">
       <%= form.label :layer_type, class: 'form-label' %>
       <%= form.select :layer_type,
                       ImageLayer.layer_types.keys.map { |type| [type.humanize, type] }, {}, { class: 'form-select' } %>
     </div>
 
-    <div class="col-4 col-md-1">
+    <div class="w-1/2 px-3">
       <%= form.label :menuindex, class: 'form-label' %>
       <%= form.text_field :menuindex, value: image_layer.menuindex, class: 'form-control' %>
     </div>
+  </div>
 
-    <div class="col-12 col-md-5 mb-3 mb-md-0">
+  <div class="mb-5 flex flex-wrap -mx-3">
+    <div class="w-full md:w-1/2 px-3 mb-5 md:mb-0">
       <%= form.label :title, class: 'form-label' %>
       <%= form.text_field :title, value: image_layer.title, class: 'form-control' %>
     </div>
 
-    <div class="col-12 col-md-11 mb-3">
+    <div class="w-full md:w-1/2 px-3">
       <%= form.label :layer_params, class: 'form-label' %>
       <%= form.text_field :layer_params, value: image_layer.layer_params, class: 'form-control',
                           placeholder: { pointsize: 64, row: 400, column: 100, pos_x: 448, pos_y: 120 } %>
     </div>
-
-    <div class="col-12 col-md-1 mt-0 mt-md-2 d-flex d-md-block justify-content-between">
-      <div>
-        <%= form.check_box :active, class: 'form-check-input', id: "active_#{image_layer.id}" %>
-        <%= form.label :active, value: image_layer.active, class: 'form-check-label', for: "active_#{image_layer.id}" %>
-      </div>
-
-      <% if method == :post %>
-        <%= form.submit 'Add', class: 'mt-0 mt-md-2 btn btn-primary btn-sm' %>
-      <% else %>
-        <%= form.submit 'Save', class: 'mt-0 mt-md-2 btn btn-warning btn-sm' %>
-      <% end %>
-    </div>
   </div>
+
+  <div class="flex gap-2 items-center mb-5">
+    <%= form.check_box :active, id: "active_#{image_layer.id}" %>
+    <%= form.label :active, class: '!-mb-0', for: "active_#{image_layer.id}" %>
+  </div>
+
+  <% if method == :post %>
+    <%= form.submit 'Add', class: 'mt-0 mt-md-2 btn btn-primary btn-sm' %>
+  <% else %>
+    <%= form.submit 'Save', class: 'mt-0 mt-md-2 btn btn-warning btn-sm' %>
+  <% end %>
 <% end %>

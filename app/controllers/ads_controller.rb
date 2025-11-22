@@ -16,14 +16,13 @@ class AdsController < ApplicationController
   end
 
   def update_all
-    @store.ads.update_all(banned: false, banned_until: nil, updated_at: Time.current)
-    set_search_ads
-    @pagy, @ads = pagy(@q_ads.result, items: 36)
-    render turbo_stream: [
-      # turbo_stream.replace(:ads, partial: '/ads/ads_list'),
-      # TODO к ссылкам пагинации пристыковывается update_all /stores/10?page=3
-      success_notice(t('.success'))
-    ]
+    @store.ads.update_all(banned: false, banned_until: nil)
+    render turbo_stream: success_notice(t('.success'))
+
+    # set_search_ads
+    # @pagy, @ads = pagy(@q_ads.result, items: 36)
+    # turbo_stream.replace(:ads, partial: '/ads/ads_list'),
+    # TODO к ссылкам пагинации пристыковывается update_all /stores/10?page=3
   end
 
   private

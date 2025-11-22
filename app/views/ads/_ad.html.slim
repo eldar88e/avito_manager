@@ -17,7 +17,7 @@ tr id=dom_id(ad) class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 
   td.px-6.py-4
     = ad.deleted? ? 'Да' : 'Нет'
   td.px-6.py-4
-    = ad.banned? ? ad.banned_until : '—'
+    = ad.banned? ? ad.banned_until.strftime("%Y-%m-%d %H:%M:%S") : '—'
   td.px-6.py-4
     = ad.promotion? ? 'Да' : 'Нет'
   td.px-6.py-4
