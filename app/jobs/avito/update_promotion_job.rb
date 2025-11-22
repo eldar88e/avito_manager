@@ -59,13 +59,11 @@ module Avito
         bids      = promotion['manual']['bids'].select { |b| b['compare'] == MIN_BID }
         best_min  = build_best_min(bids, promotion)
         make_manual_promotion(avito, adv, best_min['valuePenny'])
-      rescue => e
-        binding.irb
       end
     end
 
     def build_best_min(bids, promotion)
-      if bids.blank?
+      if bids.present?
         bids.min_by { |b| b['valuePenny'] }
       else
         promotion['manual']['bids'].max_by { |b| b['compare'] }
