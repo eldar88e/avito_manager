@@ -51,7 +51,7 @@ module Avito
       ads.each do |adv|
         promotion = fetch_promotion(avito, adv)
         bids      = promotion['manual']['bids'].select { |b| b['compare'] == MIN_BID }
-        best_min  = build_best_min(bids)
+        best_min  = build_best_min(bids, promotion)
         make_manual_promotion(avito, adv, best_min['valuePenny'])
       end
     end
