@@ -15,13 +15,13 @@ module Avito
       account_id = fetch_account_id(store, avito)&.dig('id')
       statistics = fetch_statistics(avito, account_id)
       TelegramService.call(user, statistics)
-      (statistics['presenceSpending'] / 100) < MAX_MONEY ? process_store(store) : stop_all_promotion(avito, store)
+      (statistics['presenceSpending'] / 100) < MAX_MONEY ? process_store(store, avito) : stop_all_promotion(store, avito)
       nil
     end
 
     private
 
-    def stop_all_promotion(avito, store)
+    def stop_all_promotion(store, avito)
       store.ads.where(promotion: true).find_each { |ad| stop_promotion(avito, ad) }
     end
 
