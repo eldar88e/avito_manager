@@ -7,6 +7,7 @@ module Avito
     AD_TYPES = 'AdImport'.freeze
     MAX_PROMOTION = 2
     MIN_BID = 99
+    MIN_LIMIT_PENNY = 5000
     UP_LIMIT_PENNY = 100
     PAYLOAD = {
       'dateFrom' => Time.current.to_date.to_s,
@@ -51,7 +52,7 @@ module Avito
         ads       = address.ads.active_ads.where(adable_type: AD_TYPES)
         promo_ads = ads.where(promotion: true)
         ####
-        binding.irb if address.city.include?('Махачкала')
+        # binding.irb if address.city.include?('Махачкала')
         ####
         promo_ads.each { |ad| stop_promotion(avito, ad) } if promo_ads.present?
         new_ads = (ads - promo_ads).sample(MAX_PROMOTION)
@@ -92,7 +93,7 @@ module Avito
       url     = 'https://api.avito.ru/cpxpromo/1/setManual'
       item_id = adv.avito_id || fetch_avito_id(avito, adv)
       payload = { 'actionTypeID' => 5, 'bidPenny' => value_penny,
-                  'itemID' => item_id, 'limitPenny' => value_penny + UP_LIMIT_PENNY }
+                  'itemID' => item_id, 'limitPenny' => [value_penny + UP_LIMIT_PENNY, MIN_LIMIT_PENNY].max }
       result = avito.connect_to(url, :post, payload)
       return unless result&.success?
 
