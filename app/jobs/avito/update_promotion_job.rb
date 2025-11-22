@@ -22,7 +22,7 @@ module Avito
       avito      = initialize_avito(store)
       account_id = fetch_account_id(store, avito)&.dig('id')
       statistic  = fetch_statistics(avito, account_id)
-      send_telegram_msg(user, statistic, max_money)
+      send_telegram_msg(store, statistic, max_money)
       if (statistic['presenceSpending'] / 100) < max_money
         process_store(store, avito, args[:address_ids])
       else
@@ -33,11 +33,11 @@ module Avito
 
     private
 
-    def send_telegram_msg(user, statistic, max_money)
+    def send_telegram_msg(store, statistic, max_money)
       msg = "Статистика по аккаунту #{store.manager_name}:\n"
       msg += "Лимит на продвижению на сегодня: #{max_money}₽\n"
       msg += statistic.map { |key, value| "#{t("avito.autoload.#{key}")}: #{value}" }.join("\n")
-      TelegramService.call(user, msg)
+      TelegramService.call(store.user, msg)
     end
 
     def stop_all_promotion(store, avito)
