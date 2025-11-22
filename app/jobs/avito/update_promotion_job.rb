@@ -19,13 +19,17 @@ module Avito
       store      = user.stores.active.find(store_id)
       avito      = initialize_avito(store)
       account_id = fetch_account_id(store, avito)&.dig('id')
-      statistics = fetch_statistics(avito, account_id)
-      TelegramService.call(user, statistics)
-      (statistics['presenceSpending'] / 100) < MAX_MONEY ? process_store(store, avito) : stop_all_promotion(store, avito)
+      statistic  = fetch_statistics(avito, account_id)
+      send_telegram_msg(user, statistic)
+      (statistic['presenceSpending'] / 100) < MAX_MONEY ? process_store(store, avito) : stop_all_promotion(store, avito)
       nil
     end
 
     private
+
+    def send_telegram_msg(user, statistic)
+      TelegramService.call(user, statistic.map { |key, value| "#{key}: #{value}" }.join("\n"))
+    end
 
     def stop_all_promotion(store, avito)
       store.ads.where(promotion: true).find_each { |ad| stop_promotion(avito, ad) }
@@ -43,8 +47,8 @@ module Avito
     end
 
     def stop_promotion(avito, adv)
-      url     = 'https://api.avito.ru/cpxpromo/1/remove'
-      item_id = adv.avito_id || fetch_avito_id(avito, adv)
+      url      = 'https://api.avito.ru/cpxpromo/1/remove'
+      item_id  = adv.avito_id || fetch_avito_id(avito, adv)
       response = avito.connect_to(url, :post, { 'itemId' => item_id })
       return unless response&.success?
 
