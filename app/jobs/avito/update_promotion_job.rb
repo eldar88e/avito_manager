@@ -53,6 +53,9 @@ module Avito
         bids      = promotion['manual']['bids'].select { |b| b['compare'] == MIN_BID }
         best_min  = bids.min_by { |b| b['valuePenny'] }
         make_manual_promotion(avito, adv, best_min['valuePenny'])
+      rescue StandardError => e
+        Rails.logger.error "Error #############################"
+        Rails.logger.error "Error #{self.class} || #{e.message} || #{best_min}"
       end
     end
 
@@ -106,7 +109,7 @@ module Avito
         'grouping' => 'day'
       }
       response = avito.connect_to("https://api.avito.ru/stats/v2/accounts/#{account_id}/items", :post, payload)
-      result = JSON.parse(response.body)
+      result   = JSON.parse(response.body)
       result['result']['groupings'].first['metrics'].to_h { |i| [i['slug'], i['value']] }
     end
   end
