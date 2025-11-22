@@ -67,7 +67,7 @@ class PopulateExcelJob < ApplicationJob
       title      = formit_title(game, ad)
       worksheet.append_row(
         [ad.id, ad.avito_id, current_time, store.ad_status, store.category, goods_type, store.ad_type, store.availability,
-         ad.full_address, title, make_description(game, store, address, title), store.condition, game.price,
+         ad.full_address, title, make_description(ad, title), store.condition, game.price,
          store.allow_email, store.manager_name, store.contact_phone, store.contact_method, img_urls,
          category, *form_extra(game, ad)]
       )
@@ -108,8 +108,18 @@ class PopulateExcelJob < ApplicationJob
     AttachmentUrlBuilderService.storage_path(image)
   end
 
-  def make_description(model, store, address, title)
-    DescriptionService.call(model:, store:, address_desc: address.description, title:)
+  def make_description(adv, title)
+    replacements = {
+      title: title || adv.adable.title,
+      description: adv.store.description,
+      manager: adv.store.manager_name,
+      addr_desc: adv.address.description.to_s,
+      desc_product: adv.adable.description,
+      size: nil
+    }
+    replacements[:size] = adv.extra['width'] if adv.extra.present? # && adv.adable.category == 'Кровати'
+    description = adv.adable_type == 'AdImport' ? adv.store.desc_ad_import : adv.store.desc_product
+    DescriptionService.call(description, replacements)
   end
 
   def formit_title(product, adv)

@@ -1,39 +1,36 @@
 class DescriptionService
-  def initialize(**option)
-    @model = option[:model]
-    @store = option[:store]
-    @default_replacements = {
-      title: option[:title] || @model.title,
-      description: @store.description,
-      manager: @store.manager_name,
-      addr_desc: option[:address_desc].to_s,
-      desc_product: @model.description
-    }
+  MATTRESS_SIZES = [2000, 1800, 1600, 1400, 1200, 1000, 900].freeze
+  MATTRESS_LENGTH = 2000
+  BED_SIZES = [[212, 140], [192, 140], [172, 140], [152, 130], [132, 120], [112, 120], [102, 120]].freeze
+  LENGTH = 2140
+
+  def initialize(description, replacements)
+    @description  = description
+    @replacements = replacements
   end
 
-  def make_description
-    method_name = :"handle_#{@model.class.name.underscore}_desc"
-    send(method_name)
-  end
+  def bed_sizes_str(value)
+    str = "🛏 Другие размеры данной кровати:\n\n"
+    count = 1
+    BED_SIZES.each_with_index do |size, idx|
+      next if size[0] == value
 
-  def self.call(**option)
-    new(**option).make_description
-  end
-
-  private
-
-  def handle_ad_import_desc
-    build_description @store.desc_ad_import.to_s
-  end
-
-  def handle_product_desc
-    build_description @store.desc_product.to_s
-  end
-
-  def build_description(description, **replacements)
-    replacements.merge(@default_replacements).each do |key, value|
-      description = description.gsub("[#{key}]", value.to_s)
+      str += "#{count}. Кровать: #{size[0]}0x#{LENGTH}x#{size[1]}0; Матрас: #{MATTRESS_SIZES[idx]}x#{MATTRESS_LENGTH};\n"
+      count += 1
     end
-    description.squeeze(' ').strip
+    str += "\n**Размеры указанные в миллиметрах"
+    str
+  end
+
+  def self.call(description, replacements)
+    new(description, replacements).build_description
+  end
+
+  def build_description
+    @replacements.each do |key, value|
+      value        = bed_sizes_str(value) if key == :size && value.present?
+      @description = @description.gsub("[#{key.to_s}]", value.to_s)
+    end
+    @description.squeeze(' ').strip
   end
 end
