@@ -51,9 +51,6 @@ module Avito
 
         ads       = address.ads.active_ads.where(adable_type: AD_TYPES)
         promo_ads = ads.where(promotion: true)
-        ####
-        # binding.irb if address.city.include?('Махачкала')
-        ####
         promo_ads.each { |ad| stop_promotion(avito, ad) } if promo_ads.present?
         new_ads = (ads - promo_ads).sample(MAX_PROMOTION)
         update_promotion(avito, new_ads)
@@ -69,7 +66,7 @@ module Avito
       adv.update(promotion: false)
       msg = "❌ Объявление #{adv.adable.title} снято с ручного поднятия.\nАдрес: #{adv.full_address}"
       msg += "\n\nhttps://www.avito.ru/#{adv.avito_id}"
-      TelegramService.call(adv.user, msg)
+      # TelegramService.call(adv.user, msg)
     end
 
     def update_promotion(avito, ads)
@@ -100,7 +97,7 @@ module Avito
       adv.update(promotion: true)
       msg = "✅ Объявление #{adv.adable.title} поднято в ручном режиме.\nАдрес: #{adv.full_address}"
       msg += "\nСтоимость: #{value_penny / 100} ₽\n\nhttps://www.avito.ru/#{adv.avito_id}"
-      TelegramService.call(adv.user, msg)
+      # TelegramService.call(adv.user, msg)
     end
 
     def fetch_promotion(avito, adv)
