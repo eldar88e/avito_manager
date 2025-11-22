@@ -7,6 +7,12 @@ module Avito
     MIN_BID = 99
     UP_LIMIT_PENNY = 100
     MAX_MONEY = 500
+    PAYLOAD = {
+      'dateFrom' => Time.current.to_date.to_s,
+      'dateTo' => Time.current.to_date.to_s,
+      'metrics' => %w[views contacts favorites presenceSpending impressions],
+      'grouping' => 'day'
+    }.to_json.freeze
 
     def perform(user_id, store_id)
       user       = User.find(user_id)
@@ -107,15 +113,11 @@ module Avito
     end
 
     def fetch_statistics(avito, account_id)
-      payload = {
-        'dateFrom' => Time.current.to_date.to_s,
-        'dateTo' => Time.current.to_date.to_s,
-        'metrics' => %w[views contacts favorites presenceSpending impressions],
-        'grouping' => 'day'
-      }
-      response = avito.connect_to("https://api.avito.ru/stats/v2/accounts/#{account_id}/items", :post, payload)
-      result   = JSON.parse(response.body)
-      result['result']['groupings'].first['metrics'].to_h { |i| [i['slug'], i['value']] }
+      Rails.cache.fetch("statistics_#{account_id}", expires_in: 2.minutes) do
+        response = avito.connect_to("https://api.avito.ru/stats/v2/accounts/#{account_id}/items", :post, PAYLOAD)
+        result   = JSON.parse(response.body)
+        result['result']['groupings'].first['metrics'].to_h { |i| [i['slug'], i['value']] }
+      end
     end
   end
 end
