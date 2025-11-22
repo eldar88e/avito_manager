@@ -115,9 +115,8 @@ class PopulateExcelJob < ApplicationJob
       manager: adv.store.manager_name,
       addr_desc: adv.address.description.to_s,
       desc_product: adv.adable.description,
-      size: nil
+      size: adv.extra.present? ? adv.extra['width'] : nil # && adv.adable.category == 'Кровати'
     }
-    replacements[:size] = adv.extra['width'] if adv.extra.present? # && adv.adable.category == 'Кровати'
     description = adv.adable_type == 'AdImport' ? adv.store.desc_ad_import : adv.store.desc_product
     DescriptionService.call(description, replacements)
   end
