@@ -1,15 +1,15 @@
 .py-5
   .container.mx-auto.px-5
     .block.justify-between.md:flex
-      a href="/" title="На главную" class="navbar-brand" Avito Manager
+      a href="/" title="На главную" class="navbar-brand" data-turbo-prefetch="false" Avito Manager
 
       - if user_signed_in?
         ul class="navbar-nav mb-2 flex gap-3 text-black dark:text-white"
-          li = active_link_to 'Items', ad_imports_path, class: 'nav-link', active: :exclusive
-          li = active_link_to 'Settings', settings_path, class: 'nav-link', active: :exclusive
-          li = active_link_to 'Stores', stores_path, class: 'nav-link', active: :exclusive
-          li = active_link_to 'Feeds', root_path, class: 'nav-link', active: :exclusive
-          li = active_link_to 'Avito', avitos_path, class: 'nav-link', active: :exclusive
+          li = active_link_to 'Items', ad_imports_path, class: 'nav-link', active: :exclusive, data: { turbo_prefetch: false }
+          li = active_link_to 'Settings', settings_path, class: 'nav-link', active: :exclusive, data: { turbo_prefetch: false }
+          li = active_link_to 'Stores', stores_path, class: 'nav-link', active: :exclusive, data: { turbo_prefetch: false }
+          li = active_link_to 'Feeds', root_path, class: 'nav-link', active: :exclusive, data: { turbo_prefetch: false }
+          li = active_link_to 'Avito', avitos_path, class: 'nav-link', active: :exclusive, data: { turbo_prefetch: false }
 
         .text-right
           div style="margin-right: 5px;" Hello <span style="font-weight: bold;">#{current_user.email}</span>!
