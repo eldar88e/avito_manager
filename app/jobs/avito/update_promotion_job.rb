@@ -51,11 +51,16 @@ module Avito
       ads.each do |adv|
         promotion = fetch_promotion(avito, adv)
         bids      = promotion['manual']['bids'].select { |b| b['compare'] == MIN_BID }
-        best_min  = bids.min_by { |b| b['valuePenny'] }
+        best_min  = build_best_min(bids)
         make_manual_promotion(avito, adv, best_min['valuePenny'])
-      rescue StandardError => e
-        Rails.logger.error "Error #############################"
-        Rails.logger.error "Error #{self.class} || #{e.message} || #{promotion['manual']}"
+      end
+    end
+
+    def build_best_min(bids, promotion)
+      if bids.blank?
+        bids.min_by { |b| b['valuePenny'] }
+      else
+        promotion['manual']['bids'].max_by { |b| b['compare'] }
       end
     end
 
