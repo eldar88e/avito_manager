@@ -40,7 +40,7 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
-RUN bundle exec rails bootsnap precompile --gemfile app/ lib/ config/
+RUN bundle exec bootsnap precompile --gemfile app/ lib/ config/
 
 RUN addgroup -g 1000 deploy && adduser -u 1000 -G deploy -D -s /bin/sh deploy
 USER deploy:deploy
