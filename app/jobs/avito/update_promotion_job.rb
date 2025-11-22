@@ -9,11 +9,11 @@ module Avito
     MAX_MONEY = 500
 
     def perform(user_id, store_id)
-      user        = User.find(user_id)
-      store       = user.stores.active.find(store_id)
-      avito       = initialize_avito(store)
-      avito_ak_id = account_id(store, avito)
-      statistics  = fetch_statistics(avito, avito_ak_id)
+      user       = User.find(user_id)
+      store      = user.stores.active.find(store_id)
+      avito      = initialize_avito(store)
+      account_id = fetch_account_id(store, avito)&.dig('id')
+      statistics = fetch_statistics(avito, account_id)
       TelegramService.call(user, statistics)
       (statistics['presenceSpending'] / 100) < MAX_MONEY ? process_store(store) : stop_all_promotion(avito, store)
       nil
@@ -84,7 +84,7 @@ module Avito
       avito
     end
 
-    def account_id(store, avito)
+    def fetch_account_id(store, avito)
       result = Rails.cache.fetch("account_#{store.id}", expires_in: 6.hours) do
         response = avito.connect_to('https://api.avito.ru/core/v1/accounts/self')
         next nil if response&.status != 200
