@@ -12,7 +12,7 @@ module Avito
       'dateTo' => Time.current.to_date.to_s,
       'metrics' => %w[views contacts favorites presenceSpending impressions],
       'grouping' => 'day'
-    }.to_json.freeze
+    }.freeze
 
     def perform(user_id, store_id)
       user       = User.find(user_id)
