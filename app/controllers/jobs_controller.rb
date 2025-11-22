@@ -49,7 +49,7 @@ class JobsController < ApplicationController
   end
 
   def update_promotion
-    s_id = current_user.stores.active.find(store_id)
+    s_id = current_user.stores.active.find(store_id).id
     Avito::UpdatePromotionJob.perform_later(current_user.id, s_id) if Rails.env.production?
     render turbo_stream: success_notice(t('.success'))
   end
