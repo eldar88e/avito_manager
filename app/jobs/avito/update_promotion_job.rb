@@ -6,7 +6,7 @@ module Avito
     MAX_PROMOTION = 2
     MIN_BID = 99
     UP_LIMIT_PENNY = 100
-    MAX_MONEY = 500
+    MAX_MONEY = 700
     PAYLOAD = {
       'dateFrom' => Time.current.to_date.to_s,
       'dateTo' => Time.current.to_date.to_s,
@@ -35,7 +35,7 @@ module Avito
       store.addresses.active.each do |address|
         ads       = address.ads.active_ads.where(adable_type: AD_TYPES)
         promo_ads = ads.where(promotion: true)
-        # binding.irb if address.city.include?('Махачкала')
+        binding.irb if address.city.include?('Махачкала')
         promo_ads.each { |ad| stop_promotion(avito, ad) } if promo_ads.present?
         new_ads = (ads - promo_ads).sample(MAX_PROMOTION)
         update_promotion(avito, new_ads)
