@@ -6,7 +6,7 @@ module Avito
     MAX_PROMOTION = 2
     MIN_BID = 99
     UP_LIMIT_PENNY = 100
-    MAX_MONEY = 700
+    MAX_MONEY = 800
     PAYLOAD = {
       'dateFrom' => Time.current.to_date.to_s,
       'dateTo' => Time.current.to_date.to_s,
