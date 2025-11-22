@@ -1,3 +1,5 @@
+# Avito::UpdatePromotionJob.perform_now(1, 1)
+
 module Avito
   class UpdatePromotionJob < Avito::BaseApplicationJob
     queue_as :default
@@ -6,7 +8,6 @@ module Avito
     MAX_PROMOTION = 2
     MIN_BID = 99
     UP_LIMIT_PENNY = 100
-    MAX_MONEY = 800
     PAYLOAD = {
       'dateFrom' => Time.current.to_date.to_s,
       'dateTo' => Time.current.to_date.to_s,
@@ -14,32 +15,44 @@ module Avito
       'grouping' => 'day'
     }.freeze
 
-    def perform(user_id, store_id)
+    def perform(user_id, store_id, **args)
+      max_money  = args[:max_money] || Setting.all_cached[:max_money].to_i
       user       = User.find(user_id)
       store      = user.stores.active.find(store_id)
       avito      = initialize_avito(store)
       account_id = fetch_account_id(store, avito)&.dig('id')
       statistic  = fetch_statistics(avito, account_id)
-      send_telegram_msg(user, statistic)
-      (statistic['presenceSpending'] / 100) < MAX_MONEY ? process_store(store, avito) : stop_all_promotion(store, avito)
+      send_telegram_msg(user, statistic, max_money)
+      if (statistic['presenceSpending'] / 100) < max_money
+        process_store(store, avito, args[:address_ids])
+      else
+        stop_all_promotion(store, avito)
+      end
       nil
     end
 
     private
 
-    def send_telegram_msg(user, statistic)
-      TelegramService.call(user, statistic.map { |key, value| "#{key}: #{value}" }.join("\n"))
+    def send_telegram_msg(user, statistic, max_money)
+      msg = "Статистика по аккаунту #{store.manager_name}:\n"
+      msg += "Лимит на продвижению на сегодня: #{max_money}₽\n"
+      msg += statistic.map { |key, value| "#{t("avito.autoload.#{key}")}: #{value}" }.join("\n")
+      TelegramService.call(user, msg)
     end
 
     def stop_all_promotion(store, avito)
       store.ads.where(promotion: true).find_each { |ad| stop_promotion(avito, ad) }
     end
 
-    def process_store(store, avito)
+    def process_store(store, avito, address_ids = [])
       store.addresses.active.each do |address|
+        next if address_ids.present? && address_ids.exclude?(address.id)
+
         ads       = address.ads.active_ads.where(adable_type: AD_TYPES)
         promo_ads = ads.where(promotion: true)
+        ####
         binding.irb if address.city.include?('Махачкала')
+        ####
         promo_ads.each { |ad| stop_promotion(avito, ad) } if promo_ads.present?
         new_ads = (ads - promo_ads).sample(MAX_PROMOTION)
         update_promotion(avito, new_ads)

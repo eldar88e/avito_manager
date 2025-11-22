@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
 
   include Pagy::Backend
 
+  helper_method :settings
+
   def error_notice(msg, status = :unprocessable_entity)
     render turbo_stream: send_notice(msg, 'danger'), status:
   end
@@ -33,5 +35,9 @@ class ApplicationController < ActionController::Base
 
   def send_notice(msg, key)
     turbo_stream.append(:notices, partial: '/partials/notices/notice', locals: { notices: msg, key: })
+  end
+
+  def settings
+    @settings_ ||= current_user.settings.all_cached
   end
 end

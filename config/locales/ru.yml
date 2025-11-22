@@ -5,6 +5,12 @@ ru:
     add_city: "Добавить город"
     streets: "Улицы"
   avito:
+    statistics:
+      views: "Просмотры"
+      contacts: "Контакты"
+      favorites: "В избранном"
+      presenceSpending: "Расходы на продвижение"
+      impressions: "Показы"
     autoload:
       upload_url: "Ссылка на файл"
       autoload_enabled: "Автозагрузка"
