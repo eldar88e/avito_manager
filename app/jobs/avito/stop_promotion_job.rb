@@ -11,7 +11,7 @@ module Avito
       entities = args[:address_ids].present? ? store.addresses.where(id: args[:address_id]) : store
       entities.ads.where(promotion: true).find_each { |ad| stop_promotion(avito, ad) }
     ensure
-      msg = "✅ Продвижение по ручной ставке остановлено.\nВ продвижении: #{store.ads.where(promotion: true).size}"
+      msg = "🛑 Продвижение по ручной ставке остановлено.\nВ продвижении: #{store.ads.where(promotion: true).size}"
       TelegramService.call(store.user, msg)
     end
 
