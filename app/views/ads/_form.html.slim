@@ -12,6 +12,9 @@ h3 class="text-lg" External ID: <span class="font-semibold">#{@ad.file_id}</span
     .flex.gap-2
       = form.check_box :banned
       = form.label :banned, class: '!-mb-0'
+    .flex.gap-2
+      = form.check_box :promotion
+      = form.label :promotion, class: '!-mb-0'
   .mb-5
     = form.label :banned_until
     div data-controller="datepicker"
