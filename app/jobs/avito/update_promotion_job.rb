@@ -24,8 +24,7 @@ module Avito
       account_id = fetch_account_id(store, avito)&.dig('id')
       statistic  = fetch_statistics(avito, account_id)
       send_telegram_msg(store, statistic, max_money)
-      TelegramService.call(store.user, "#{statistic['presenceSpending']} – #{statistic['presenceSpending'].class}")
-      if statistic['presenceSpending'].present? && (statistic['presenceSpending'] / 100) < max_money
+      if (statistic['presenceSpending'] / 100) < max_money
         process_store(store, avito, args[:address_ids])
       else
         stop_all_promotion(store, avito)
@@ -137,12 +136,9 @@ module Avito
 
     def fetch_statistics(avito, account_id)
       Rails.cache.fetch("statistics_#{account_id}", expires_in: 59.seconds) do
-        response  = avito.connect_to("https://api.avito.ru/stats/v2/accounts/#{account_id}/items", :post, PAYLOAD)
-        result    = JSON.parse(response.body)
-        groupings = result['result']['groupings']
-        return {} if groupings.blank?
-
-        groupings.first['metrics'].to_h { |i| [i['slug'], i['value']] }
+        response = avito.connect_to("https://api.avito.ru/stats/v2/accounts/#{account_id}/items", :post, PAYLOAD)
+        result   = JSON.parse(response.body)
+        result['result']['groupings'].first['metrics'].to_h { |i| [i['slug'], i['value']] }
       end
     end
 
