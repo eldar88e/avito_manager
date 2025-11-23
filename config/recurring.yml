@@ -21,3 +21,7 @@ production:
     class: Avito::UpdatePromotionJob
     args: [1, 1]
     schedule: "*/1 6-23,0-1 * * *"
+  stop_avito_promotion:
+    class: Avito::StopPromotionJob
+    args: [{ user_id: 1, store_id: 1 }]
+    schedule: every day at 02:00
