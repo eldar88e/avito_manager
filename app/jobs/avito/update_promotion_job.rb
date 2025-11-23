@@ -135,7 +135,7 @@ module Avito
     end
 
     def fetch_statistics(avito, account_id)
-      Rails.cache.fetch("statistics_#{account_id}", expires_in: 59.seconds) do
+      Rails.cache.fetch("statistics_#{account_id}", expires_in: 70.seconds) do
         response = avito.connect_to("https://api.avito.ru/stats/v2/accounts/#{account_id}/items", :post, PAYLOAD)
         result   = JSON.parse(response.body)
         result['result']['groupings'].first['metrics'].to_h { |i| [i['slug'], i['value']] }
