@@ -30,7 +30,7 @@ module Avito
         stop_all_promotion(store, avito)
       end
     ensure
-      msg = "✅ Ручное поднятие завершено.\nВ продвижении: #{store.ads.where(promotion: true).size}"
+      msg = "✅ Установка ручной ставки продвижения завершено.\nВ продвижении: #{store.ads.where(promotion: true).size}"
       TelegramService.call(store.user, msg)
     end
 
