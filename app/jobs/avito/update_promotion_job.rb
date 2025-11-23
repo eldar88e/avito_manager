@@ -63,7 +63,8 @@ module Avito
       url      = 'https://api.avito.ru/cpxpromo/1/remove'
       item_id  = adv.avito_id || fetch_avito_id(avito, adv)
       response = avito.connect_to(url, :post, { 'itemId' => item_id })
-      return unless response&.success?
+      msg      = "‼️ Ошибка снятия ad ##{adv.file_id} с ручного поднятия.\n#{response&.status}\n#{response&.body}"
+      return TelegramService.call(adv.user, msg) unless response&.success?
 
       adv.update(promotion: false)
       msg = "❌ Объявление #{adv.adable.title} снято с ручного поднятия.\nАдрес: #{adv.full_address}"
