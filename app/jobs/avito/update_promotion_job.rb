@@ -49,11 +49,13 @@ module Avito
       store.addresses.active.each do |address|
         next if address_ids.present? && address_ids.exclude?(address.id)
 
-        ads       = address.ads.active_ads.where(adable_type: AD_TYPES)
+        ads       = find_ads(address)
         promo_ads = ads.where(promotion: true)
         promo_ads.each { |ad| stop_promotion(avito, ad) } if promo_ads.present?
-        new_ads = (ads - promo_ads).sample(MAX_PROMOTION)
-        update_promotion(avito, new_ads)
+        available_ads = ads - promo_ads
+        current_ads   = build_current_ads(available_ads, address)
+        update_promotion(avito, current_ads)
+        add_to_skip(address.id, current_ads.map(&:id))
       end
     end
 
@@ -134,6 +136,38 @@ module Avito
         result   = JSON.parse(response.body)
         result['result']['groupings'].first['metrics'].to_h { |i| [i['slug'], i['value']] }
       end
+    end
+
+    def find_ads(address)
+      address.ads
+             .active_ads
+             .joins("INNER JOIN ad_imports ON ads.adable_id = ad_imports.id AND ads.adable_type = 'AdImport'")
+             .where(extra: nil)
+             .where.not(ad_imports: { category: 'Тумбы' })
+    end
+
+    def skipped_ads(address_id)
+      Rails.cache.fetch("promotion_skip_#{address_id}", expires_in: 10.minutes) { [] }
+    end
+
+    def add_to_skip(address_id, ids)
+      key = "promotion_skip_#{address_id}"
+      current = Rails.cache.read(key) || []
+      Rails.cache.write(key, (current + ids).uniq)
+    end
+
+    def clear_skip_cache(address_id)
+      Rails.cache.delete("promotion_skip_#{address_id}")
+    end
+
+    def build_current_ads(ads, address)
+      skip_ids = skipped_ads(address.id)
+      new_ads  = ads.reject { |ad| skip_ids.include?(ad.id) }
+      if new_ads.blank? || new_ads.size < MAX_PROMOTION
+        clear_skip_cache(address.id)
+        new_ads = ads
+      end
+      new_ads.sample(MAX_PROMOTION)
     end
   end
 end
