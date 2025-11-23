@@ -1,7 +1,5 @@
-# Avito::UpdatePromotionJob.perform_now(1, 1)
-
 module Avito
-  class UpdatePromotionJob < Avito::BaseApplicationJob
+  class StopPromotionJob < Avito::BaseApplicationJob
     queue_as :default
 
     def perform(**args)
