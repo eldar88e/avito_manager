@@ -1,3 +1,5 @@
+# Avito::StopPromotionJob.perform_now(user_id: 1, store_id: 1)
+
 module Avito
   class StopPromotionJob < Avito::BaseApplicationJob
     queue_as :default
@@ -16,9 +18,7 @@ module Avito
       url      = 'https://api.avito.ru/cpxpromo/1/remove'
       item_id  = adv.avito_id || fetch_avito_id(avito, adv)
       response = avito.connect_to(url, :post, { 'itemId' => item_id })
-      body     = response&.body.to_s.dup.force_encoding('UTF-8')
-      msg      = "‼️ Ошибка снятия ad ##{adv.file_id} с ручного поднятия.\n#{response&.status}\n#{body}"
-      return TelegramService.call(adv.user, msg) unless response&.success?
+      return send_error(adv, response) unless response&.success?
 
       adv.update(promotion: false)
       msg = "❌ Объявление #{adv.adable.title} снято с ручного поднятия.\nАдрес: #{adv.full_address}"
@@ -31,6 +31,12 @@ module Avito
       raise StandardError, 'Failed to get token' if avito.token_status.present? && avito.token_status != 200
 
       avito
+    end
+
+    def send_error(adv, response)
+      body = response&.body.to_s.dup.force_encoding('UTF-8')
+      msg  = "‼️ Ошибка снятия ad ##{adv.file_id} с ручного поднятия.\n#{response&.status}\n#{body}"
+      TelegramService.call(adv.user, msg)
     end
   end
 end

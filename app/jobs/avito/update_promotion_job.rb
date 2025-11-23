@@ -66,13 +66,11 @@ module Avito
       url      = 'https://api.avito.ru/cpxpromo/1/remove'
       item_id  = adv.avito_id || fetch_avito_id(avito, adv)
       response = avito.connect_to(url, :post, { 'itemId' => item_id })
-      body     = response&.body.to_s.dup.force_encoding('UTF-8')
-      msg      = "Ошибка снятия ad ##{adv.file_id} с ручного поднятия.\n#{response&.status}\n#{body}"
-      return TelegramService.call(adv.user, msg) unless response&.success?
+      return send_error(adv, response) unless response&.success?
 
       adv.update(promotion: false)
-      msg = "❌ Объявление #{adv.adable.title} снято с ручного поднятия.\nАдрес: #{adv.full_address}"
-      msg += "\n\nhttps://www.avito.ru/#{adv.avito_id}"
+      # msg = "❌ Объявление #{adv.adable.title} снято с ручного поднятия.\nАдрес: #{adv.full_address}"
+      # msg += "\n\nhttps://www.avito.ru/#{adv.avito_id}"
       # TelegramService.call(adv.user, msg)
     end
 
@@ -102,8 +100,8 @@ module Avito
       return unless result&.success?
 
       adv.update(promotion: true)
-      msg = "✅ Объявление #{adv.adable.title} поднято в ручном режиме.\nАдрес: #{adv.full_address}"
-      msg += "\nСтоимость: #{value_penny / 100} ₽\n\nhttps://www.avito.ru/#{adv.avito_id}"
+      # msg = "✅ Объявление #{adv.adable.title} поднято в ручном режиме.\nАдрес: #{adv.full_address}"
+      # msg += "\nСтоимость: #{value_penny / 100} ₽\n\nhttps://www.avito.ru/#{adv.avito_id}"
       # TelegramService.call(adv.user, msg)
     end
 
@@ -173,6 +171,12 @@ module Avito
         new_ads = ads
       end
       new_ads.sample(MAX_PROMOTION)
+    end
+
+    def send_error(adv, response)
+      body = response&.body.to_s.dup.force_encoding('UTF-8')
+      msg  = "‼️ Ошибка снятия ad ##{adv.file_id} с ручного поднятия.\n#{response&.status}\n#{body}"
+      TelegramService.call(adv.user, msg)
     end
   end
 end
