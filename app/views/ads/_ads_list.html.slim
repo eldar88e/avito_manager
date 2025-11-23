@@ -2,7 +2,7 @@
   = button_to 'Очистить бан лист', store_update_all_path(@store.id), class: 'btn btn-danger', method: :patch,
                 data: { confirm: t('confirm.ad'), controller: 'confirm', action: 'click->confirm#call' }
   = button_to 'Обновить рекламные объявления', store_update_promotion_path(@store.id), class: 'btn btn-primary', method: :patch
-  = button_to 'Отключить рекламу', store_stop_promotion_path, class: 'btn btn-warning', method: :delete,
+  = button_to 'Отключить рекламу', store_stop_promotion_path(@store.id), class: 'btn btn-warning', method: :delete,
                 data: { confirm: 'Вы уверены, что хотите отключить рекламу на всех объявлениях?',
                         controller: 'confirm', action: 'click->confirm#call' }
 = render partial: '/ads/search'
