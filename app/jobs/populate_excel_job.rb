@@ -123,7 +123,7 @@ class PopulateExcelJob < ApplicationJob
 
   def formit_title(product, adv)
     prefix = PREFIX[product.category]
-    prefix = "#{adv.extra['furniture_type']} #{prefix}" if product.category == 'Кровати' && adv.extra.present?
+    prefix = "#{adv.extra['furniture_type']} #{prefix.downcase}" if product.category == 'Кровати' && adv.extra.present?
     shape  = product.extra['furniture_shape']
     prefix = "#{shape} #{prefix.downcase}" if product.category == 'Диваны' && shape != 'Прямой'
     title  = prefix.present? ? "#{prefix} #{product.title}" : product.title
