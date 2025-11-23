@@ -180,7 +180,7 @@ module Avito
       body = response&.body.to_s.dup.force_encoding('UTF-8')
       msg  = "‼️ Ошибка снятия объявления #{adv.file_id} с ручного поднятия."
       msg += "\nStatus: #{response&.status}\nBody: #{body}"
-      msg += "\n\nhttps://www.avito.ru/#{adv.avito_id}"
+      msg += "\nhttps://www.avito.ru/#{adv.avito_id}"
       TelegramService.call(adv.user, msg)
     end
   end
