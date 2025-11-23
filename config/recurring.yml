@@ -16,8 +16,8 @@ production:
   check_avito_errors:
     class: Avito::CheckErrorsJob
     args: [{ user_id: 1 }]
-    schedule: every day at 20:00
+    schedule: every day at 06:00
   update_avito_promotion:
     class: Avito::UpdatePromotionJob
     args: [1, 1]
-    schedule: "*/2 6-23,0-2 * * *"
+    schedule: "*/2 6-23,0-1 * * *"
