@@ -29,7 +29,8 @@ module Avito
       else
         stop_all_promotion(store, avito)
       end
-      nil
+      msg = "✅ Ручное поднятие завершено.\nВ продвижении: #{store.ads.where(promotion: true).size}"
+      TelegramService.call(store.user, msg)
     end
 
     private
@@ -37,6 +38,7 @@ module Avito
     def send_telegram_msg(store, statistic, max_money)
       msg = "Статистика по аккаунту #{store.manager_name}:\n"
       msg += "Лимит на продвижению на сегодня: #{max_money}₽\n"
+      statistic['presenceSpending'] = (statistic['presenceSpending'] / 100).round(2)
       msg += statistic.map { |key, value| "#{I18n.t("avito.statistics.#{key}")}: #{value}" }.join("\n")
       TelegramService.call(store.user, msg)
     end
