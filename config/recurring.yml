@@ -20,4 +20,4 @@ production:
   update_avito_promotion:
     class: Avito::UpdatePromotionJob
     args: [1, 1]
-    schedule: "*/2 6-23,0-1 * * *"
+    schedule: "*/1 6-23,0-1 * * *"
