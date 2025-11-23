@@ -24,7 +24,7 @@ module Avito
       account_id = fetch_account_id(store, avito)&.dig('id')
       statistic  = fetch_statistics(avito, account_id)
       send_telegram_msg(store, statistic, max_money)
-      if statistic['presenceSpending'].present? && (statistic['presenceSpending'] / 100) < max_money
+      if statistic['presenceSpending'].present? && (statistic['presenceSpending'].to_i / 100) < max_money
         process_store(store, avito, args[:address_ids])
       else
         stop_all_promotion(store, avito)
