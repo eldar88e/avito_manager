@@ -54,6 +54,12 @@ class JobsController < ApplicationController
     render turbo_stream: success_notice(t('.success'))
   end
 
+  def stop_promotion
+    s_id = current_user.stores.active.find(store_id).id
+    Avito::StopPromotionJob.perform_later(user_id: current_user.id, store_id: s_id) if Rails.env.production?
+    render turbo_stream: success_notice(t('.success'))
+  end
+
   private
 
   def store_id
