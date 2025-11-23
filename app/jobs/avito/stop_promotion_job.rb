@@ -35,7 +35,9 @@ module Avito
 
     def send_error(adv, response)
       body = response&.body.to_s.dup.force_encoding('UTF-8')
-      msg  = "‼️ Ошибка снятия ad ##{adv.file_id} с ручного поднятия.\n#{response&.status}\n#{body}"
+      msg  = "‼️ Ошибка снятия объявления #{adv.file_id} с ручного поднятия."
+      msg += "\nStatus: #{response&.status}\nBody: #{body}"
+      msg += "\n\nhttps://www.avito.ru/#{adv.avito_id}"
       TelegramService.call(adv.user, msg)
     end
   end
