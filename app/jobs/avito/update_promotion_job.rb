@@ -39,7 +39,7 @@ module Avito
     def send_telegram_msg(store, statistic, max_money)
       msg = "Статистика по аккаунту #{store.manager_name}:\n"
       msg += "Лимит на продвижению на сегодня: #{max_money}₽\n"
-      statistic['presenceSpending'] = "#{(statistic['presenceSpending'] / 100).round(2)}₽"
+      statistic['presenceSpending'] = "#{(statistic['presenceSpending'].to_i / 100).round(2)}₽"
       msg += statistic.map { |key, value| "#{I18n.t("avito.statistics.#{key}")}: #{value}" }.join("\n")
       TelegramService.call(store.user, msg)
     end
@@ -135,9 +135,12 @@ module Avito
 
     def fetch_statistics(avito, account_id)
       Rails.cache.fetch("statistics_#{account_id}", expires_in: 2.minutes) do
-        response = avito.connect_to("https://api.avito.ru/stats/v2/accounts/#{account_id}/items", :post, PAYLOAD)
-        result   = JSON.parse(response.body)
-        result['result']['groupings'].first['metrics'].to_h { |i| [i['slug'], i['value']] }
+        response  = avito.connect_to("https://api.avito.ru/stats/v2/accounts/#{account_id}/items", :post, PAYLOAD)
+        result    = JSON.parse(response.body)
+        groupings = result['result']['groupings']
+        return {} if groupings.blank?
+
+        groupings.first['metrics'].to_h { |i| [i['slug'], i['value']] }
       end
     end
 
