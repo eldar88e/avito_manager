@@ -5,7 +5,7 @@ module Avito
     queue_as :default
 
     AD_TYPES = 'AdImport'.freeze
-    MAX_PROMOTION = 2
+    MAX_PROMOTION = 3
     MIN_BID = 99
     MIN_LIMIT_PENNY = 5000
     UP_LIMIT_PENNY = 100
