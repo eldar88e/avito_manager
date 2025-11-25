@@ -5,6 +5,7 @@ module Avito
     queue_as :default
 
     AD_TYPES = 'AdImport'.freeze
+    AD_CACHE_TIME = 5.minutes
     MAX_PROMOTION = 3
     MIN_BID = 99
     MIN_LIMIT_PENNY = 5000
@@ -152,7 +153,7 @@ module Avito
     end
 
     def skipped_ads(address_id)
-      Rails.cache.fetch("promotion_skip_#{address_id}", expires_in: 10.minutes) { [] }
+      Rails.cache.fetch("promotion_skip_#{address_id}", expires_in: AD_CACHE_TIME) { [] }
     end
 
     def add_to_skip(address_id, ids)
