@@ -9,6 +9,8 @@ services:
 
   rails:
     <<: *base
+    tty: true
+    stdin_open: true
     container_name: rails
     hostname: rails
     depends_on:
