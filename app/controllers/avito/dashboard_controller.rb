@@ -16,8 +16,7 @@ module Avito
       @balance = fetch_cached("balance_#{@store.id}",
                               url: "https://api.avito.ru/core/v1/accounts/#{@account['id']}/balance/")
       error = instance_variables[-6..].map { |var| instance_variable_get(var) }.find { |i| i['error'] }
-      # error_notice(error['error']['message'], :bad_gateway) if error
-      binding.irb if error
+      error_notice(error['error']['message'], :bad_gateway) if error
     end
   end
 end
