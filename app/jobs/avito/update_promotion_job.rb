@@ -121,9 +121,7 @@ module Avito
     def fetch_account_id(store, avito)
       result = Rails.cache.fetch("account_#{store.id}", expires_in: 6.hours) do
         response = avito.connect_to('https://api.avito.ru/core/v1/accounts/self')
-        next nil if response&.status != 200
-
-        JSON.parse(response.body)
+        response&.success? ? JSON.parse(response.body) : nil
       rescue JSON::ParserError => e
         Rails.logger.error e.message
         nil
