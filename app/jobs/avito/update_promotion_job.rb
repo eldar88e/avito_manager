@@ -106,8 +106,8 @@ module Avito
     end
 
     def fetch_promotion(avito, adv)
-      item_id = adv.avito_id || fetch_avito_id(avito, adv)
-      url = "https://api.avito.ru/cpxpromo/1/getBids/#{item_id}"
+      item_id  = adv.avito_id || fetch_avito_id(avito, adv)
+      url      = "https://api.avito.ru/cpxpromo/1/getBids/#{item_id}"
       response = avito.connect_to(url, :get)
       JSON.parse(response.body)
     end
@@ -156,7 +156,7 @@ module Avito
     end
 
     def add_to_skip(address_id, ids)
-      key = "promotion_skip_#{address_id}"
+      key     = "promotion_skip_#{address_id}"
       current = Rails.cache.read(key) || []
       Rails.cache.write(key, (current + ids).uniq)
     end
