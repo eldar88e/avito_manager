@@ -20,7 +20,7 @@ production:
   update_avito_promotion:
     class: Avito::UpdatePromotionJob
     args: [1, 1]
-    schedule: "*/1 11-22 * * *"
+    schedule: "*/1 6-22 * * *"
   stop_avito_promotion:
     class: Avito::StopPromotionJob
     args: [{ user_id: 1, store_id: 1 }]
