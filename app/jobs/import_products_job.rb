@@ -104,6 +104,7 @@ class ImportProductsJob < ApplicationJob
     row['extra']['sleeping_place_length']      = 200
     row['extra']['lifting_mechanism_included'] = 'Есть'
     row['extra']['mattress_included']          = 'Нет'
+    row['extra']['furniture_type']             = 'Двуспальная'
   end
 
   def build_sleeping_place(width)
