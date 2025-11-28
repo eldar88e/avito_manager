@@ -158,7 +158,7 @@ module Avito
     def add_to_skip(address_id, ids)
       key     = "promotion_skip_#{address_id}"
       current = Rails.cache.read(key) || []
-      Rails.cache.write(key, (current + ids).uniq)
+      Rails.cache.write(key, (current + ids).uniq, expires_in: AD_CACHE_TIME)
     end
 
     def clear_skip_cache(address_id)
