@@ -4,7 +4,7 @@ class PopulateExcelJob < ApplicationJob
   include Rails.application.routes.url_helpers
 
   MAIN_COLUMNS = %w[
-    Id AvitoId DateBegin AdStatus Category GoodsType AdType Availability Address Title Description Condition Price
+    Id AvitoId Stock DateBegin AdStatus Category GoodsType AdType Availability Address Title Description Condition Price
     AllowEmail ManagerName ContactPhone ContactMethod ImageUrls GoodsSubType
   ].freeze
   ADDITIONAL_COLUMNS = %w[
@@ -16,6 +16,7 @@ class PopulateExcelJob < ApplicationJob
   COLUMNS_NAME = MAIN_COLUMNS + ADDITIONAL_COLUMNS
   EXTRA_COLUMNS_SIZE = ADDITIONAL_COLUMNS.size
   PREFIX = { 'Кровати' => 'Кровать', 'Диваны' => 'Диван', 'Тумбы' => 'Тумба', 'Мини-Диваны' => 'Мини-Диван' }.freeze
+  STOCK = 2
 
   def perform(**args)
     store     = Store.find(args[:store_id])
@@ -67,8 +68,8 @@ class PopulateExcelJob < ApplicationJob
       category   = game.category.sub('Мини-', '')
       title      = formit_title(game, ad)
       worksheet.append_row(
-        [ad.id, ad.avito_id, current_time, store.ad_status, store.category, goods_type, store.ad_type, store.availability,
-         ad.full_address, title, make_description(ad, title), store.condition, game.price,
+        [ad.id, ad.avito_id, STOCK, current_time, store.ad_status, store.category, goods_type, store.ad_type,
+         store.availability, ad.full_address, title, make_description(ad, title), store.condition, game.price,
          store.allow_email, store.manager_name, store.contact_phone, store.contact_method, img_urls,
          category, *form_extra(game, ad)]
       )
