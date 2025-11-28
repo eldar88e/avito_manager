@@ -98,10 +98,12 @@ class ImportProductsJob < ApplicationJob
   end
 
   def add_attributes_bed(row)
-    row['extra']['length']                = row['extra']['depth']
-    row['extra']['furniture_frame']       = 'Дерево|ДСП|С обивкой'
-    row['extra']['sleeping_place_width']  = build_sleeping_place(row['extra']['width'].to_i)
-    row['extra']['sleeping_place_length'] = 200
+    row['extra']['length']                     = row['extra']['depth']
+    row['extra']['furniture_frame']            = 'Дерево|ДСП|С обивкой'
+    row['extra']['sleeping_place_width']       = build_sleeping_place(row['extra']['width'].to_i)
+    row['extra']['sleeping_place_length']      = 200
+    row['extra']['lifting_mechanism_included'] = 'Есть'
+    row['extra']['mattress_included']          = 'Нет'
   end
 
   def build_sleeping_place(width)
