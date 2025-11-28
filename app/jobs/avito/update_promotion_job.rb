@@ -105,9 +105,9 @@ module Avito
       return unless result&.success?
 
       adv.update(promotion: true)
-      msg = "✅ Объявление #{adv.adable.title} поднято в ручном режиме.\nАдрес: #{adv.full_address}"
-      msg += "\nСтоимость: #{value_penny / 100} ₽\n\nhttps://www.avito.ru/#{adv.avito_id}"
-      TelegramJob.perform_later(msg:, user_id: adv.user_id)
+      # msg = "✅ Объявление #{adv.adable.title} поднято в ручном режиме.\nАдрес: #{adv.full_address}"
+      # msg += "\nСтоимость: #{value_penny / 100} ₽\n\nhttps://www.avito.ru/#{adv.avito_id}"
+      # TelegramJob.perform_later(msg:, user_id: adv.user_id)
     end
 
     def fetch_promotion(avito, adv)
