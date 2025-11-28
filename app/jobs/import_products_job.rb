@@ -63,6 +63,7 @@ class ImportProductsJob < ApplicationJob
     row['extra']['material']                 = 'МДФ|Дерево' if row['category'] == 'Тумбы'
     row['extra']['purpose']                  = 'Гостиная' if row['category'] == 'Диваны'
     row['extra']['purpose']                  = 'Гостиная|Детская|Кухня|Офис|Кафе и ресторан' if row['category'] == 'Мини-Диваны'
+    row['extra']['multi_name']               = row['title']
 
     add_attributes_bed(row) if row['category'] == 'Кровати'
 

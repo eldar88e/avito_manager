@@ -11,6 +11,7 @@ class PopulateExcelJob < ApplicationJob
     Color ColorName FurnitureShape Modular FoldingMechanism TypeOfFoldingMechanism SleepingPlace UpholsteryMaterial
     Width Depth Height Length ConditionSleepingPlace FurnitureType MechanismCondition SofaCorner FurnitureFrame
     CabinetType Purpose Material SleepingPlaceWidth SleepingPlaceLength LiftingMechanismIncluded MattressIncluded
+    MultiName
   ].freeze
   COLUMNS_NAME = MAIN_COLUMNS + ADDITIONAL_COLUMNS
   EXTRA_COLUMNS_SIZE = ADDITIONAL_COLUMNS.size
