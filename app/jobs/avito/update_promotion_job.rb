@@ -80,6 +80,8 @@ module Avito
         promotion = fetch_promotion(avito, adv)
         best_min  = build_best_min(promotion)
         make_manual_promotion(avito, adv, best_min['valuePenny'])
+      rescue StandardError => e
+        binding.irb
       end
     end
 
