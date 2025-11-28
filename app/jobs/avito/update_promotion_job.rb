@@ -7,7 +7,7 @@ module Avito
     AD_TYPES = 'AdImport'.freeze
     AD_CACHE_TIME = 5.minutes
     MAX_PROMOTION = 3
-    MAX_LIMIT_PENNY = 12_000 # 100 руб.
+    MAX_LIMIT_PENNY = 12_200 # 122 руб.
     MIN_BID = 99
     MIN_LIMIT_PENNY = 5000
     UP_LIMIT_PENNY = 100
@@ -78,17 +78,21 @@ module Avito
     def update_promotion(avito, ads)
       ads.each do |adv|
         promotion = fetch_promotion(avito, adv)
-        best_min  = build_best_min(promotion)
+        best_min  = build_best_min(promotion, adv)
         make_manual_promotion(avito, adv, best_min['valuePenny'])
       rescue StandardError => e
         binding.irb
       end
     end
 
-    def build_best_min(promotion)
+    def build_best_min(promotion, adv)
       bids = promotion['manual']['bids'].select { |b| b['compare'] == MIN_BID }
       if bids.present?
-        bids.select { |b| b['valuePenny'] < MAX_LIMIT_PENNY }.max_by { |b| b['valuePenny'] }
+        result = bids.select { |b| b['valuePenny'] <= MAX_LIMIT_PENNY }.max_by { |b| b['valuePenny'] }
+        TelegramJob.perform_later(msg: "‼️ #{bids.first['valuePenny']}", user_id: adv.user_id) if result.blank?
+        return bids.first if result.blank?
+
+        result
       else
         promotion['manual']['bids'].max_by { |b| b['compare'] }
       end
