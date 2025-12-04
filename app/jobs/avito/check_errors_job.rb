@@ -90,7 +90,7 @@ module Avito
       count_ban = [0]
       blocked   = fetch_and_add_ban_ad(report_url, avito, store, ads, count_ban)
       if blocked['meta']['pages'] > 1
-        [*1..blocked['meta']['pages'] - 1].each do |page|
+        [*1..(blocked['meta']['pages'] - 1)].each do |page|
           fetch_and_add_ban_ad(report_url, avito, store, ads, count_ban, page)
         end
       end

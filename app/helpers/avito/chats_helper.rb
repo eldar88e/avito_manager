@@ -33,11 +33,11 @@ module Avito
         result
       elsif type == 'image'
         img = content['image']['sizes']['640x480']
-        str = <<-EOF
+        str = <<~HTML
           <a data-fancybox="msg_img" data-src="#{content['image']['sizes']['1280x960']}" data-caption="1280x960" style="cursor:pointer;">
             <img src='#{img}' style='height: 200px;' />
           </a>
-        EOF
+        HTML
         str.html_safe
       elsif type == 'link'
         result = content['link']['text']

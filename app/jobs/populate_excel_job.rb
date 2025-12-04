@@ -34,9 +34,8 @@ class PopulateExcelJob < ApplicationJob
       # products.each { |product| process_product(product, address, product_ads, worksheet) }
     end
 
-    content   = workbook.read_string
     xlsx_path = "./public/adverts_list/#{store.var}.xlsx"
-    File.binwrite(xlsx_path, content)
+    File.binwrite(xlsx_path, workbook.read_string)
     url = Rails.env.production? ? "https://#{ENV.fetch('HOST')}" : 'http://localhost:3000'
     msg = "✅ File #{url}#{xlsx_path.sub('./public', '')} is updated!"
     broadcast_notify(msg)
@@ -49,7 +48,8 @@ class PopulateExcelJob < ApplicationJob
   private
 
   def active_ad_import(address, settings)
-    AdImport.active.order(created_at: :desc).limit(address.total_games || settings['quantity_games']) # .includes(:game_black_list)
+    AdImport.active.order(created_at: :desc).limit(address.total_games || settings['quantity_games'])
+    # .includes(:game_black_list)
   end
 
   def process_ad_import(game, address, ads, worksheet)

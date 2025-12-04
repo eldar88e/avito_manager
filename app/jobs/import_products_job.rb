@@ -12,9 +12,9 @@ class ImportProductsJob < ApplicationJob
     run_id = Run.last_id
     count  = [0, 0]
     Run.status = :processing
-    result['pagination']['total_pages'].times do |page|
-      page += 1
-      result = page == 1 ? result : fetch_products(user, page)
+    total_pages = result.dig('pagination', 'total_pages').to_i
+    (1..total_pages).each do |page|
+      result = fetch_products(user, page) if page != 1
       result['products'].each do |product|
         next if product['extra']['width'].blank? || product['price'].blank?
 
@@ -57,13 +57,15 @@ class ImportProductsJob < ApplicationJob
     row['extra']['color']                    = COLORS.include?(color) ? color : 'Другой'
     row['extra']['color_name']               = color if row['extra']['color'] == 'Другой'
     row['extra']['condition_sleeping_place'] = 'Ровное' if row['extra']['sleeping_place'].present?
-    row['extra']['mechanism_condition']      = 'Всё в порядке' if row['extra']['folding_mechanism'].present? && row['extra']['folding_mechanism'] != 'Без механизма'
-    row['extra']['sofa_corner']              = 'Универсальный' if row['extra']['furniture_shape'] == 'Угловой'
-    row['extra']['cabinet_type']             = 'Прикроватные тумбы' if row['category'] == 'Тумбы'
-    row['extra']['material']                 = 'МДФ|Дерево' if row['category'] == 'Тумбы'
-    row['extra']['purpose']                  = 'Гостиная' if row['category'] == 'Диваны'
-    row['extra']['purpose']                  = 'Гостиная|Детская|Кухня|Офис|Кафе и ресторан' if row['category'] == 'Мини-Диваны'
-    row['extra']['multi_name']               = row['title']
+    if row['extra']['folding_mechanism'].present? && row['extra']['folding_mechanism'] != 'Без механизма'
+      row['extra']['mechanism_condition'] = 'Всё в порядке'
+    end
+    row['extra']['sofa_corner']  = 'Универсальный' if row['extra']['furniture_shape'] == 'Угловой'
+    row['extra']['cabinet_type'] = 'Прикроватные тумбы' if row['category'] == 'Тумбы'
+    row['extra']['material']     = 'МДФ|Дерево' if row['category'] == 'Тумбы'
+    row['extra']['purpose']      = 'Гостиная' if row['category'] == 'Диваны'
+    row['extra']['purpose']      = 'Гостиная|Детская|Кухня|Офис|Кафе и ресторан' if row['category'] == 'Мини-Диваны'
+    row['extra']['multi_name']   = row['title']
 
     add_attributes_bed(row) if row['category'] == 'Кровати'
 

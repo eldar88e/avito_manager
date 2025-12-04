@@ -1,6 +1,10 @@
 module ApplicationHelper
   include Pagy::Frontend
 
+  def storage_path(image, variant = nil)
+    AttachmentUrlBuilderService.storage_path(image, variant)
+  end
+
   def img_resize(image, **args)
     height  = args[:height] || args[:width]
     variant = image.variant(resize_to_limit: [args[:width], height]).processed
@@ -42,18 +46,6 @@ module ApplicationHelper
   def make_page(starts, ends)
     page = params[:page].present? && params[:page].to_i.positive? ? params[:page].to_i : starts
     [page, ends].min
-  end
-
-  def storage_path(attach, variant = nil)
-    blob = variant ? attach : attach.blob
-    if attach.blob.service_name == 'minio'
-      "https://#{ENV.fetch('MINIO_HOST')}:9000/#{ENV.fetch('MINIO_BUCKET')}/#{blob.key}"
-    else
-      url_for attach
-    end
-  rescue StandardError => e
-    Rails.logger.error "Error getting file path: #{e.message}"
-    nil
   end
 
   def noimage_url

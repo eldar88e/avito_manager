@@ -85,15 +85,11 @@ module Avito
 
     def build_best_min(promotion, adv)
       bids = promotion['manual']['bids'].select { |b| b['compare'] == MIN_BID }
-      if bids.present?
-        result = bids.select { |b| b['valuePenny'] <= MAX_LIMIT_PENNY }.max_by { |b| b['valuePenny'] }
-        TelegramJob.perform_later(msg: "‼️ #{bids.first['valuePenny']}", user_id: adv.user_id) if result.blank?
-        return bids.first if result.blank?
+      return promotion['manual']['bids'].max_by { |b| b['compare'] } if bids.blank?
 
-        result
-      else
-        promotion['manual']['bids'].max_by { |b| b['compare'] }
-      end
+      result = bids.select { |b| b['valuePenny'] <= MAX_LIMIT_PENNY }.max_by { |b| b['valuePenny'] }
+      TelegramJob.perform_later(msg: "‼️ #{bids.first['valuePenny']}", user_id: adv.user_id) if result.blank?
+      result.presence || bids.first
     end
 
     def make_manual_promotion(avito, adv, value_penny)

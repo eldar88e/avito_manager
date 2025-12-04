@@ -1,5 +1,5 @@
 class Run < ApplicationRecord
-  has_many :ad_imports
+  has_many :ad_imports, dependent: :restrict_with_exception
 
   enum :status, { pending: 0, processing: 1, finish: 2 }
 

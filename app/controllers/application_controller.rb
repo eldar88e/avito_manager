@@ -37,7 +37,9 @@ class ApplicationController < ActionController::Base
     turbo_stream.append(:notices, partial: '/partials/notices/notice', locals: { notices: msg, key: })
   end
 
+  # rubocop:disable Naming/MemoizedInstanceVariableName
   def settings
     @settings_ ||= current_user.settings.all_cached
   end
+  # rubocop:enable Naming/MemoizedInstanceVariableName
 end
