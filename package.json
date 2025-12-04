@@ -10,7 +10,8 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "lint": "eslint app/frontend --ext .js,.ts,.jsx,.tsx"
+    "lint": "eslint app/frontend/javascript --ext .js,.ts,.jsx,.tsx",
+    "lint:fix": "eslint app/frontend/javascript --ext .js,.ts,.jsx,.tsx --fix"
   },
   "dependencies": {
     "@fancyapps/ui": "^6.0.16",

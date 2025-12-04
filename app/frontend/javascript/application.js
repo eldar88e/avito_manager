@@ -37,7 +37,6 @@ window.openModal = function () {
   modal.addEventListener("click", handleOutsideClick);
 };
 
-
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", function () {
     navigator.serviceWorker

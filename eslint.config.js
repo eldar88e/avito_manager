@@ -6,9 +6,8 @@ import importPlugin from "eslint-plugin-import";
 export default [
     js.configs.recommended,
     {
-      files: ["app/frontend/**/*.{js}"],
+      files: ["app/frontend/**/*.{js,jsx,ts,tsx}"],
       languageOptions: {
-        parser: "@babel/eslint-parser",
         parserOptions: {
           ecmaVersion: "latest",
           sourceType: "module"
@@ -32,12 +31,24 @@ export default [
           ymaps: "readonly", // если используешь Яндекс.Карты
         },
       },
-      plugins: ["prettier", "import"],
-      rules: { "prettier/prettier": "error" },
-      settings: {
-        react: {
-          version: "detect"
-        }
+      plugins: {
+        prettier,
+        import: importPlugin
+      },
+      rules: {
+        "prettier/prettier": "error",
+
+        // Упорядочивание импорта
+        "import/order": [
+          "warn",
+          {
+            groups: ["builtin", "external", "internal", "parent", "sibling", "index"],
+            "newlines-between": "always"
+          }
+        ],
+
+        // Игнорировать аргументы начинающиеся с _
+        "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }]
       }
     }
 ];
