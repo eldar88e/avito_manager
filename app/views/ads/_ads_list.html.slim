@@ -16,7 +16,7 @@
         th.px-6.py-3 scope="col" Avito ID
         th.px-6.py-3 scope="col" Картинки
         th.px-6.py-3 scope="col"
-          = sort_link(@q_ads, :file_id, "External\xa0ID", data: { turbo_prefetch: false })
+          = sort_link(@q_ads, :file_id, 'External ID', data: { turbo_prefetch: false })
         th.px-6.py-3 scope="col"
           = sort_link(@q_ads, :deleted, 'Удалено', data: { turbo_prefetch: false })
         th.px-6.py-3 scope="col"

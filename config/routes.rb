@@ -8,11 +8,10 @@ Rails.application.routes.draw do
   end
 
   get 'manifest' => 'rails/pwa#manifest', as: :pwa_manifest
-  get 'service-worker' => 'rails/pwa#service_worker', as: :pwa_service_worker if Rails.env.production?
+  get 'service-worker' => 'rails/pwa#service_worker', as: :pwa_service_worker # if Rails.env.production?
 
   root 'feeds#index'
 
-  resources :stores
   resources :ad_imports, only: %i[index show destroy]
   resources :settings, only: %i[index create update]
   resources :avitos, only: [:index]
@@ -20,7 +19,7 @@ Rails.application.routes.draw do
   post '/update_img', to: 'jobs#update_img'
   get '/feeds', to: 'feeds#index'
 
-  draw :avito
+  draw :stores
 
   match '*unmatched', to: 'pwa#not_found', via: :all,
                       constraints: ->(req) { !req.path.start_with?('/rails/active_storage') }
