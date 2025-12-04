@@ -27,7 +27,7 @@ gem 'fast_excel'
 gem 'gretel' # breadcrumbs
 gem 'i18n'
 gem 'image_processing'
-gem 'pagy'
+gem 'pagy', '~> 9.4'
 gem 'pghero'
 gem 'ransack'
 gem 'rollbar'
