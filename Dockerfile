@@ -42,7 +42,7 @@ RUN apk --update add --no-cache \
     fontconfig \
     freetype \
     ttf-dejavu \
-    && rm -rf /var/cache/apk/* \
+    && rm -rf /var/cache/apk/*
 
 COPY . .
 
