@@ -3,21 +3,24 @@ require 'vips'
 class WatermarkService
   include Rails.application.routes.url_helpers
 
-  BLOB_CACHE_EXPIRES = 30.minutes
   DEFAULT_WIDTH      = 1920
   DEFAULT_HEIGHT     = 1440
   DEFAULT_FONT_SIZE  = 42
-  DEFAULT_COLOR      = 'white'.freeze
-  DEFAULT_FONT       = 'Arial'.freeze
+  DEFAULT_IMG_COLOR  = '#FFFFFF'.freeze
+  DEFAULT_COLOR      = [0, 0, 0, 255].freeze
+  DEFAULT_TEXT_BACK  = '#00000000'.freeze
+  DEFAULT_FONT       = 'sans'.freeze
+  TEXT_DPI           = 300
 
   def initialize(**args)
     @store     = args[:store]
     @settings  = args[:settings]
-    @main_font = make_font @settings[:main_font]
+    # @main_font = make_font @settings[:main_font]
     @width     = (@settings[:avito_img_width] || DEFAULT_WIDTH).to_i
     @height    = (@settings[:avito_img_height] || DEFAULT_HEIGHT).to_i
     @new_image = initialize_first_layer
     @main_img  = args[:main_img]
+    @add_layer = JSON.parse(args[:add_layer]).transform_keys(&:to_sym) if args[:add_layer].present?
     handle_layers(args[:address])
   end
 
@@ -47,7 +50,7 @@ class WatermarkService
   end
 
   def initialize_first_layer
-    bg_color = @settings[:avito_back_color] || DEFAULT_COLOR
+    bg_color = @settings[:avito_back_color] || DEFAULT_IMG_COLOR
     rgba     = convert_to_rgba(bg_color)
     img      = Vips::Image.black(@width, @height).new_from_image(rgba)
     img.copy(interpretation: :srgb)
@@ -55,6 +58,7 @@ class WatermarkService
 
   def handle_layers(address)
     @layers = make_layers_row
+    @layers << @add_layer if @add_layer.present?
     @layers << { img: @main_img, menuindex: @store.menuindex,
                  params: @store.img_params.presence || {}, layer_type: 'img' }
     @layers.sort_by! { |layer| layer[:menuindex] }
@@ -92,8 +96,8 @@ class WatermarkService
   end
 
   def add_img(layer)
-    image      = load_image(layer[:img])
-    image      = resize_image!(image, layer[:params])
+    raw_image  = load_image(layer[:img])
+    image      = resize_image!(raw_image, layer[:params])
     @new_image = @new_image.composite2(image, 'over', x: layer[:params]['pos_x'], y: layer[:params]['pos_y'])
   end
 
@@ -105,6 +109,10 @@ class WatermarkService
   def resize_image!(img, params)
     if params['row'].positive? && params['column'].positive?
       img.thumbnail_image(params['row'], height: params['column'])
+    elsif params['column'].positive?
+      img.resize params['column'].to_f / img.height
+    elsif params['row'].positive?
+      img.thumbnail_image(params['row'])
     else
       img
     end
@@ -114,23 +122,26 @@ class WatermarkService
     return if layer[:title].blank?
 
     params     = layer[:params]
-    text_color = params['fill'] || 'white'
-    rgba       = convert_to_rgba(text_color)
-    font_size  = params['pointsize'] || DEFAULT_FONT_SIZE
-    text_img   = Vips::Image.text(layer[:title], width: @width, rgba: rgba, font: "#{@main_font} #{font_size}")
-                            .colourspace(:srgb)
-    @new_image = @new_image.composite2(text_img, 'over', x: params['pos_x'], y: params['pos_y'])
+    rgba       = convert_to_rgba(params['fill'])
+    font_size  = params['pointsize'].presence || DEFAULT_FONT_SIZE
+    font_back  = convert_to_rgba params['font_back'].presence || DEFAULT_TEXT_BACK
+    text_mask  = Vips::Image.text(layer[:title], font: "#{DEFAULT_FONT} #{font_size}", dpi: TEXT_DPI)
+    text       = text_mask.ifthenelse(rgba, font_back).copy(interpretation: 'srgb')
+    @new_image = @new_image.composite2(text, 'over', x: params['pos_x'], y: params['pos_y'])
   end
 
   def convert_to_rgba(color)
-    case color.downcase
-    when 'white' then [255, 255, 255, 255]
-    when 'black' then [0, 0, 0, 255]
-    when 'red' then [255, 0, 0, 255]
-    when /^#([0-9a-f]{6})$/i
-      [::Regexp.last_match(1)[0..1].hex, ::Regexp.last_match(1)[2..3].hex, ::Regexp.last_match(1)[4..5].hex, 255]
+    str = color.to_s.strip.downcase
+    return DEFAULT_COLOR unless str.start_with?('#')
+
+    hex = str[1..]
+    case hex.size
+    when 8
+      hex.scan(/../).map(&:hex)
+    when 6
+      hex.scan(/../).map(&:hex) << 255
     else
-      [255, 255, 255, 255]
+      DEFAULT_COLOR
     end
   end
 

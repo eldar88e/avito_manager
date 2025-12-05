@@ -1,5 +1,5 @@
 class ImageLayer < ApplicationRecord
-  validates :title, presence: true, length: { maximum: 50, minimum: 2 }
+  validates :title, length: { maximum: 50, minimum: 2 }
   validate :check_img_title, on: %i[update create]
 
   has_one_attached :layer, dependent: :purge
@@ -25,6 +25,6 @@ class ImageLayer < ApplicationRecord
   end
 
   def check_img_title
-    errors.add(:base, 'Должна быть указана картинка или текст слоя!') if layer.blank?
+    errors.add(:base, 'Должна быть указана картинка или текст слоя!') if layer.blank? && title.blank?
   end
 end
