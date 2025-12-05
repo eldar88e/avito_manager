@@ -11,10 +11,9 @@ class PopulateExcelJob < ApplicationJob
     Color ColorName FurnitureShape Modular FoldingMechanism TypeOfFoldingMechanism SleepingPlace UpholsteryMaterial
     Width Depth Height Length ConditionSleepingPlace FurnitureType MechanismCondition SofaCorner FurnitureFrame
     CabinetType Purpose Material SleepingPlaceWidth SleepingPlaceLength LiftingMechanismIncluded MattressIncluded
-    MultiName
+    MultiName ModelName
   ].freeze
   COLUMNS_NAME = MAIN_COLUMNS + ADDITIONAL_COLUMNS
-  EXTRA_COLUMNS_SIZE = ADDITIONAL_COLUMNS.size
   PREFIX = { 'Кровати' => 'Кровать', 'Диваны' => 'Диван', 'Тумбы' => 'Тумба', 'Мини-Диваны' => 'Мини-Диван' }.freeze
   STOCK = 2
 
@@ -94,12 +93,14 @@ class PopulateExcelJob < ApplicationJob
   # end
 
   def form_extra(product, adv)
-    COLUMNS_NAME.last(EXTRA_COLUMNS_SIZE).map do |column|
+    ADDITIONAL_COLUMNS.map do |column|
       column_underscored = column.underscore
       if %w[sleeping_place folding_mechanism].include?(column_underscored)
         product.extra&.dig(column_underscored) ? 'Есть' : 'Нет'
       elsif column_underscored == 'modular'
         product.extra&.dig(column_underscored) ? 'Да' : 'Нет'
+      elsif column_underscored == 'model_name'
+        product.title
       else
         adv.extra&.dig(column_underscored).presence || product.extra&.dig(column_underscored)
       end
