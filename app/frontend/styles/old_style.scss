@@ -338,6 +338,9 @@ ul.pagination {
         display: flex;
         align-items: center;
         text-decoration: none;
+        @media (min-width: 748px) {
+          padding: 10px 0;
+        }
 
         .title {
           width: 0;
@@ -402,6 +405,9 @@ ul.pagination {
     transition: all 1ms;
     @media (min-width: 1630px) {
       display: none;
+    }
+    @media (min-width: 748px) {
+      padding: 10px 0;
     }
   }
 }

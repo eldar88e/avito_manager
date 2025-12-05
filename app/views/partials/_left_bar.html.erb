@@ -12,14 +12,14 @@
       <li>
         <%= active_link_to store_avito_path(@store), data: { turbo_prefetch: false },
                            active: /^\/stores\/#{@store.id}\/avito(\/dashboard)?$/ do %>
-          <i class="bi bi-kanban"></i>
+          <%= render IconComponent.new name: :door, width: 24 %>
           <span class="title">Инфо</span>
         <% end %>
       </li>
 
       <li>
         <%= active_link_to store_avito_reports_path, data: { turbo_prefetch: false } do %>
-          <i class="bi bi-list-task"></i>
+          <%= render IconComponent.new name: :door, width: 24 %>
           <span class="title">Отчеты</span>
         <% end %>
       </li>
@@ -27,35 +27,35 @@
       <li>
         <%= active_link_to store_avito_items_path(status: 'active'),
                            data: { turbo_prefetch: false }, active: :exclusive do %>
-          <i class="bi bi-bag-check"></i>
+          <%= render IconComponent.new name: :door, width: 24 %>
           <span class="title">Объявления</span>
         <% end %>
       </li>
 
       <li>
         <%= active_link_to store_avito_chats_path, data: { turbo_prefetch: false }, active: :exclusive do %>
-          <i class="bi bi-chat-dots"></i>
+          <%= render IconComponent.new name: :door, width: 24 %>
           <span class="title">Сообщения</span>
         <% end %>
       </li>
 
       <li>
         <%= active_link_to store_avito_reviews_path, data: { turbo_prefetch: false }, active: :exclusive do %>
-          <i class="bi bi-chat-heart"></i>
+          <%= render IconComponent.new name: :door, width: 24 %>
           <span class="title">Отзывы</span>
         <% end %>
       </li>
 
       <li>
         <%= active_link_to store_avito_settings_path, data: { turbo_prefetch: false }, active: :exclusive do %>
-          <i class="bi bi-gear"></i>
+          <%= render IconComponent.new name: :door, width: 24 %>
           <span class="title">Настройки</span>
         <% end %>
       </li>
     </ul>
 
     <%= tag.div class: 'collapse-bar-button', data: { action: 'click->collapse#call' } do %>
-      <i class="bi bi-arrow-right-square"></i>
+      <%= render IconComponent.new name: :door, width: 24 %>
     <% end %>
   </div>
 </div>
