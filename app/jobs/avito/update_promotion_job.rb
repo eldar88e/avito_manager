@@ -14,12 +14,12 @@ module Avito
     METRICS = %w[views contacts favorites presenceSpending impressions].freeze
 
     def perform(user_id, store_id, **args)
-      max_money  = args[:max_money] || Setting.all_cached[:max_money].to_i
       user       = User.find(user_id)
       store      = user.stores.active.find(store_id)
       avito      = initialize_avito(store)
       account_id = fetch_account_id(store, avito)&.dig('id')
       statistic  = fetch_statistics(avito, account_id)
+      max_money  = args[:max_money] || user.settings.all_cached[:max_money].to_i
       send_telegram_msg(store, statistic, max_money)
       if statistic['presenceSpending'].present? && (statistic['presenceSpending'] / 100) < max_money
         process_store(store, avito, args[:address_ids])

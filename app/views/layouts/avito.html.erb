@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang=<%= I18n.locale %>>
   <head>
-    <title>Avito Manager</title>
+    <title><%= content_for(:title) || settings[:app_name] %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>

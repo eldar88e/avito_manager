@@ -1,7 +1,7 @@
 .py-5
   .container.mx-auto.px-5
     .block.justify-between.md:flex
-      a href="/" title="На главную" class="navbar-brand" data-turbo-prefetch="false" Avito Manager
+      a href="/" title="На главную" class="navbar-brand" data-turbo-prefetch="false" = settings[:app_name]
 
       - if user_signed_in?
         ul class="navbar-nav mb-2 flex gap-3 text-black dark:text-white"
