@@ -36,7 +36,7 @@ module Avito
     def send_telegram_msg(store, statistic, max_money)
       statistic = statistic.dup
       msg = "Статистика по аккаунту #{store.manager_name}:\n"
-      msg += "Лимит на продвижению на сегодня: #{max_money}₽\n"
+      msg += "Лимит на продвижение на сегодня: #{max_money}₽\n"
       if statistic.present?
         statistic['presenceSpending'] = "#{(statistic['presenceSpending'].to_i / 100).round(2)}₽"
         msg += statistic.map { |key, value| "#{I18n.t("avito.statistics.#{key}")}: #{value}" }.join("\n")
