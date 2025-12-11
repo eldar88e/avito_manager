@@ -35,7 +35,7 @@ services:
     restart: always
 
   pg:
-    image: postgres:16.10-alpine3.22
+    image: postgres:16.11
     container_name: rails-pg
     hostname: pg
     environment:
