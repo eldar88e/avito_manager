@@ -13,10 +13,7 @@ AllCops:
     - 'config/environments/*.rb'
     - 'config/initializers/content_security_policy.rb'
     - 'config/initializers/filter_parameter_logging.rb'
-    - 'config/puma.rb'
-    - 'config/boot.rb'
-    - 'config/application.rb'
-    - 'config/environment.rb'
+    - 'config/*.rb'
     - 'config.ru'
     - 'Rakefile'
 

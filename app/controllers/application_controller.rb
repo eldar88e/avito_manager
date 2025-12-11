@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
 
   # rubocop:disable Naming/MemoizedInstanceVariableName
   def settings
-    @settings_ ||= current_user.settings.all_cached
+    @settings_ ||= current_user&.settings&.all_cached || {}
   end
   # rubocop:enable Naming/MemoizedInstanceVariableName
 end
