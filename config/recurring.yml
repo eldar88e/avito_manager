@@ -24,4 +24,8 @@ production:
   stop_avito_promotion:
     class: Avito::StopPromotionJob
     args: [{ user_id: 1, store_id: 1 }]
-    schedule: every day at 23:00
+    schedule: every day at 22:00
+  update_feed:
+    class: Avito::PopulateExcelJob
+    args: [{ store_id: 1 }]
+    schedule: every day at 22:20
