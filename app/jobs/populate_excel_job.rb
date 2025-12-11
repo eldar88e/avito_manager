@@ -20,19 +20,19 @@ class PopulateExcelJob < ApplicationJob
   def perform(**args)
     store     = Store.find(args[:store_id])
     user      = store.user
-    settings  = user.settings.all_cached
+    limit     = user.settings.all_cached[:quantity_games]
     workbook  = FastExcel.open
     worksheet = create_worksheet(workbook)
     # products = user.products.active.with_attached_image
     store.addresses.where(active: true).find_each do |address|
       ad_imports_ads = address.ads.active_ads.for_ad_import
-      ad_imports     = active_ad_import(address, settings)
+      ad_imports     = active_ad_import(address, limit)
       ad_imports.each { |ad_import| process_ad_import(ad_import, address, ad_imports_ads, worksheet) }
       # product_ads = address.ads.active_ads.for_product
       # products.each { |product| process_product(product, address, product_ads, worksheet) }
     end
 
-    save_workbook(workbook, "./public/adverts_list/#{store.var}.xlsx")
+    save_workbook(user, workbook, "./public/adverts_list/#{store.var}.xlsx")
   rescue StandardError => e
     Rails.logger.error("Error #{self.class} || #{e.message}")
     TelegramService.call(user, "Error #{self.class} || #{e.message}")
@@ -46,7 +46,7 @@ class PopulateExcelJob < ApplicationJob
     worksheet
   end
 
-  def save_workbook(workbook, xlsx_path)
+  def save_workbook(user, workbook, xlsx_path)
     File.binwrite(xlsx_path, workbook.read_string)
     url = Rails.env.production? ? "https://#{ENV.fetch('HOST')}" : 'http://localhost:3000'
     msg = "✅ File #{url}#{xlsx_path.sub('./public', '')} is updated!"
@@ -54,8 +54,8 @@ class PopulateExcelJob < ApplicationJob
     TelegramService.call(user, msg)
   end
 
-  def active_ad_import(address, settings)
-    AdImport.active.order(created_at: :desc).limit(address.total_games || settings['quantity_games'])
+  def active_ad_import(address, limit)
+    AdImport.active.order(created_at: :desc).limit(address.total_games || limit)
     # .includes(:game_black_list)
   end
 
