@@ -64,7 +64,7 @@ module Avito
     def handle_ban_list_entry(ban_list_entry, id, store, count_ban)
       if ban_list_entry.nil?
         TelegramService.call(store.user, "Not existing ad with id #{id}")
-      elsif ban_list_entry.banned_until.nil? || ban_list_entry.banned_until <= Time.current
+      elsif ban_list_entry.banned_until.nil? || ban_list_entry.banned_until <= Time.current || !ban_list_entry.banned
         ban_list_entry.update(banned: true, banned_until: Time.current + BAN_PERIOD) # report_id: report_id
         count_ban[0] += 1
       end
