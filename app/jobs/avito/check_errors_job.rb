@@ -57,15 +57,15 @@ module Avito
     def add_ban_ad(ads, store, blocked, count_ban)
       blocked['items'].each do |item|
         ban_list_entry = ads.find { |ad| ad.id == item['ad_id'].to_i }
-        handle_ban_list_entry(ban_list_entry, item['ad_id'].to_i, store, count_ban)
+        handle_ban_list_entry(ban_list_entry, item, store, count_ban)
       end
     end
 
-    def handle_ban_list_entry(ban_list_entry, id, store, count_ban)
+    def handle_ban_list_entry(ban_list_entry, item, store, count_ban)
       if ban_list_entry.nil?
-        TelegramService.call(store.user, "Not existing ad with id #{id}")
+        TelegramService.call(store.user, "Not existing ad with id #{item['ad_id']}")
       elsif ban_list_entry.banned_until.nil? || ban_list_entry.banned_until <= Time.current || !ban_list_entry.banned
-        ban_list_entry.update(banned: true, banned_until: Time.current + BAN_PERIOD, avito_id: id)
+        ban_list_entry.update(banned: true, banned_until: Time.current + BAN_PERIOD, avito_id: item['avito_id'])
         count_ban[0] += 1
       end
     end
