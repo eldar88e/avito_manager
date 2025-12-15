@@ -16,6 +16,8 @@ module Avito
     def perform(user_id, store_id, **args)
       user       = User.find(user_id)
       store      = user.stores.active.find(store_id)
+      return if Rails.cache.read("stop_promotion_#{store.id}")
+
       avito      = initialize_avito(store)
       account_id = fetch_account_id(store, avito)&.dig('id')
       statistic  = fetch_statistics(avito, account_id)
@@ -23,12 +25,11 @@ module Avito
       send_telegram_msg(store, statistic, max_money)
       if statistic['presenceSpending'].present? && (statistic['presenceSpending'] / 100) < max_money
         process_store(store, avito, args[:address_ids])
+        msg = "✅ Установлена ручная ставка продвижения.\nВ продвижении: #{store.ads.where(promotion: true).size}"
+        TelegramService.call(store.user, msg)
       else
         stop_all_promotion(store, avito)
       end
-    ensure
-      msg = "✅ Установка ручной ставки продвижения завершено.\nВ продвижении: #{store.ads.where(promotion: true).size}"
-      TelegramService.call(store.user, msg)
     end
 
     private
@@ -47,6 +48,7 @@ module Avito
 
     def stop_all_promotion(store, avito)
       store.ads.where(promotion: true).find_each { |ad| stop_promotion(avito, ad) }
+      Rails.cache.write("stop_promotion_#{store.id}", true, expires_in: 15.minutes)
     end
 
     def process_store(store, avito, address_ids = [])
