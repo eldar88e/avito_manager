@@ -31,7 +31,7 @@ module Avito
       else
         stop_all_promotion(store, avito)
       end
-      stop_promotion_with_balance(avito)
+      stop_promotion_with_balance(avito, store)
     end
 
     private
@@ -193,7 +193,7 @@ module Avito
       response&.success? ? JSON.parse(response.body) : nil
     end
 
-    def stop_promotion_with_balance(avito)
+    def stop_promotion_with_balance(avito, store)
       balance_raw = fetch_balance(avito)
       return if balance_raw.nil?
 
