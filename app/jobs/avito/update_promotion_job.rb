@@ -23,15 +23,17 @@ module Avito
       account_id = fetch_account_id(store, avito)&.dig('id')
       statistic  = fetch_statistics(avito, account_id)
       max_money  = args[:max_money] || user.settings.all_cached[:max_money].to_i
+      balance    = fetch_balance(avito, store.id)
       send_telegram_msg(store, statistic, max_money)
-      if statistic['presenceSpending'].present? && (statistic['presenceSpending'] / 100) < max_money
+      if can_promote?(balance, statistic['presenceSpending'], max_money)
         process_store(store, avito, args[:address_ids])
         msg = "✅ Установлена ручная ставка продвижения.\nВ продвижении: #{store.ads.where(promotion: true).size}"
         TelegramService.call(store.user, msg)
       else
         stop_all_promotion(store, avito)
+        msg = "‼️ Баланс на аккаунте #{store.manager_name} меньше #{BALANCE_LIMIT}₽. Продвижение остановлено."
+        TelegramService.call(store.user, msg) if balance > BALANCE_LIMIT
       end
-      stop_promotion_with_balance(avito, store)
     end
 
     private
@@ -190,24 +192,20 @@ module Avito
 
     def fetch_balance(avito, store_id)
       key = "bal_#{store_id}"
-      result = Rails.cache.fetch(key, expires_in: 5.minutes) do
+      balance_raw = Rails.cache.fetch(key, expires_in: 5.minutes) do
         response = avito.connect_to('https://api.avito.ru/cpa/v3/balanceInfo', :post, {})
         response&.success? ? JSON.parse(response.body) : nil
       end
-      Rails.cache.delete(key) if result.nil? || !result.is_a?(Hash)
-      result
+      if balance_raw.nil? || !balance_raw.is_a?(Hash)
+        Rails.cache.delete(key)
+        return balance_raw
+      end
+
+      balance_raw['balance'] ? balance_raw['balance'] / 100 : 0
     end
 
-    def stop_promotion_with_balance(avito, store)
-      balance_raw = fetch_balance(avito, store.id)
-      return if balance_raw.nil?
-
-      balance = balance_raw['balance'] ? balance_raw['balance'] / 100 : 0
-      return if balance > BALANCE_LIMIT
-
-      stop_all_promotion(store, avito)
-      msg = "‼️ Баланс на аккаунте #{store.manager_name} меньше #{BALANCE_LIMIT}₽. Продвижение остановлено."
-      TelegramService.call(store.user, msg)
+    def can_promote?(balance, spending, max_money)
+      spending.present? && (spending / 100) < max_money && balance > BALANCE_LIMIT
     end
   end
 end
