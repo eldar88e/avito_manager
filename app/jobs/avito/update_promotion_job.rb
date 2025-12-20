@@ -188,13 +188,18 @@ module Avito
       TelegramService.call(adv.user, msg)
     end
 
-    def fetch_balance(avito)
-      response = avito.connect_to('https://api.avito.ru/cpa/v3/balanceInfo', :post, {})
-      response&.success? ? JSON.parse(response.body) : nil
+    def fetch_balance(avito, store_id)
+      key = "bal_#{store_id}"
+      result = Rails.cache.fetch(key, expires_in: 5.minutes) do
+        response = avito.connect_to('https://api.avito.ru/cpa/v3/balanceInfo', :post, {})
+        response&.success? ? JSON.parse(response.body) : nil
+      end
+      Rails.cache.delete(key) if result.nil? || !result.is_a?(Hash)
+      result
     end
 
     def stop_promotion_with_balance(avito, store)
-      balance_raw = fetch_balance(avito)
+      balance_raw = fetch_balance(avito, store.id)
       return if balance_raw.nil?
 
       balance = balance_raw['balance'] ? balance_raw['balance'] / 100 : 0
