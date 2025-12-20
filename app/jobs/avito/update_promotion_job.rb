@@ -12,6 +12,7 @@ module Avito
     MIN_LIMIT_PENNY = 5000
     UP_LIMIT_PENNY = 100
     METRICS = %w[views contacts favorites presenceSpending impressions].freeze
+    BALANCE_LIMIT = 300
 
     def perform(user_id, store_id, **args)
       user       = User.find(user_id)
@@ -30,6 +31,7 @@ module Avito
       else
         stop_all_promotion(store, avito)
       end
+      stop_promotion_with_balance(avito)
     end
 
     private
@@ -184,6 +186,23 @@ module Avito
       msg += "\nStatus: #{response&.status}\nBody: #{body}"
       msg += "\nhttps://www.avito.ru/#{adv.avito_id}"
       TelegramService.call(adv.user, msg)
+    end
+
+    def fetch_balance(avito)
+      response = avito.connect_to('https://api.avito.ru/cpa/v3/balanceInfo', method: :post, payload: {})
+      response&.success? ? JSON.parse(response.body) : nil
+    end
+
+    def stop_promotion_with_balance(avito)
+      balance_raw = fetch_balance(avito)
+      return if balance_raw.nil?
+
+      balance = balance_raw['balance'] ? balance_raw['balance'] / 100 : 0
+      return if balance > BALANCE_LIMIT
+
+      stop_all_promotion(store, avito)
+      msg = "‼️ Баланс на аккаунте #{store.manager_name} меньше #{BALANCE_LIMIT}₽. Продвижение остановлено."
+      TelegramService.call(store.user, msg)
     end
   end
 end
