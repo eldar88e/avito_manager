@@ -189,7 +189,7 @@ module Avito
     end
 
     def fetch_balance(avito)
-      response = avito.connect_to('https://api.avito.ru/cpa/v3/balanceInfo', method: :post, payload: {})
+      response = avito.connect_to('https://api.avito.ru/cpa/v3/balanceInfo', :post, {})
       response&.success? ? JSON.parse(response.body) : nil
     end
 
