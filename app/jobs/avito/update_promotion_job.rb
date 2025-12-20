@@ -32,7 +32,7 @@ module Avito
       else
         stop_all_promotion(store, avito)
         msg = "‼️ Баланс на аккаунте #{store.manager_name} меньше #{BALANCE_LIMIT}₽. Продвижение остановлено."
-        TelegramService.call(store.user, msg) if balance > BALANCE_LIMIT
+        TelegramService.call(store.user, msg) if balance < BALANCE_LIMIT
       end
     end
 
