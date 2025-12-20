@@ -4,15 +4,15 @@ module Avito
   class UpdatePromotionJob < Avito::BaseApplicationJob
     queue_as :default
 
-    AD_TYPES = 'AdImport'.freeze
-    AD_CACHE_TIME = 5.minutes
-    MAX_PROMOTION = 3
+    AD_TYPES        = 'AdImport'.freeze
+    AD_CACHE_TIME   = 5.minutes
+    MAX_PROMOTION   = 3
     MAX_LIMIT_PENNY = 12_200 # 122 руб.
-    MIN_BID = 99
+    MIN_BID         = 99
     MIN_LIMIT_PENNY = 5000
-    UP_LIMIT_PENNY = 100
-    METRICS = %w[views contacts favorites presenceSpending impressions].freeze
-    BALANCE_LIMIT = 300
+    UP_LIMIT_PENNY  = 100
+    METRICS         = %w[views contacts favorites presenceSpending impressions].freeze
+    BALANCE_LIMIT   = 300
 
     def perform(user_id, store_id, **args)
       user       = User.find(user_id)
