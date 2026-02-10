@@ -11,6 +11,7 @@ RUN apk --update add --no-cache \
     curl \
     yarn \
     && rm -rf /var/cache/apk/*
+    # yaml
 
 ENV BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
@@ -19,7 +20,6 @@ ENV BUNDLE_DEPLOYMENT="1" \
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
-
 RUN gem install bundler -v $(tail -n 1 Gemfile.lock)
 RUN bundle check || bundle install --jobs=2 --retry=3
 RUN bundle clean --force
@@ -35,7 +35,7 @@ RUN apk --update add --no-cache \
 
 COPY . .
 
-RUN bundle exec bootsnap precompile --gemfile app/ lib/ config/
+# RUN bundle exec bootsnap precompile --gemfile app/ lib/ config/
 
 #RUN addgroup -g 1000 deploy && adduser -u 1000 -G deploy -D -s /bin/sh deploy
 #USER deploy:deploy
