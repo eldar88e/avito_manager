@@ -17,14 +17,18 @@ production:
     class: Avito::CheckErrorsJob
     args: [{ user_id: 1 }]
     schedule: "5 12,22 * * *"
-  update_avito_promotion:
-    class: Avito::UpdatePromotionJob
-    args: [1, 1]
-    schedule: "*/1 10-21 * * *"
-  stop_avito_promotion:
-    class: Avito::StopPromotionJob
-    args: [{ user_id: 1, store_id: 1 }]
-    schedule: every day at 22:00
+#  update_avito_promotion:
+#    class: Avito::UpdatePromotionJob
+#    args: [1, 1]
+#    schedule: "*/1 10-21 * * *"
+#  stop_avito_promotion:
+#    class: Avito::StopPromotionJob
+#    args: [{ user_id: 1, store_id: 1 }]
+#    schedule: every day at 22:00
+  import_products:
+    class: ImportProductsJob
+    args: [{ user_id: 1 }]
+    schedule: every day at 22:10
   update_feed:
     class: PopulateExcelJob
     args: [{ store_id: 1 }]
