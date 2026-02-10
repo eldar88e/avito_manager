@@ -25,7 +25,7 @@ gem 'aws-sdk-s3'
 gem 'devise'
 gem 'dotenv'
 gem 'fast_excel'
-gem 'gretel' # breadcrumbs
+# gem 'gretel' # breadcrumbs
 gem 'i18n'
 gem 'image_processing'
 gem 'pagy', '~> 9.4'
@@ -40,7 +40,6 @@ gem 'view_component'
 
 group :development, :test do
   gem 'brakeman', require: false
-  gem 'pry'
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
 end
@@ -49,6 +48,6 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'bullet'
-  gem 'letter_opener'
+  # gem 'letter_opener'
   gem 'web-console'
 end
