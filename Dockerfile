@@ -1,25 +1,15 @@
-FROM ruby:3.4.6-alpine3.22 AS miniapp
+FROM ruby:3.4.8-alpine3.23 AS miniapp
 
 RUN apk --update add --no-cache \
     build-base \
     yaml-dev \
     tzdata \
-    yarn \
-    libc6-compat \
+    libpq \
     postgresql-dev \
-    postgresql-client \
-    redis \
-    curl \
-    libffi-dev \
-    ruby-dev \
     vips \
     vips-dev \
-    libjpeg-turbo-dev \
-    libpng-dev \
-    libwebp-dev \
-    libheif-dev \
-    imagemagick \
-    imagemagick-dev \
+    curl \
+    yarn \
     && rm -rf /var/cache/apk/*
 
 ENV BUNDLE_DEPLOYMENT="1" \
@@ -30,7 +20,6 @@ WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
 
-RUN gem update --system 3.7.2
 RUN gem install bundler -v $(tail -n 1 Gemfile.lock)
 RUN bundle check || bundle install --jobs=2 --retry=3
 RUN bundle clean --force
