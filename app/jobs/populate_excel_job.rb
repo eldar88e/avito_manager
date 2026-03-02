@@ -16,7 +16,7 @@ class PopulateExcelJob < ApplicationJob
   COLUMNS_NAME = MAIN_COLUMNS + ADDITIONAL_COLUMNS
   PREFIX = {
     'Кровати' => 'Кровать', 'Диваны' => 'Диван', 'Тумбы' => 'Тумба', 'Мини-Диваны' => 'Мини-Диван',
-    'Диван-кровати' => 'Диван-кровать'
+    'Диван-Кровати' => 'Диван-кровать'
   }.freeze
   STOCK = 2
 
