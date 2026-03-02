@@ -150,8 +150,8 @@ class PopulateExcelJob < ApplicationJob
     type   = adv.extra['furniture_type']
 
     case adv.extra['sleeping_place_width']
-    when 200
-      "#{type} #{prefix} King Size"
+    # when 200 т.к. нет adv.extra
+    #   "#{type} #{prefix} King Size"
     when 160
       "#{type} евро #{prefix}"
     when 140, 120
