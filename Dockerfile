@@ -36,6 +36,7 @@ RUN bundle exec rails assets:precompile
 # RUN bundle exec bootsnap precompile --gemfile app/ lib/ config/
 
 RUN addgroup -g 1000 deploy && adduser -u 1000 -G deploy -D -s /bin/sh deploy
+RUN chown -R deploy:deploy /public/adverts_list /log /tmp
 USER deploy:deploy
 
 EXPOSE 3000
