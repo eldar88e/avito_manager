@@ -10,6 +10,9 @@ RUN apk --update add --no-cache \
     vips-dev \
     curl \
     yarn \
+    fontconfig \
+    freetype \
+    ttf-dejavu \
     && rm -rf /var/cache/apk/*
     # yaml
 
@@ -26,12 +29,6 @@ RUN bundle clean --force
 
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
-
-RUN apk --update add --no-cache \
-    fontconfig \
-    freetype \
-    ttf-dejavu \
-    && rm -rf /var/cache/apk/*
 
 COPY . .
 
