@@ -137,7 +137,7 @@ class PopulateExcelJob < ApplicationJob
 
   def formit_title(product, adv)
     prefix = PREFIX[product.category]
-    prefix = "#{adv.extra['furniture_type']} #{prefix.downcase}" if product.category == 'Кровати' && adv.extra.present?
+    prefix = build_bed_prefix(adv, prefix) if product.category == 'Кровати' && adv.extra.present?
     shape  = product.extra['furniture_shape']
     prefix = "#{shape} #{prefix.downcase}" if product.category == 'Диваны' && shape != 'Прямой'
     title  = prefix.present? ? "#{prefix} #{product.title}" : product.title
@@ -145,11 +145,27 @@ class PopulateExcelJob < ApplicationJob
     title
   end
 
+  def build_bed_prefix(adv, prefix_raw)
+    prefix = prefix_raw.downcase
+    type   = adv.extra['furniture_type']
+
+    case adv.extra['sleeping_place_width']
+    when 200
+      "#{type} #{prefix} King Size"
+    when 160
+      "#{type} евро #{prefix}"
+    when 140, 120
+      "Полутороспальная #{prefix}"
+    else
+      "#{type} #{prefix}" # 180 100 90
+    end
+  end
+
   def build_bed_title(adv, title)
     size =
-      if adv.extra['sleeping_place_width'] == 160
-        'Евро'
-      elsif [180, 120].include? adv.extra['sleeping_place_width']
+      # if adv.extra['sleeping_place_width'] == 160
+      #   'Евро'
+      if [180, 120].include? adv.extra['sleeping_place_width']
         ''
       else
         adv.extra['sleeping_place_width']
