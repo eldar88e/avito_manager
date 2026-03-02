@@ -14,7 +14,10 @@ class PopulateExcelJob < ApplicationJob
     MultiName ModelName
   ].freeze
   COLUMNS_NAME = MAIN_COLUMNS + ADDITIONAL_COLUMNS
-  PREFIX = { 'Кровати' => 'Кровать', 'Диваны' => 'Диван', 'Тумбы' => 'Тумба', 'Мини-Диваны' => 'Мини-Диван' }.freeze
+  PREFIX = {
+    'Кровати' => 'Кровать', 'Диваны' => 'Диван', 'Тумбы' => 'Тумба', 'Мини-Диваны' => 'Мини-Диван',
+    'Диван-кровати' => 'Диван-кровать'
+  }.freeze
   STOCK = 2
 
   def perform(**args)
