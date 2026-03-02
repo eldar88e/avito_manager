@@ -13,13 +13,13 @@ module Avito
       ads.group_by(&:store_id).each { |key, group_ads| update_price(key, group_ads, user) }
       nil
     rescue StandardError => e
-      handle_error(e)
+      handle_error(e, user)
     end
 
     private
 
-    def handle_error(error)
-      Rails.logger.error "Error #{self.class} || #{error.message}"
+    def handle_error(error, user)
+      Rails.logger.error error.full_message
       TelegramService.call(user, "Error #{self.class} || #{error.message}")
     end
 

@@ -14,7 +14,7 @@ class User < ApplicationRecord
   after_create :create_default_settings
 
   def member_of?(store)
-    stores.include?(store)
+    stores.exists?(id: store.id)
   end
 
   private

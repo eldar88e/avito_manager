@@ -37,8 +37,8 @@ module Avito
       url      = msg_url(1)
       payload  = { message: { text: params[:msg] }, type: 'text' }
       fetch_and_parse(url, :post, payload)
-      message = formit_msg
-      @messages = Rails.cache.read(@chat_id, @messages)
+      message   = formit_msg
+      @messages = Rails.cache.read(@chat_id)
       render turbo_stream: [
         turbo_stream.append(:messages, partial: '/avito/chats/message', locals: { message: })
         # TODO: Сделать scroll down и очищение input после отправки сообщения

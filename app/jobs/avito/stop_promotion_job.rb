@@ -8,7 +8,7 @@ module Avito
       user     = User.find(args[:user_id])
       store    = user.stores.find(args[:store_id])
       avito    = initialize_avito(store)
-      entities = args[:address_ids].present? ? store.addresses.where(id: args[:address_id]) : store
+      entities = args[:address_ids].present? ? store.addresses.where(id: args[:address_ids]) : store
       entities.ads.where(promotion: true).find_each { |ad| stop_promotion(avito, ad) }
     ensure
       msg = "🛑 Продвижение по ручной ставке остановлено.\nВ продвижении: #{store.ads.where(promotion: true).size}"

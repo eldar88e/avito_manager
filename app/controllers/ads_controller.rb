@@ -28,7 +28,7 @@ class AdsController < ApplicationController
   private
 
   def set_ad
-    @ad = Ad.find(params[:id])
+    @ad = current_user.ads.find(params[:id])
   end
 
   def ad_params
