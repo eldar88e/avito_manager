@@ -47,10 +47,13 @@ class AvitoService
 
   def fetch_token
     cache_key = "store_#{@store.id}_avito_token"
-    Rails.cache.fetch(cache_key, expires_in: 10.minutes) do
-      last_token = @store.avito_tokens.latest_valid.first
-      last_token&.access_token || refresh_token
+    result = Rails.cache.fetch(cache_key, expires_in: 23.hours) do
+      # last_token = @store.avito_tokens.latest_valid.first
+      # last_token&.access_token || refresh_token
+      refresh_token
     end
+    Rails.cache.delete(cache_key) if result.blank?
+    result
   end
 
   def refresh_token
@@ -69,7 +72,7 @@ class AvitoService
 
   def parse_token(response)
     token_info = JSON.parse(response.body)
-    @store.avito_tokens.create token_info
+    # @store.avito_tokens.create token_info
     token_info['access_token']
   end
 
