@@ -4,7 +4,6 @@ services:
     build: .
     env_file: ./.env
     volumes:
-      - gems:/usr/local/bundle
       - .:/app
 
   rails:
@@ -51,7 +50,6 @@ services:
 
 volumes:
   db_data:
-  gems:
 
 networks:
   net:
