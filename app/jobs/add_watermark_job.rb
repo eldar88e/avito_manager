@@ -97,7 +97,7 @@ class AddWatermarkJob < ApplicationJob
     product.extra_sizes.map.with_index do |params, index|
       variant_file_id = "#{product.external_id}_#{store.id}_#{address.id}_#{index}"
 
-      product.ads.find_or_create_by(file_id: variant_file_id) do |ad|
+      product.ads.active.find_or_create_by(file_id: variant_file_id) do |ad|
         ad.user         = store.user
         ad.address      = address
         ad.store        = store
