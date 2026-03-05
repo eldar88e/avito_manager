@@ -30,6 +30,6 @@ production:
     args: [{ user_id: 1 }]
     schedule: every day at 22:10
   update_feed:
-    class: PopulateExcelJob
-    args: [{ store_id: 1 }]
+    class: WatermarksSheetsJob
+    args: [{ store_id: 1, user_id: 1 }]
     schedule: every day at 22:20
