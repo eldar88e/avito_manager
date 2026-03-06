@@ -4,7 +4,7 @@ services:
     build: .
     env_file: ./.env
     volumes:
-      - .:/app
+      - ./public/adverts_list:/app/public/adverts_list
 
   rails:
     <<: *base
