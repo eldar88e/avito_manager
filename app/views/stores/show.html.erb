@@ -59,14 +59,22 @@
           Слои картинки
         </button>
 
-        <button type="button"
-                role="tab"
-                data-action="click->tabs#switch"
-                data-tabs-target="tab"
-                aria-selected="false"
-                class="me-5 md:me-0 px-3 py-2 text-sm font-medium -mb-px border-b-2 border-transparent focus:outline-none">
-          Объявления
-        </button>
+<!--        <button type="button"-->
+<!--                role="tab"-->
+<!--                data-action="click->tabs#switch"-->
+<!--                data-tabs-target="tab"-->
+<!--                aria-selected="false"-->
+<!--                class="me-5 md:me-0 px-3 py-2 text-sm font-medium -mb-px border-b-2 border-transparent focus:outline-none">-->
+<!--          Объявления-->
+<!--        </button>-->
+          <a href="/stores/<%= @store.id %>/ads"
+             data-turbo-prefetch="false"
+             data-turbo-frame="ads"
+             data-action="click->tabs#switch"
+             data-tabs-target="tab"
+             class="me-5 md:me-0 px-3 py-2 text-sm font-medium -mb-px border-b-2 border-transparent focus:outline-none">
+            Объявления
+          </a>
       </div>
 
       <!-- Panels -->
@@ -112,9 +120,7 @@
 
         <!-- 4 -->
         <section role="tabpanel" data-tabs-target="panel" class="hidden">
-          <%= turbo_frame_tag :ads do %>
-            <%= render partial: '/ads/ads_list' %>
-          <% end %>
+          <%= turbo_frame_tag :ads %>
         </section>
       </div>
     </div>

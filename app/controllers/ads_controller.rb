@@ -2,6 +2,11 @@ class AdsController < ApplicationController
   before_action :authenticate_user!, :set_store
   before_action :set_ad, only: %i[edit update]
 
+  def index
+    set_search_ads
+    @pagy, @ads = pagy(@q_ads.result, items: 36)
+  end
+
   def edit
     render turbo_stream: [
       turbo_stream.update(:modal_content, partial: '/ads/form'),

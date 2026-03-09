@@ -11,6 +11,6 @@ resources :stores do
 
   resources :streets, only: %i[index create update destroy]
   resources :maps, only: [:show]
-  resources :addresses, only: %i[new create show update destroy]
-  resources :ads, only: %i[edit update]
+  resources :addresses, only: %i[index new create show update destroy]
+  resources :ads, only: %i[index edit update]
 end

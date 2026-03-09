@@ -12,7 +12,7 @@ class Address < ApplicationRecord
 
   def store_address
     random_street = streets.sample
-    "#{city}, #{random_street.title}" if random_street
+    random_street.present? ? "#{city}, #{random_street.title}" : city
   end
 
   private
