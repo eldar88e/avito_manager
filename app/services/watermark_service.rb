@@ -124,10 +124,50 @@ class WatermarkService
     params     = layer[:params]
     rgba       = convert_to_rgba(params['fill'])
     font_size  = params['pointsize'].presence || DEFAULT_FONT_SIZE
-    font_back  = convert_to_rgba params['font_back'].presence || DEFAULT_TEXT_BACK
+    font_back  = convert_to_rgba(params['font_back'].presence || DEFAULT_TEXT_BACK)
+    padding    = (params['font_padding'] || 0).to_i
+    radius     = (params['font_back_radius'] || 0).to_i
     text_mask  = Vips::Image.text(layer[:title], font: "#{DEFAULT_FONT} #{font_size}", dpi: TEXT_DPI)
-    text       = text_mask.ifthenelse(rgba, font_back).copy(interpretation: 'srgb')
+
+    text = if padding.positive? || radius.positive?
+             build_padded_text(text_mask, rgba, font_back, padding, radius)
+           else
+             text_mask.ifthenelse(rgba, font_back).copy(interpretation: :srgb)
+           end
+
     @new_image = @new_image.composite2(text, 'over', x: params['pos_x'], y: params['pos_y'])
+  end
+
+  def build_padded_text(text_mask, text_color, bg_color, padding, radius)
+    bg_w = text_mask.width + padding * 2
+    bg_h = text_mask.height + padding * 2
+
+    bg = Vips::Image.black(bg_w, bg_h).new_from_image(bg_color).copy(interpretation: :srgb)
+
+    if radius.positive?
+      mask = rounded_rect_mask(bg_w, bg_h, radius)
+      bg_rgb   = bg.extract_band(0, n: 3)
+      bg_alpha = (bg.extract_band(3).cast(:float) * mask.cast(:float) / 255.0).cast(:uchar)
+      bg = bg_rgb.bandjoin(bg_alpha).copy(interpretation: :srgb)
+    end
+
+    text_layer = text_mask.ifthenelse(text_color, [0, 0, 0, 0]).copy(interpretation: :srgb)
+    bg.composite2(text_layer, 'over', x: padding, y: padding)
+  end
+
+  def rounded_rect_mask(width, height, radius)
+    r = [radius, width / 2, height / 2].min.to_f
+    xy = Vips::Image.xyz(width, height)
+    x = xy[0]
+    y = xy[1]
+
+    tl = (x < r) & (y < r) & (((x - r)**2 + (y - r)**2) > r**2)
+    tr = (x >= width - r) & (y < r) & (((x - width + r)**2 + (y - r)**2) > r**2)
+    bl = (x < r) & (y >= height - r) & (((x - r)**2 + (y - height + r)**2) > r**2)
+    br = (x >= width - r) & (y >= height - r) & (((x - width + r)**2 + (y - height + r)**2) > r**2)
+
+    outside = tl | tr | bl | br
+    outside.ifthenelse(0, 255).cast(:uchar)
   end
 
   def convert_to_rgba(color)
