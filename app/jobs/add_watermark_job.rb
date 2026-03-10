@@ -3,7 +3,8 @@ class AddWatermarkJob < ApplicationJob
 
   IMG_LIMIT_FOR_VARIANTS = 2..3
   IMG_LIMIT              = 0..8
-  BED_PARAMS = { pos_x: 80, pos_y: 1240, fill: '#FFFFFF', font_back: '#53713fd6', pointsize: 18 }.freeze
+  BED_PARAMS = { pos_x: 80, pos_y: 1240, fill: '#FFFFFF', font_back: '#53713f', pointsize: 18,
+                 font_padding: 30, font_back_radius: 20 }.freeze
 
   def perform(**args)
     user     = find_user(args)
