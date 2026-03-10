@@ -28,7 +28,7 @@
       <% end %>
 
       <% if address.streets.any? %>
-        <%= link_to  store_map_path(store_id: address.store, address_id: address, all: params[:all]),
+        <%= link_to  store_map_path(address.store, address, all: params[:all]),
                      title: 'Отобразить на карте покрытие адреса',
                      class: 'btn btn-primary btn-sm', data: { turbo_prefetch: false } do %>
           <%= render IconComponent.new name: :map, width: 20 %>

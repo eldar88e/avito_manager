@@ -1,7 +1,11 @@
 class AddressesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_store, only: %i[show update destroy new create]
+  before_action :set_store, only: %i[index show update destroy new create]
   before_action :set_address, only: %i[show update destroy]
+
+  def index
+    @addresses = @store.addresses.includes(:streets, image_attachment: :blob).order(:id)
+  end
 
   def show
     if @address

@@ -13,6 +13,6 @@ class MapsController < ApplicationController
   private
 
   def set_address
-    @address = @store.addresses.find(params[:address_id]) if @store
+    @address = @store.addresses.find(params[:id]) if @store
   end
 end

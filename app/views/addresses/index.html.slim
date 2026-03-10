@@ -1,0 +1,13 @@
+= turbo_frame_tag :addr_block do
+  .flex.justify-end.gap-2
+    - first_with_streets = @addresses.detect { |a| a.streets.any? }
+    - if first_with_streets
+      = link_to store_map_path(@store, first_with_streets, all: true), class: 'btn btn-primary mb-3', data: { turbo_prefetch: false } do
+        | Все маркеры на карте
+    = render partial: '/addresses/new_address_btn', locals: { store: @store }
+
+  ul class="divide-y rounded-lg border p-3 mb-3" id="addresses"
+    = render @addresses
+
+  = turbo_frame_tag :test_img do
+    = render partial: '/stores/test_img'

@@ -41,14 +41,14 @@
           Основная информация
         </button>
 
-        <button type="button"
-                role="tab"
-                data-action="click->tabs#switch"
-                data-tabs-target="tab"
-                aria-selected="false"
-                class="px-3 py-2 text-sm font-medium -mb-px border-b-2 border-transparent focus:outline-none">
+        <a href="<%= store_addresses_path(@store) %>"
+           data-turbo-prefetch="false"
+           data-turbo-frame="addr_block"
+           data-action="click->tabs#switch"
+           data-tabs-target="tab"
+           class="me-5 md:me-0 px-3 py-2 text-sm font-medium -mb-px border-b-2 border-transparent focus:outline-none">
           Адреса магазина
-        </button>
+        </a>
 
         <button type="button"
                 role="tab"
@@ -96,16 +96,10 @@
 
         <!-- 2 -->
         <section role="tabpanel" data-tabs-target="panel" class="hidden">
-          <div class="flex justify-end">
-            <%= render partial: '/addresses/new_address_btn', locals: { store: @store } %>
-          </div>
-
-          <ul class="divide-y rounded-lg border p-3 mb-3" id="addresses">
-            <%= render @addresses %>
-          </ul>
-
-          <%= turbo_frame_tag :test_img do %>
-            <%= render partial: '/stores/test_img' %>
+          <%= turbo_frame_tag :addr_block do %>
+            <div class="flex justify-center items-center h-16 my-10">
+              <span class="animate-spin rounded-full h-10 w-10 border-b-2 text-blue-700"></span>
+            </div>
           <% end %>
         </section>
 
