@@ -10,6 +10,7 @@
           li = active_link_to 'Stores', stores_path, class: 'nav-link', active: :exclusive, data: { turbo_prefetch: false }
           li = active_link_to 'Feeds', root_path, class: 'nav-link', active: :exclusive, data: { turbo_prefetch: false }
           li = active_link_to 'Avito', avitos_path, class: 'nav-link', active: :exclusive, data: { turbo_prefetch: false }
+          li = link_to 'SolidQueue', '/solid-queue', class: 'nav-link', data: { turbo_prefetch: false }
 
         .text-right
           div style="margin-right: 5px;" Hello <span style="font-weight: bold;">#{current_user.email}</span>!
