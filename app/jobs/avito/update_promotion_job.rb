@@ -13,6 +13,7 @@ module Avito
     UP_LIMIT_PENNY  = 100
     METRICS         = %w[views contacts favorites presenceSpending impressions].freeze
     BALANCE_LIMIT   = 300
+    MAX_RETRIES     = 3
 
     def perform(user_id, store_id, **args)
       user       = User.find(user_id)
@@ -112,11 +113,20 @@ module Avito
       # TelegramJob.perform_later(msg:, user_id: adv.user_id)
     end
 
-    def fetch_promotion(avito, adv)
+    def fetch_promotion(avito, adv, retries = 0)
       item_id  = adv.avito_id || fetch_avito_id(avito, adv)
       url      = "https://api.avito.ru/cpxpromo/1/getBids/#{item_id}"
       response = avito.connect_to(url, :get)
       JSON.parse(response.body)
+    rescue JSON::ParserError => e
+      if retries < MAX_RETRIES
+        sleep 1 + retries
+        retries += 1
+        retry
+      end
+
+      TelegramJob.perform_later(msg: e.message, user_id: adv.user_id)
+      raise e
     end
 
     def initialize_avito(store)
