@@ -120,13 +120,14 @@ module Avito
       JSON.parse(response.body)
     rescue JSON::ParserError => e
       if retries < MAX_RETRIES
-        sleep 1 + retries
+        sleep 3 + retries
         retries += 1
         retry
       end
 
-      TelegramJob.perform_later(msg: e.message, user_id: adv.user_id)
-      raise e
+      msg = "‼️ Ошибка парсинга JSON: #{e.message}\n#{response&.body}\n#{response&.status}\n#{response&.headers}#{url}"
+      TelegramJob.perform_later(msg: msg, user_id: adv.user_id)
+      raise msg
     end
 
     def initialize_avito(store)
