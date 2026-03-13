@@ -1,7 +1,6 @@
 @import "tailwindcss";
-
-@import "./colors";
 @import "./old_style.scss";
+@import "./colors";
 
 body {
   font-family: var(--font-sans);
