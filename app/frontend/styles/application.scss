@@ -1,11 +1,10 @@
 @import "tailwindcss";
 
 @import "./colors";
-@import "./fonts";
 @import "./old_style.scss";
 
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--font-sans);
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;

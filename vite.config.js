@@ -20,6 +20,18 @@ export default defineConfig({
       plugins: [autoprefixer()],
     },
   },
+  build: {
+    assetsInlineLimit: 1500,
+    chunkSizeWarningLimit: 600,
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("swiper")) return "swiper";
+        }
+      }
+    }
+  },
   server: {
     host: 'localhost',
     port: 3036,
