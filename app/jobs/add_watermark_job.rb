@@ -28,7 +28,7 @@ class AddWatermarkJob < ApplicationJob
             # raise("No set img for #{product.class}") unless product.is_a?(AdImport)
 
             ad.images.purge if args[:clean]
-            make_image(ad, product.images['first'], count)
+            make_image(ad, product.images['first'], count) if product.images['first'].present?
             (product.images['other'] || [])[IMG_LIMIT].each { |image| make_image(ad, image, count) }
           end
           next if product.category != 'Кровати' || product.extra_sizes.blank?
@@ -110,7 +110,7 @@ class AddWatermarkJob < ApplicationJob
 
   def make_variants_images(product, adv, count)
     title = "Спальное место: #{product.extra['sleeping_place_length']}0х#{adv.extra['sleeping_place_width']}0"
-    (product.images['other'] || []).shuffle[0..rand(1..2)].each do |image|
+    (product.images['other'] || [])[0..-2].shuffle[0..rand(1..2)].each do |image|
       add_layer = { title: title, menuindex: 99, layer_type: 'text', params: BED_PARAMS }.to_json
       make_image(adv, image, count, add_layer)
     end
