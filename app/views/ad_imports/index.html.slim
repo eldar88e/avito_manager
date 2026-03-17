@@ -6,4 +6,5 @@
       div = ad_import.title
       div = ad_import.price
       div = ad_import.description.html_safe
+      = image_tag ad_import.image['first']
   = render 'partials/pagy'
