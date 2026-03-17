@@ -5,5 +5,5 @@
     .mb-5.flex.justify-between
       div = ad_import.title
       div = ad_import.price
-      div = ad_import.description
+      div = ad_import.description.html_safe
   = render 'partials/pagy'
