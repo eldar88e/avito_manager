@@ -51,7 +51,9 @@ class ImportProductsJob < ApplicationJob
   end
 
   def process_product(user, row, run_id, count)
-    row[:images] = { first: row.delete('first_image'), other: row.delete('images') }
+    row[:images] = {
+      first: row.delete('first_image'), other: [row.delete('images'), row.delete('sizes_img')].flatten.compact
+    }
 
     color                                    = row['extra']['color']
     row['extra']['color']                    = COLORS.include?(color) ? color : 'Другой'
