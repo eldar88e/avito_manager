@@ -10,7 +10,7 @@ class ExampleImageService
   end
 
   def assemble
-    product   = @user.ad_imports.active.sample
+    product   = @user.ad_imports.active.order('RANDOM()').limit(1).first
     avito_img = product.images['first']
     main_imgs = [avito_img, product.images['other']&.first].compact_blank.uniq
     return { error: 'Не найдены изображения для тестовой картинки' } if main_imgs.empty?
