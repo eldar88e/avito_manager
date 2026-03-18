@@ -16,10 +16,12 @@ class WatermarkService
     @store     = args[:store]
     @settings  = args[:settings]
     # @main_font = make_font @settings[:main_font]
-    @width     = (@settings[:avito_img_width] || DEFAULT_WIDTH).to_i
-    @height    = (@settings[:avito_img_height] || DEFAULT_HEIGHT).to_i
+    @reference_width  = (args[:width] || @settings[:avito_img_width] || DEFAULT_WIDTH).to_i
+    @reference_height = (args[:height] || @settings[:avito_img_height] || DEFAULT_HEIGHT).to_i
+    @main_img = args[:main_img]
+    @preserve_main_image_size = args[:preserve_main_image_size]
+    prepare_canvas!
     @new_image = initialize_first_layer
-    @main_img  = args[:main_img]
     @add_layer = JSON.parse(args[:add_layer]).transform_keys(&:to_sym) if args[:add_layer].present?
     handle_layers(args[:address])
   end
@@ -89,24 +91,23 @@ class WatermarkService
   def rewrite_pos_size(args)
     args = args.presence || {}
     formated_args = %w[pos_x pos_y row column].each_with_object({}) do |key, hash|
+      scaled_value = scaled_param_value(args[key], key)
       max_value = %w[pos_x row].include?(key) ? @width : @height
-      hash[key] = [args[key].to_i, max_value].min
+      hash[key] = [scaled_value, max_value].min
     end
     args.merge formated_args
   end
 
   def add_img(layer)
+    params     = normalized_img_params(layer)
     raw_image  = load_image(layer[:img])
-    image      = resize_image!(raw_image, layer[:params])
-    @new_image = @new_image.composite2(image, 'over', x: layer[:params]['pos_x'], y: layer[:params]['pos_y'])
+    image      = resize_image!(raw_image, params, layer)
+    @new_image = @new_image.composite2(image, 'over', x: params['pos_x'], y: params['pos_y'])
   end
 
-  def load_image(url_or_blob)
-    data = url_or_blob.is_a?(ActiveStorage::Blob) ? url_or_blob.download : URI.open(url_or_blob).read
-    Vips::Image.new_from_buffer(data, '')
-  end
+  def resize_image!(img, params, layer)
+    return crop_to_target_aspect(img) if preserve_main_image_size?(layer)
 
-  def resize_image!(img, params)
     if params['row'].positive? && params['column'].positive?
       img.thumbnail_image(params['row'], height: params['column'])
     elsif params['column'].positive?
@@ -123,10 +124,10 @@ class WatermarkService
 
     params     = layer[:params]
     rgba       = convert_to_rgba(params['fill'])
-    font_size  = params['pointsize'].presence || DEFAULT_FONT_SIZE
+    font_size  = scaled_text_value(params['pointsize'].presence || DEFAULT_FONT_SIZE)
     font_back  = convert_to_rgba(params['font_back'].presence || DEFAULT_TEXT_BACK)
-    padding    = (params['font_padding'] || 0).to_i
-    radius     = (params['font_back_radius'] || 0).to_i
+    padding    = scaled_text_value(params['font_padding'] || 0)
+    radius     = scaled_text_value(params['font_back_radius'] || 0)
     text_mask  = Vips::Image.text(layer[:title], font: "#{DEFAULT_FONT} #{font_size}", dpi: TEXT_DPI)
 
     text = if padding.positive? || radius.positive?
@@ -207,5 +208,73 @@ class WatermarkService
       layer_type: layer.layer_type,
       title: layer.title
     }
+  end
+
+  def prepare_canvas!
+    if @preserve_main_image_size && @main_img.present?
+      @prepared_main_img = crop_to_target_aspect(load_image(@main_img))
+      @width = @prepared_main_img.width
+      @height = @prepared_main_img.height
+    else
+      @width = @reference_width
+      @height = @reference_height
+    end
+  end
+
+  def scaled_param_value(value, key)
+    raw_value = value.to_i
+    return raw_value unless @preserve_main_image_size
+
+    scale = %w[pos_x row].include?(key) ? width_scale : height_scale
+    (raw_value * scale).round
+  end
+
+  def width_scale
+    @width.to_f / @reference_width
+  end
+
+  def height_scale
+    @height.to_f / @reference_height
+  end
+
+  def preserve_main_image_size?(layer)
+    @preserve_main_image_size && layer[:img] == @main_img
+  end
+
+  def crop_to_target_aspect(img)
+    source_ratio = img.width.to_f / img.height
+    target_ratio = @reference_width.to_f / @reference_height
+
+    if source_ratio > target_ratio
+      crop_width = (img.height * target_ratio).round
+      left = [(img.width - crop_width) / 2, 0].max
+      img.crop(left, 0, crop_width, img.height)
+    elsif source_ratio < target_ratio
+      crop_height = (img.width / target_ratio).round
+      top = [(img.height - crop_height) / 2, 0].max
+      img.crop(0, top, img.width, crop_height)
+    else
+      img
+    end
+  end
+
+  def load_image(url_or_blob)
+    return @prepared_main_img if @prepared_main_img && url_or_blob == @main_img
+
+    data = url_or_blob.is_a?(ActiveStorage::Blob) ? url_or_blob.download : URI.open(url_or_blob).read
+    Vips::Image.new_from_buffer(data, '')
+  end
+
+  def normalized_img_params(layer)
+    return layer[:params] unless preserve_main_image_size?(layer)
+
+    layer[:params].merge('pos_x' => 0, 'pos_y' => 0, 'row' => @width, 'column' => @height)
+  end
+
+  def scaled_text_value(value)
+    raw_value = value.to_i
+    return raw_value unless @preserve_main_image_size
+
+    (raw_value * [width_scale, height_scale].min).round
   end
 end

@@ -18,6 +18,7 @@ class Store < ApplicationRecord
   # has_many :cache_reports, dependent: :destroy
 
   has_one_attached :test_img, dependent: :purge
+  has_many_attached :test_imgs, dependent: :purge
 
   belongs_to :user
 

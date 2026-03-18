@@ -3,7 +3,7 @@ class SaveImageJob < ApplicationJob
 
   def perform(**args)
     adv     = Ad.find(args[:ad_id])
-    options = make_options(adv, args[:image_url], args[:add_layer])
+    options = make_options(adv, args[:image_url], args[:add_layer], args[:preserve_main_image_size])
     process_image(options, adv)
   rescue StandardError => e
     Rails.logger.error "#{e.class} || #{e.message}\nID: #{adv.adable.id}"
@@ -11,13 +11,14 @@ class SaveImageJob < ApplicationJob
 
   private
 
-  def make_options(adv, image, add_layer)
+  def make_options(adv, image, add_layer, preserve_main_image_size)
     {
       store: adv.store,
       address: adv.address,
       settings: fetch_settings(adv.user),
       main_img: image,
-      add_layer: add_layer
+      add_layer: add_layer,
+      preserve_main_image_size: preserve_main_image_size
     }
   end
 

@@ -1,21 +1,21 @@
 class ExampleImageService
-  def initialize(user, address)
+  def initialize(address)
     @store    = address.store
     @address  = address
-    @user     = user
+    @user     = @store.user
   end
 
-  def self.call(user, address)
-    new(user, address).assemble
+  def self.call(address)
+    new(address).assemble
   end
 
   def assemble
-    product   = @user.ad_imports.active.order(:created_at).first
-    main_img  = product.images['first']
-    w_service = WatermarkService.new(store: @store, address: @address, settings: settings, main_img: main_img)
-    return unless w_service.image_exist?
+    product   = @user.ad_imports.active.sample
+    avito_img = product.images['first']
+    main_imgs = [avito_img, product.images['other']&.first].compact_blank.uniq
+    return { error: 'Не найдены изображения для тестовой картинки' } if main_imgs.empty?
 
-    save_image(w_service)
+    save_images(main_imgs, avito_img)
     { success: true }
   rescue StandardError => e
     Rails.logger.error e.message
@@ -24,12 +24,22 @@ class ExampleImageService
 
   private
 
-  def save_image(w_service)
-    image = w_service.add_watermarks
-    Tempfile.open(%w[image .jpg]) do |temp_img|
-      image.write_to_file(temp_img.path)
-      temp_img.flush
-      @store.test_img.attach(io: File.open(temp_img.path), filename: 'test.jpg', content_type: 'image/jpeg')
+  def save_images(main_imgs, avito_img)
+    @store.test_imgs.purge
+
+    main_imgs.each_with_index do |main_img, index|
+      preserve_main_image_size = avito_img == main_img
+      w_service = WatermarkService.new(
+        store: @store, address: @address, settings: settings, main_img: main_img, preserve_main_image_size:
+      )
+      next unless w_service.image_exist?
+
+      image = w_service.add_watermarks
+      Tempfile.open(%W[test-image-#{index} .jpg]) do |temp_img|
+        image.write_to_file(temp_img.path)
+        temp_img.flush
+        @store.test_imgs.attach(io: File.open(temp_img.path), filename: "test_#{index + 1}.jpg", content_type: 'image/jpeg')
+      end
     end
   end
 

@@ -2,7 +2,7 @@ class AddWatermarkJob < ApplicationJob
   queue_as :default
 
   IMG_LIMIT_FOR_VARIANTS = 2..3
-  IMG_LIMIT              = 0..8
+  IMG_LIMIT              = 9
   BED_PARAMS = { pos_x: 80, pos_y: 1240, fill: '#FFFFFF', font_back: '#53713f', pointsize: 18,
                  font_padding: 30, font_back_radius: 20 }.freeze
 
@@ -28,8 +28,13 @@ class AddWatermarkJob < ApplicationJob
             # raise("No set img for #{product.class}") unless product.is_a?(AdImport)
 
             ad.images.purge if args[:clean]
-            make_image(ad, product.images['first'], count) if product.images['first'].present?
-            (product.images['other'] || [])[IMG_LIMIT].each { |image| make_image(ad, image, count) }
+            img_limit = IMG_LIMIT
+            if product.images['first'].present?
+              make_image(ad, product.images['first'], count, preserve_main_image_size: true)
+              img_limit -= 1
+            end
+            images = product.images['other'] || []
+            (images.first(img_limit) + [images.last].compact).uniq.each { |i| make_image(ad, i, count) }
           end
           next if product.category != 'Кровати' || product.extra_sizes.blank?
 
@@ -50,8 +55,8 @@ class AddWatermarkJob < ApplicationJob
 
   private
 
-  def make_image(adv, image_url, count, add_layer = nil)
-    SaveImageJob.perform_now(ad_id: adv.id, image_url:, add_layer:)
+  def make_image(adv, image_url, count, add_layer = nil, preserve_main_image_size: false)
+    SaveImageJob.perform_now(ad_id: adv.id, image_url:, add_layer:, preserve_main_image_size:)
     count[0] += 1
   end
 
