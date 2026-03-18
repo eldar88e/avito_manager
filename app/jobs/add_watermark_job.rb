@@ -115,7 +115,8 @@ class AddWatermarkJob < ApplicationJob
 
   def make_variants_images(product, adv, count)
     title = "Спальное место: #{product.extra['sleeping_place_length']}0х#{adv.extra['sleeping_place_width']}0"
-    (product.images['other'] || [])[0..-2].shuffle[0..rand(1..2)].each do |image|
+    images = product.images['other'] || []
+    (images[0..-2].sample(rand(1..2)) + [images.last].compact).uniq.each do |image|
       add_layer = { title: title, menuindex: 99, layer_type: 'text', params: BED_PARAMS }.to_json
       make_image(adv, image, count, add_layer)
     end
