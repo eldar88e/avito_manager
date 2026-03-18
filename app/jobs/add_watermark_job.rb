@@ -3,6 +3,7 @@ class AddWatermarkJob < ApplicationJob
 
   IMG_LIMIT_FOR_VARIANTS = 2..3
   IMG_LIMIT              = 9
+  IMG_LIMIT_VARIANTS     = 2..3
   BED_PARAMS = { pos_x: 80, pos_y: 1240, fill: '#FFFFFF', font_back: '#53713f', pointsize: 18,
                  font_padding: 30, font_back_radius: 20 }.freeze
 
@@ -116,7 +117,7 @@ class AddWatermarkJob < ApplicationJob
   def make_variants_images(product, adv, count)
     title = "Спальное место: #{product.extra['sleeping_place_length']}0х#{adv.extra['sleeping_place_width']}0"
     images = product.images['other'] || []
-    (images[0..-2].sample(rand(1..2)) + [images.last].compact).uniq.each do |image|
+    (images[0..-2].sample(rand(IMG_LIMIT_VARIANTS)) + [images.last].compact).uniq.each do |image|
       add_layer = { title: title, menuindex: 99, layer_type: 'text', params: BED_PARAMS }.to_json
       make_image(adv, image, count, add_layer)
     end
