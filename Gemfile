@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 ruby '3.4.8'
-gem 'rails', '~> 8.0'
+gem 'rails', '~> 8.1'
 
 gem 'bootsnap', require: false
 gem 'jbuilder'
@@ -28,15 +28,14 @@ gem 'fast_excel'
 # gem 'gretel' # breadcrumbs
 gem 'i18n'
 gem 'image_processing'
-gem 'pagy', '~> 9.4'
-gem 'pghero'
+gem 'pagy'
 gem 'ransack'
-gem 'rollbar'
 gem 'slim-rails'
-gem 'telegram-bot-ruby', '~> 2.0'
+gem 'telegram-bot-ruby'
 gem 'view_component'
 
-# gem 'rmagick'
+gem 'pghero'
+gem 'rollbar'
 
 group :development, :test do
   gem 'brakeman', require: false

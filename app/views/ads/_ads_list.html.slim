@@ -28,6 +28,6 @@
       = render @ads
 
   div data-controller="pagy-initializer" class="mt-3 mb-3"
-    == pagy_nav(@pagy, data: { turbo_prefetch: false }) if @pagy.pages > 1
+    == @pagy.series_nav if @pagy.pages > 1
 
-  == pagy_info(@pagy)
+  == @pagy.info_tag

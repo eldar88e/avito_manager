@@ -1,6 +1,4 @@
 module ApplicationHelper
-  include Pagy::Frontend
-
   def storage_path(image, variant = nil)
     AttachmentUrlBuilderService.storage_path(image, variant)
   end

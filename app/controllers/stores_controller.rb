@@ -10,9 +10,7 @@ class StoresController < ApplicationController
   end
 
   def show
-    # add_breadcrumb @store.manager_name, store_path(@store)
-    # @pagy, @ads   = pagy(@q_ads.result, items: 36)
-    @image_layers = @store.image_layers.includes(layer_attachment: :blob).order(:menuindex, :id)
+    @image_layers = @store.image_layers.includes(:layer_attachment).order(:menuindex, :id)
   end
 
   def new
