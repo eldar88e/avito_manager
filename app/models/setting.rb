@@ -9,9 +9,8 @@ class Setting < ApplicationRecord
 
   def self.all_cached(user_id)
     Rails.cache.fetch("settings/user_#{user_id}") do
-      settings             = pluck(:variable, :value).to_h.symbolize_keys
-      blob                 = find_by(variable: 'main_font')&.font&.blob
-      settings[:main_font] = blob if blob
+      settings = pluck(:variable, :value).to_h.symbolize_keys
+      settings[:main_font] = find_by(variable: 'main_font')&.font&.blob
       settings
     end
   end
