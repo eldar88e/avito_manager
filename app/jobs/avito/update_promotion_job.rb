@@ -7,7 +7,7 @@ module Avito
     AD_TYPES        = 'AdImport'.freeze
     AD_CACHE_TIME   = 5.minutes
     MAX_PROMOTION   = 3
-    MAX_LIMIT_PENNY = 12_200 # 122 руб.
+    MAX_LIMIT_PENNY = 14_200 # 142 руб.
     MIN_BID         = 99
     MIN_LIMIT_PENNY = 5000
     UP_LIMIT_PENNY  = 100
@@ -95,7 +95,7 @@ module Avito
       return promotion['manual']['bids'].max_by { |b| b['compare'] } if bids.blank?
 
       result = bids.select { |b| b['valuePenny'] <= MAX_LIMIT_PENNY }.max_by { |b| b['valuePenny'] }
-      TelegramJob.perform_later(msg: "‼️ #{bids.first['valuePenny']}", user_id: adv.user_id) if result.blank?
+      TelegramJob.perform_later(msg: "‼️ #{bids.first['valuePenny'] / 100} ₽", user_id: adv.user_id) if result.blank?
       result.presence || bids.first
     end
 
