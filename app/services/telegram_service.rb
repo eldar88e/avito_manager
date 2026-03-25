@@ -5,8 +5,9 @@ class TelegramService
 
   def initialize(user_id, message)
     @message   = message
-    @chat_id   = Setting.fetch_value(:tg_chat_ids, user_id)
-    @bot_token = Setting.fetch_value(:tg_token, user_id)
+    settings   = Setting.all_cached(user_id)
+    @chat_id   = settings[:tg_chat_ids]
+    @bot_token = settings[:tg_token]
   end
 
   def self.call(user, message)
