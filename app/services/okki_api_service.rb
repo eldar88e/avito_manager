@@ -17,12 +17,10 @@ class OkkiApiService
 
   def fetch_products
     response = @conn.get("/api/v1/products?page=#{@page}") do |req|
-      req.headers['Authorization'] = @token
+      req.headers['Authorization'] = "Bearer #{@token}"
     end
+    raise "Error #{response.status} #{response.body}" unless response.success?
 
     response.body
-  rescue StandardError => e
-    Rails.logger.error e.message
-    { error: e.message }
   end
 end
