@@ -95,7 +95,8 @@ module Avito
       return promotion['manual']['bids'].max_by { |b| b['compare'] } if bids.blank?
 
       result = bids.select { |b| b['valuePenny'] <= MAX_LIMIT_PENNY }.max_by { |b| b['valuePenny'] }
-      TelegramJob.perform_later(msg: "‼️ #{bids.first['valuePenny'] / 100} ₽", user_id: adv.user_id) if result.blank?
+      msg    = "‼️ Минимальная ставка #{bids.first['valuePenny'] / 100} ₽\n#{adv.full_address}\n#{adv.adable.title}"
+      TelegramJob.perform_later(msg: msg, user_id: adv.user_id) if result.blank?
       result.presence || bids.first
     end
 
