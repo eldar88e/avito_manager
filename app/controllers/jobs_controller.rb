@@ -68,7 +68,7 @@ class JobsController < ApplicationController
 
   def set_settings
     settings              = current_user.settings
-    @settings             = settings.all_cached
+    @settings             = Setting.all_cached(current_user.id)
     blob                  = settings.find_by(variable: 'main_font')&.font&.blob
     # @settings[:main_font] = blob.service.path_for(blob.key) if blob
     @settings[:main_font] = blob if blob

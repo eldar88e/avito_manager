@@ -44,6 +44,6 @@ class ExampleImageService
   end
 
   def settings
-    @store.user.settings.all_cached
+    Setting.all_cached(@store.user_id)
   end
 end

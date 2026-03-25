@@ -1,6 +1,4 @@
 class Setting < ApplicationRecord
-  DEFAULT_USER_ID = 1
-
   belongs_to :user
   has_one_attached :font, dependent: :purge
 
@@ -9,7 +7,7 @@ class Setting < ApplicationRecord
 
   after_commit :clear_settings_cache, on: %i[create update destroy]
 
-  def self.all_cached(user_id = DEFAULT_USER_ID)
+  def self.all_cached(user_id)
     Rails.cache.fetch("settings/user_#{user_id}") do
       settings             = pluck(:variable, :value).to_h.symbolize_keys
       blob                 = find_by(variable: 'main_font')&.font&.blob
@@ -18,7 +16,7 @@ class Setting < ApplicationRecord
     end
   end
 
-  def self.fetch_value(key, user_id = DEFAULT_USER_ID)
+  def self.fetch_value(key, user_id)
     all_cached(user_id)[key]
   end
 

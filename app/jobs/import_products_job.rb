@@ -92,8 +92,8 @@ class ImportProductsJob < ApplicationJob
   end
 
   def fetch_products(user, page = 1)
-    url   = user.settings.fetch_value(:okki_api_url)
-    token = user.settings.fetch_value(:okki_api_token)
+    url   = Setting.fetch_value(:okki_api_url, user.id)
+    token = Setting.fetch_value(:okki_api_token, user.id)
     OkkiApiService.call(url, token, page)
   end
 

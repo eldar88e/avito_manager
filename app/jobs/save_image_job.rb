@@ -24,9 +24,8 @@ class SaveImageJob < ApplicationJob
 
   def fetch_settings(user)
     Rails.cache.fetch("settings_#{user.id}", expires_in: 10.minutes) do
-      set_row              = user.settings
-      settings             = set_row.all_cached
-      blob                 = set_row.find_by(variable: 'main_font')&.font&.blob
+      settings             = Setting.all_cached(user.id)
+      blob                 = user.settings.find_by(variable: 'main_font')&.font&.blob
       settings[:main_font] = blob if blob # TODO: разобраться со шрифтом для vips
       settings
     end

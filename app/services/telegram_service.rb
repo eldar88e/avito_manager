@@ -3,16 +3,16 @@ require 'telegram/bot'
 class TelegramService
   MESSAGE_LIMIT = 4_090
 
-  def initialize(user, message)
+  def initialize(user_id, message)
     @message   = message
-    @chat_id   = user.settings.fetch_value(:tg_chat_ids)
-    @bot_token = user.settings.fetch_value(:tg_token)
+    @chat_id   = Setting.fetch_value(:tg_chat_ids, user_id)
+    @bot_token = Setting.fetch_value(:tg_token, user_id)
   end
 
   def self.call(user, message)
     return Rails.logger.error("User not specified for #{self.class}") if user.nil?
 
-    new(user, message).report
+    new(user.id, message).report
   end
 
   def report

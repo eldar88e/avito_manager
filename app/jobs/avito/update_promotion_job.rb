@@ -23,7 +23,7 @@ module Avito
       avito      = initialize_avito(store)
       account_id = fetch_account_id(store, avito)&.dig('id')
       statistic  = fetch_statistics(avito, account_id)
-      max_money  = args[:max_money] || user.settings.all_cached[:max_money].to_i
+      max_money  = args[:max_money] || Setting.all_cached(user_id)[:max_money].to_i
       balance    = fetch_balance(avito, store.id)
       send_telegram_msg(store, statistic, max_money)
       if can_promote?(balance, statistic['presenceSpending'], max_money)

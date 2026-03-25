@@ -23,7 +23,7 @@ class PopulateExcelJob < ApplicationJob
   def perform(**args)
     store     = Store.find(args[:store_id])
     user      = store.user
-    limit     = user.settings.all_cached[:quantity_games]
+    limit     = Setting.all_cached(user.id)[:quantity_games]
     workbook  = FastExcel.open
     worksheet = create_worksheet(workbook)
     # products = user.products.active.with_attached_image
