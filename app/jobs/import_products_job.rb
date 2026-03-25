@@ -68,6 +68,7 @@ class ImportProductsJob < ApplicationJob
     row['extra']['purpose']      = 'Гостиная' if row['category'] == 'Диваны'
     row['extra']['purpose']      = 'Гостиная|Детская|Кухня|Офис|Кафе и ресторан' if row['category'] == 'Мини-Диваны'
     row['extra']['multi_name']   = row['title']
+    row['extra']['length']       = row['extra']['depth'] if row['category'] == 'Пуфы и банкетки'
 
     add_attributes_bed(row) if row['category'] == 'Кровати'
 
