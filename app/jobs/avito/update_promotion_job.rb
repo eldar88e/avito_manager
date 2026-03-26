@@ -7,7 +7,7 @@ module Avito
     AD_TYPES        = 'AdImport'.freeze
     AD_CACHE_TIME   = 5.minutes
     MAX_PROMOTION   = 3
-    MAX_LIMIT_PENNY = 14_200 # 142 руб.
+    MAX_LIMIT_PENNY = 13_200 # 132 руб.
     MIN_BID         = 99
     MIN_LIMIT_PENNY = 5000
     UP_LIMIT_PENNY  = 100
