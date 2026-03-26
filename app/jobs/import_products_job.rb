@@ -69,12 +69,7 @@ class ImportProductsJob < ApplicationJob
     row['extra']['purpose']      = 'Гостиная|Детская|Кухня|Офис|Кафе и ресторан' if row['category'] == 'Мини-Диваны'
     row['extra']['multi_name']   = row['title']
 
-    if row['category'] == 'Пуфы и банкетки'
-      row['extra']['length']          = row['extra']['depth']
-      row['extra']['furniture_frame'] = 'Дерево|ДСП|С обивкой'
-      row['extra']['purpose']         = 'Спальня'
-    end
-
+    add_attributes_puff(row) if row['category'] == 'Пуфы и банкетки'
     add_attributes_bed(row) if row['category'] == 'Кровати'
 
     row[:md5_hash]       = md5_hash(row.slice(*KEYS).merge(row['extra']))
@@ -107,6 +102,13 @@ class ImportProductsJob < ApplicationJob
   def md5_hash(hash)
     str = hash.values.join
     Digest::MD5.hexdigest(str)
+  end
+
+  def add_attributes_puff(row)
+    row['extra']['length']          = row['extra']['depth']
+    row['extra']['furniture_frame'] = 'Дерево|ДСП|С обивкой'
+    row['extra']['purpose']         = 'Спальня'
+    row['extra']['furniture_type']  = row['description'].to_s.downcase.include?('пуф') ? 'Пуф' : 'Банкетка'
   end
 
   def add_attributes_bed(row)
