@@ -142,6 +142,7 @@ class PopulateExcelJob < ApplicationJob
     prefix = "#{shape} #{prefix.downcase}" if product.category == 'Диваны' && shape != 'Прямой'
     title  = prefix.present? ? "#{prefix} #{product.title}" : product.title
     title  = build_bed_title(adv, title) if product.category == 'Кровати' && adv.extra.present?
+    title  = "#{product.extra['furniture_type']} #{product.title}" if product.category == 'Пуфы и банкетки'
     title
   end
 
