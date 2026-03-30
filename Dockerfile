@@ -1,4 +1,4 @@
-FROM ruby:3.4.8-alpine3.23 AS builder
+FROM ruby:3.4.9-alpine3.23 AS builder
 
 RUN apk add --no-cache \
     build-base \
@@ -33,7 +33,7 @@ RUN SECRET_KEY_BASE=dummy DB_USER=dummy DB_PASSWORD=dummy REDIS_URL=dummy \
     && rm -rf node_modules
 #    && bundle exec bootsnap precompile --gemfile app/ lib/ config/
 
-FROM ruby:3.4.8-alpine3.23 AS runtime
+FROM ruby:3.4.9-alpine3.23 AS runtime
 
 RUN apk add --no-cache \
     tzdata \
