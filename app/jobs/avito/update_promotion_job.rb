@@ -167,7 +167,7 @@ module Avito
              .active_ads
              .joins("INNER JOIN ad_imports ON ads.adable_id = ad_imports.id AND ads.adable_type = 'AdImport'")
              .where(extra: nil)
-             .where.not(ad_imports: { category: 'Тумбы' })
+             .where.not(ad_imports: { category: ['Тумбы', 'Пуфы и банкетки'] })
     end
 
     def skipped_ads(address_id)
