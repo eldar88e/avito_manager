@@ -115,7 +115,7 @@ class AddWatermarkJob < ApplicationJob
   end
 
   def make_variants_images(product, adv, count)
-    title = "Спальное место: #{product.extra['sleeping_place_length']}0х#{adv.extra['sleeping_place_width']}0"
+    title = "Спальное место: #{product.extra['sleeping_place_width']}×#{adv.extra['sleeping_place_length']}"
     images = product.images['other'] || []
     last_image = images.last
     (images[0..-2].sample(rand(IMG_LIMIT_VARIANTS)) + [last_image].compact).uniq.each do |image|
