@@ -1,0 +1,134 @@
+<h1 class="text-4xl flex items-center gap-2">
+  <%= recurring_task_circle(@recurring_task.type, class: "size-4") %>
+
+  <span class="tracking-tighter font-bold">
+    Recurring Task #<%= @recurring_task.id %>
+  </span>
+</h1>
+
+<div class="card mt-6">
+  <div class="card-content pt-6 grid grid-cols-1 sm:grid-cols-2 sm:gap-16">
+    <div class="space-y-4">
+      <div class="info-line">
+        <span class="info-line-label">Type</span>
+        <div class="info-line-separator"></div>
+        <span class="info-line-value"><%= recurring_task_type_badge(@recurring_task.type) %></span>
+      </div>
+
+      <div class="info-line">
+        <span class="info-line-label">Key</span>
+        <div class="info-line-separator"></div>
+        <span class="info-line-value"><%= @recurring_task.key %></span>
+      </div>
+
+      <div class="info-line">
+        <span class="info-line-label">Schedule</span>
+        <div class="info-line-separator"></div>
+        <span class="info-line-value"><%= @recurring_task.schedule %></span>
+      </div>
+
+      <% if @recurring_task.queue_name? %>
+        <div class="info-line">
+          <span class="info-line-label">Queue Name</span>
+          <div class="info-line-separator"></div>
+          <span class="info-line-value"><%= @recurring_task.queue_name %></span>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="space-y-4">
+      <% if @recurring_task.priority? %>
+        <div class="info-line">
+          <span class="info-line-label">Priority</span>
+          <div class="info-line-separator"></div>
+          <span class="info-line-value"><%= @recurring_task.priority %></span>
+        </div>
+      <% end %>
+
+      <div class="info-line">
+        <span class="info-line-label">Static</span>
+        <div class="info-line-separator"></div>
+        <span class="info-line-value"><%= @recurring_task.static ? "Yes" : "No" %></span>
+      </div>
+
+      <div class="info-line">
+        <span class="info-line-label">Created At</span>
+        <div class="info-line-separator"></div>
+        <span class="info-line-value" data-date><%= @recurring_task.created_at.to_fs(:database) %></span>
+      </div>
+
+      <div class="info-line">
+        <span class="info-line-label">Updated At</span>
+        <div class="info-line-separator"></div>
+        <span class="info-line-value" data-date><%= @recurring_task.updated_at.to_fs(:database) %></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% if @recurring_task.command.present? %>
+  <div class="card mt-8 overflow-hidden">
+    <div class="card-header border-b border-t-4 border-t-amber-500 dark:border-t-amber-600">
+      <h3 class="card-title">Command</h3>
+      <p class="card-description">The command to be executed</p>
+    </div>
+    <div class="card-content pt-6">
+      <pre><%= @recurring_task.command %></pre>
+    </div>
+  </div>
+<% end %>
+
+<% if @recurring_task.class_name.present? %>
+  <div class="card mt-8 overflow-hidden">
+    <div class="card-header border-b border-t-4 border-t-blue-500 dark:border-t-blue-600">
+      <h3 class="card-title">Job Class</h3>
+      <p class="card-description">The job class to be executed</p>
+    </div>
+    <div class="card-content pt-6">
+      <pre><%= @recurring_task.class_name %></pre>
+    </div>
+  </div>
+<% end %>
+
+<% if @recurring_task.arguments.present? %>
+  <div class="card mt-8 overflow-hidden">
+    <div class="card-header border-b border-t-4 border-t-purple-500 dark:border-t-purple-600">
+      <h3 class="card-title">Arguments</h3>
+      <p class="card-description">The arguments to be passed to the job</p>
+    </div>
+    <div class="card-content pt-6">
+      <pre><%= JSON.pretty_generate(@recurring_task.arguments) %></pre>
+    </div>
+  </div>
+<% end %>
+
+<% if @recurring_task.description.present? %>
+  <div class="card mt-8 overflow-hidden">
+    <div class="card-header border-b border-t-4 border-t-amber-500 dark:border-t-amber-600">
+      <h3 class="card-title">Description</h3>
+      <p class="card-description">Additional information about this recurring task</p>
+    </div>
+    <div class="card-content pt-6">
+      <pre><%= @recurring_task.description %></pre>
+    </div>
+  </div>
+<% end %>
+
+<div class="card mt-8 overflow-hidden">
+  <div class="card-header border-b border-t-4 border-t-zinc-500 dark:border-t-zinc-600">
+    <h3 class="card-title">Next Runs</h3>
+    <p class="card-description">Based on the current schedule</p>
+  </div>
+  <div class="card-content pt-5">
+    <ul class="list-decimal marker:text-sm marker:text-muted-foreground ml-4 space-y-1">
+      <% @recurring_task.next_runs.each do |run_time| %>
+        <li>
+          <span data-date><%= run_time.strftime("%Y-%m-%d %H:%M:%S %Z") %></span>
+          <span class="text-muted-foreground">
+            in <%= distance_of_time_in_words(Time.current, run_time.to_i) %>
+          </span>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
