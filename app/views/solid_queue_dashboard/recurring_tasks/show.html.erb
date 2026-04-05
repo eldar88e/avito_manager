@@ -125,7 +125,7 @@
         <li>
           <span data-date><%= run_time.strftime("%Y-%m-%d %H:%M:%S %Z") %></span>
           <span class="text-muted-foreground">
-            in <%= distance_of_time_in_words(Time.current, run_time.to_i) %>
+            in <%= distance_of_time_in_words(Time.current, run_time.to_time) %>
           </span>
         </li>
       <% end %>
