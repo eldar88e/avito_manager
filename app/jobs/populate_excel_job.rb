@@ -3,6 +3,15 @@ class PopulateExcelJob < ApplicationJob
 
   include Rails.application.routes.url_helpers
 
+  WIDTH_PRICES = {
+    192 => 2_000,
+    172 => 3_000,
+    152 => 4_000,
+    132 => 6_000,
+    112 => 7_000,
+    102 => 8_000
+  }.freeze
+
   MAIN_COLUMNS = %w[
     Id AvitoId Stock DateBegin AdStatus Category GoodsType AdType Availability Address Title Description Condition Price
     AllowEmail ManagerName ContactPhone ContactMethod ImageUrls GoodsSubType
@@ -79,7 +88,8 @@ class PopulateExcelJob < ApplicationJob
       title      = formit_title(game, ad)
       worksheet.append_row(
         [ad.id, ad.avito_id, STOCK, current_time, store.ad_status, store.category, goods_type, store.ad_type,
-         store.availability, ad.full_address, title, make_description(ad, title), store.condition, game.price,
+         store.availability, ad.full_address, title, make_description(ad, title), store.condition,
+         make_price(ad.extra&.dig('width'), game.price),
          store.allow_email, store.manager_name, store.contact_phone, store.contact_method, img_urls,
          category, *form_extra(game, ad)]
       )
@@ -129,7 +139,7 @@ class PopulateExcelJob < ApplicationJob
       manager: adv.store.manager_name,
       addr_desc: adv.address.description.to_s,
       desc_product: adv.adable.description,
-      size: adv.extra.present? ? adv.extra['width'] : nil # && adv.adable.category == 'Кровати'
+      size: adv.extra&.dig('width')
     }
     description = adv.adable_type == 'AdImport' ? adv.store.desc_ad_import : adv.store.desc_product
     DescriptionService.call(description, replacements)
@@ -172,5 +182,9 @@ class PopulateExcelJob < ApplicationJob
         adv.extra['sleeping_place_width']
       end
     "#{title} #{size}"
+  end
+
+  def make_price(width, price)
+    price - (WIDTH_PRICES[width] || 0)
   end
 end
