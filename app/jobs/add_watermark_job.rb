@@ -12,7 +12,6 @@ class AddWatermarkJob < ApplicationJob
     model    = args[:model].camelize.constantize
     products = fetch_product(model, user)
     stores   = make_stores(args, user)
-    id       = model == AdImport ? :external_id : :id
 
     stores.each do |store|
       count     = [0]
@@ -20,27 +19,7 @@ class AddWatermarkJob < ApplicationJob
       addresses = addresses.where(id: args[:address_id].to_i) if args[:address_id]
       addresses.each do |address|
         products = products.limit(address.total_games) if model == AdImport
-        products.each do |product|
-          # next if product.is_a?(AdImport) && product.game_black_list
-
-          file_id = "#{product.send(id)}_#{store.id}_#{address.id}"
-          ad      = find_or_create_ad(product, file_id, address)
-          if !ad.images.attached? || args[:clean]
-            # raise("No set img for #{product.class}") unless product.is_a?(AdImport)
-
-            ad.images.purge if args[:clean]
-            img_limit = IMG_LIMIT
-            if product.images['first'].present?
-              make_image(ad, product.images['first'], count, preserve_main_image_size: true)
-              img_limit -= 1
-            end
-            images = product.images['other'] || []
-            (images.first(img_limit) + [images.last].compact).uniq.each { |i| make_image(ad, i, count) }
-          end
-          next if product.category != 'Кровати' || product.extra_sizes.blank?
-
-          process_variants(product, address, args[:clean], count)
-        end
+        products.each { |product| process_product(product, address, args[:clean], count) }
       end
       address = addresses.size == 1 ? addresses.first.city : addresses.map(&:city).join("\n")
       msg     = "🏞 Added #{count[0]} image(s) for #{model} for #{store.manager_name} for:\n#{address}"
@@ -70,6 +49,20 @@ class AddWatermarkJob < ApplicationJob
     args[:all] ? user.stores.includes(:addresses).active : [user.stores.find(args[:store_id])]
   end
 
+  def process_product(product, address, clean, count)
+    file_id = build_file_id(product, address)
+    ad      = find_or_create_ad(product, file_id, address)
+    sync_ad_images(ad, product, clean, count)
+    return unless variants_supported?(product)
+
+    process_variants(product, address, clean, count)
+  end
+
+  def build_file_id(product, address)
+    id = product.is_a?(AdImport) ? product.external_id : product.id
+    "#{id}_#{address.store.id}_#{address.id}"
+  end
+
   def find_or_create_ad(product, file_id, address)
     product.ads.active.find_or_create_by(file_id:) do |new_ad|
       store = address.store
@@ -81,8 +74,30 @@ class AddWatermarkJob < ApplicationJob
     end
   end
 
+  def sync_ad_images(ad, product, clean, count)
+    return if ad.images.attached? && !clean
+
+    ad.images.purge if clean
+    attach_product_images(ad, product, count)
+  end
+
+  def attach_product_images(ad, product, count)
+    img_limit = IMG_LIMIT
+    if product.images['first'].present?
+      make_image(ad, product.images['first'], count, preserve_main_image_size: true)
+      img_limit -= 1
+    end
+
+    images = product.images['other'] || []
+    (images.first(img_limit) + [images.last].compact).uniq.each { |image| make_image(ad, image, count) }
+  end
+
   def build_extra(extra)
     { 'furniture_type' => (extra['sleeping_place_width'] > 120 ? 'Двуспальная' : 'Односпальная') }
+  end
+
+  def variants_supported?(product)
+    product.category == 'Кровати' && product.extra_sizes.present?
   end
 
   def process_variants(product, address, clean, count)
