@@ -1,10 +1,36 @@
 - content_for :title, 'Импортированные объявления'
 
 .container.mx-auto.px-5
+  - if @store.blank?
+    .mb-5.rounded.border.border-yellow-300.bg-yellow-50.p-4.text-sm.text-yellow-900
+      | Нет активного магазина. Для запуска обновления картинок сначала активируйте магазин.
+
   - @ad_imports.each do |ad_import|
-    .mb-5.flex.justify-between
-      div = ad_import.title
-      div = ad_import.price
-      div = ad_import.description.html_safe
-      img src="#{ad_import.images['first']}" style="max-width: 200px; width: 100%;"
+    .mb-5.rounded.border.p-4 id="ad_import_#{ad_import.id}"
+      .flex.flex-col.gap-4.lg:flex-row.lg:items-start.lg:justify-between
+        .flex-1
+          h3.text-lg.font-semibold = ad_import.title
+          .mt-2.text-sm.text-gray-700 = "Цена: #{ad_import.price}"
+          - if ad_import.description.present?
+            .mt-2.text-sm = ad_import.description.html_safe
+
+          .mt-4.flex.flex-wrap.gap-2
+            - if @store.present?
+              = button_to 'Создать', store_update_ad_import_images_path(@store, ad_import_id: ad_import.id),
+                          class: 'loader-btn btn btn-success btn-sm',
+                          data: { controller: 'btn_preloader', action: 'click->btn_preloader#call' }
+
+              = button_to 'Обновить', store_update_ad_import_images_path(@store, ad_import_id: ad_import.id, clean: true),
+                          class: 'btn btn-danger btn-sm',
+                          data: { confirm: 'Вы уверены, что хотите удалить старые картинки этого объявления и создать новые?',
+                                  controller: 'confirm', action: 'click->confirm#call' }
+
+            = button_to ad_import_path(ad_import, store_id: @store&.id), method: :delete,
+                        class: 'btn btn-danger btn-sm',
+                        data: { confirm: 'Вы уверены, что хотите удалить это импортированное объявление?',
+                                controller: 'confirm', action: 'click->confirm#call' } do
+              = render IconComponent.new name: :trash, width: 20
+
+        - if ad_import.images['first'].present?
+          img.rounded.border src="#{ad_import.images['first']}" style="max-width: 200px; width: 100%;"
   = render 'partials/pagy'
