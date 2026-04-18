@@ -10,7 +10,7 @@ tr id=dom_id(ad) class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 
         - ad.images.limit(7).each do |image|
           a data-fancybox="gallery_ad" data-src="#{storage_path(image)}" data-caption="#{ad.file_id}"
             .loading-image.w-19.h-14
-              = image_tag img_resize(image, width: 80, height: 57), style: 'object-fit: cover;'
+              = image_tag storage_path(image.variant(:thumb)), style: 'object-fit: cover;'
   td.px-6.py-4
     = ad.file_id
     .mt-1 = ad.full_address

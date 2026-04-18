@@ -5,7 +5,9 @@ class Ad < ApplicationRecord
   belongs_to :store
   belongs_to :address
   belongs_to :adable, polymorphic: true
-  has_many_attached :images, dependent: :purge
+  has_many_attached :images, dependent: :purge do |blob|
+    blob.variant :thumb, resize_to_limit: [120, 90], format: :webp, saver: { quality: 90 }
+  end
 
   scope :active,        -> { where(deleted: false) }
   scope :not_baned,     -> { where(banned: false).or(where(banned_until: ...Time.current)) }
