@@ -71,6 +71,7 @@ class ImportProductsJob < ApplicationJob
 
     add_attributes_puff(row) if row['category'] == 'Пуфы и банкетки'
     add_attributes_bed(row) if row['category'] == 'Кровати'
+    add_attributes_armchair(row) if row['category'] == 'Кресла'
 
     row[:md5_hash]       = md5_hash(row.slice(*KEYS).merge(row['extra']))
     row[:touched_run_id] = run_id
@@ -125,5 +126,10 @@ class ImportProductsJob < ApplicationJob
     return if width.zero?
 
     [200, 180, 160, 140, 120, 100, 90].find { |size| width > size - 10 }
+  end
+
+  def add_attributes_armchair(row)
+    row['extra']['furniture_type'] = 'Обычное'
+    row['extra']['purpose']        = 'Гостиная|Офис|Рабочий кабинет'
   end
 end

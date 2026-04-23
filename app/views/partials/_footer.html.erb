@@ -1,6 +1,8 @@
 <footer>
-  <div class="container mx-auto px-5 mb-3 mt-4">
-    <h3><%= link_to settings[:app_name], root_path, title: 'На главную' %></h3>
+  <div class="container mx-auto px-5 mb-3 mt-10">
+    <%= link_to settings[:app_name], root_path, title: 'На главную', class: 'text-xl' %>
+
+    <div class="mt-4">© 2023 — <%= Time.current.year %> <%= settings[:app_name] %>. All rights reserved.</div>
   </div>
 </footer>
 <div class="mobile-bar bg-light">

@@ -4,6 +4,7 @@ resources :stores do
 
   post '/update_feed', to: 'jobs#update_feed', as: 'update_feed'
   post '/update_ban_list', to: 'jobs#update_ban_list'
+  post '/update_ad_import_images', to: 'jobs#update_ad_import_images'
   patch '/update_promotion', to: 'jobs#update_promotion'
   delete '/stop_promotion', to: 'jobs#stop_promotion'
   post '/update_store_test_img', to: 'jobs#update_store_test_img'

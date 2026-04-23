@@ -1,13 +1,5 @@
 module ApplicationHelper
-  def storage_path(image, variant = nil)
-    AttachmentUrlBuilderService.storage_path(image, variant)
-  end
-
-  def img_resize(image, **args)
-    height  = args[:height] || args[:width]
-    variant = image.variant(resize_to_limit: [args[:width], height]).processed
-    storage_path(variant, true)
-  end
+  delegate :storage_path, to: :AttachmentUrlBuilderService
 
   def format_date(date)
     return date.strftime('%H:%M %d.%m.%Yг.') if date.instance_of?(ActiveSupport::TimeWithZone)

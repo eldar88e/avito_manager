@@ -1,8 +1,8 @@
 class AttachmentUrlBuilderService
   include Rails.application.routes.url_helpers
 
-  def self.storage_path(attach, variant = nil)
-    blob = variant ? attach : attach.blob
+  def self.storage_path(attach)
+    blob = attach.is_a?(ActiveStorage::VariantWithRecord) ? attach : attach.blob
 
     case attach.blob.service_name
     when 'beget' then beget_storage_path(blob)

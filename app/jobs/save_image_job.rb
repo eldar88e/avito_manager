@@ -47,7 +47,13 @@ class SaveImageJob < ApplicationJob
 
       File.open(temp_img.path, 'rb') do |file|
         item.images.attach(io: file, filename: name, content_type: 'image/jpeg')
+        enqueue_image_variants(item)
       end
     end
+  end
+
+  def enqueue_image_variants(item)
+    blob_id = item.images.attachments.last&.blob_id
+    GenerateImageVariantsJob.perform_later(blob_id) if blob_id.present?
   end
 end

@@ -1,6 +1,6 @@
 class JobsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_settings, only: %i[update_img update_store_test_img]
+  before_action :set_settings, only: %i[update_img update_ad_import_images update_store_test_img]
 
   def update_store_test_img
     @store  = current_user.stores.active.find(store_id)
@@ -34,6 +34,21 @@ class JobsController < ApplicationController
     job_type = clean ? 'пересозданию' : 'созданию'
     msg      = t('controllers.jobs.update_img.success', job_type:, models: models.join(', '))
     render turbo_stream: success_notice(msg)
+  end
+
+  def update_ad_import_images
+    current_user.ad_imports.find(params[:ad_import_id])
+    current_user.stores.active.find(store_id)
+
+    UpdateAdImportImagesJob.perform_later(
+      user_id: current_user.id,
+      store_id:,
+      ad_import_id: params[:ad_import_id],
+      clean: params[:clean].present?,
+      notify: true
+    )
+
+    render turbo_stream: success_notice('Задача на обновление картинок для выбранного AdImport поставлена в очередь.')
   end
 
   def update_feed
