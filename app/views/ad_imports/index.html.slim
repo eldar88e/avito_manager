@@ -9,10 +9,18 @@
     .mb-5.rounded.border.p-4 id="ad_import_#{ad_import.id}"
       .flex.flex-col.gap-4.lg:flex-row.lg:items-start.lg:justify-between
         .flex-1
-          h3.text-lg.font-semibold = ad_import.title
-          .mt-2.text-sm.text-gray-700 = "Цена: #{ad_import.price}"
+          h3.text-lg.font-semibold = "#{ad_import.title}, #{ad_import.category}"
+          .mt-2.text-sm.text-gray-700.dark:text-gray-400
+            | Цена:
+            = ' '
+            span.text-xl.dark:text-white = format_price ad_import.price
           - if ad_import.description.present?
             .mt-2.text-sm = ad_import.description.html_safe
+          - if ad_import.extra_sizes.present?
+            .mt-3 Extra sizes:
+            .flex.gap-2.text-lg
+              span Width:
+              = ad_import.extra_sizes.map { |i| i['width'] }.join(', ')
 
           .mt-4.flex.flex-wrap.gap-2
             - if @store.present?

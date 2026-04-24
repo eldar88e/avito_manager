@@ -41,4 +41,8 @@ module ApplicationHelper
   def noimage_url
     vite_asset_path('images/noimage.png')
   end
+
+  def format_price(price)
+    MoneyService.price_to_s(price)
+  end
 end
