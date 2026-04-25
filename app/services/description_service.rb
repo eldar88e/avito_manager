@@ -9,6 +9,20 @@ class DescriptionService
     @replacements = replacements
   end
 
+  def build_description
+    @replacements.each do |key, value|
+      value = bed_sizes_str(value) if key == :size && value.present?
+      @description.gsub!("[#{key}]", value.to_s)
+    end
+    @description.squeeze(' ').strip
+  end
+
+  def self.call(description, replacements)
+    new(description, replacements).build_description
+  end
+
+  private
+
   def bed_sizes_str(value)
     str = "🛏 Другие размеры данной кровати:\n\n"
     count = 1
@@ -20,17 +34,5 @@ class DescriptionService
     end
     str += "\n**Размеры указанные в миллиметрах"
     str
-  end
-
-  def self.call(description, replacements)
-    new(description, replacements).build_description
-  end
-
-  def build_description
-    @replacements.each do |key, value|
-      value        = bed_sizes_str(value) if key == :size && value.present?
-      @description = @description.gsub("[#{key.to_s}]", value.to_s)
-    end
-    @description.squeeze(' ').strip
   end
 end
