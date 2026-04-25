@@ -3,7 +3,7 @@ tr id=dom_id(ad) class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 
     = ad.id
   td.px-6.py-4
     - if ad.avito_id.present?
-      = link_to "https://avito.ru/items/#{ad.avito_id}", ad.avito_id, target: '_blank'
+      = link_to ad.avito_id, "https://avito.ru/items/#{ad.avito_id}", target: '_blank'
   td.px-6.py-4.flex.gap-2.items-center
     - if ad.images.attached?
       = "#{ad.images.size} шт."
