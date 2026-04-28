@@ -89,7 +89,7 @@ class AddWatermarkJob < ApplicationJob
     end
 
     images = product.images['other'] || []
-    (images.first(img_limit) + [images.last].compact).uniq.each { |image| make_image(ad, image, count) }
+    (images.first(img_limit) + [images.last].compact).uniq.each { |image| make_image(adv, image, count) }
   end
 
   def build_extra(extra)
