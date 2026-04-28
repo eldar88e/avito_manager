@@ -74,17 +74,17 @@ class AddWatermarkJob < ApplicationJob
     end
   end
 
-  def sync_ad_images(ad, product, clean, count)
-    return if ad.images.attached? && !clean
+  def sync_ad_images(adv, product, clean, count)
+    return if adv.images.attached? && !clean
 
-    ad.images.purge if clean
-    attach_product_images(ad, product, count)
+    adv.images.purge if clean
+    attach_product_images(adv, product, count)
   end
 
-  def attach_product_images(ad, product, count)
+  def attach_product_images(adv, product, count)
     img_limit = IMG_LIMIT
     if product.images['first'].present?
-      make_image(ad, product.images['first'], count, preserve_main_image_size: true)
+      make_image(adv, product.images['first'], count, preserve_main_image_size: true)
       img_limit -= 1
     end
 
