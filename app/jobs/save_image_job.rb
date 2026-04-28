@@ -1,6 +1,8 @@
 class SaveImageJob < ApplicationJob
   queue_as :default
 
+  QUALITY = 90
+
   def perform(**args)
     adv     = Ad.find(args[:ad_id])
     options = make_options(adv, args[:image_url], args[:add_layer], args[:preserve_main_image_size])
@@ -42,7 +44,7 @@ class SaveImageJob < ApplicationJob
 
   def save_image(item, name, image)
     Tempfile.open(%w[image .jpg], binmode: true) do |temp_img|
-      image.write_to_file(temp_img.path)
+      image.write_to_file("#{temp_img.path}[Q=#{QUALITY}]")
       temp_img.flush
 
       File.open(temp_img.path, 'rb') do |file|

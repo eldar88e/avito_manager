@@ -33,3 +33,6 @@ production:
     class: WatermarksSheetsJob
     args: [{ store_id: 1, user_id: 1 }]
     schedule: every day at 22:20
+  clear_failed_jobs:
+    class: ClearFailedJob
+    schedule: every day at 01:00
