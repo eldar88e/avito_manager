@@ -20,6 +20,7 @@ class WatermarkService
     @reference_height = (args[:height] || @settings[:avito_img_height] || DEFAULT_HEIGHT).to_i
     @main_img = args[:main_img]
     @preserve_main_image_size = args[:preserve_main_image_size]
+    @skip_text_layers = args[:skip_text_layers]
     prepare_canvas!
     @new_image = initialize_first_layer
     @add_layer = JSON.parse(args[:add_layer]).transform_keys(&:to_sym) if args[:add_layer].present?
@@ -32,6 +33,8 @@ class WatermarkService
 
   def add_watermarks
     @layers.each do |layer|
+      next if skip_text_layer?(layer)
+
       layer[:params] = prepare_layer_params(layer[:params])
       layer[:layer_type] == 'text' ? add_text(layer) : add_img(layer)
     end
@@ -239,6 +242,10 @@ class WatermarkService
 
   def preserve_main_image_size?(layer)
     @preserve_main_image_size && layer[:img] == @main_img
+  end
+
+  def skip_text_layer?(layer)
+    @skip_text_layers && layer[:layer_type].to_s == 'text'
   end
 
   def crop_to_target_aspect(img)

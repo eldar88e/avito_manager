@@ -35,8 +35,8 @@ class AddWatermarkJob < ApplicationJob
 
   private
 
-  def make_image(adv, image_url, count, add_layer = nil, preserve_main_image_size: false)
-    SaveImageJob.perform_now(ad_id: adv.id, image_url:, add_layer:, preserve_main_image_size:)
+  def make_image(adv, image_url, count, add_layer = nil, preserve_main_image_size: false, skip_text_layers: false)
+    SaveImageJob.perform_now(ad_id: adv.id, image_url:, add_layer:, preserve_main_image_size:, skip_text_layers:)
     count[0] += 1
   end
 
@@ -89,7 +89,9 @@ class AddWatermarkJob < ApplicationJob
     end
 
     images = product.images['other'] || []
-    (images.first(img_limit) + [images.last].compact).uniq.each { |image| make_image(adv, image, count) }
+    images[0..-2].first(img_limit).uniq.each { |img| make_image(adv, img, count) }
+    last_image = images.last
+    make_image(adv, last_image, count, skip_text_layers: true) if last_image.present?
   end
 
   def build_extra(extra)
@@ -133,10 +135,11 @@ class AddWatermarkJob < ApplicationJob
     title  = "Спальное место: #{adv.extra['sleeping_place_width']}×#{product.extra['sleeping_place_length']}"
     images = product.images['other'] || []
     last_image = images.last
-    (images[0..-2].sample(rand(IMG_LIMIT_VARIANTS)) + [last_image].compact).uniq.each do |image|
-      current_title = image == last_image ? nil : title
-      add_layer = { title: current_title, menuindex: 99, layer_type: 'text', params: BED_PARAMS }.to_json
+    images[0..-2].sample(rand(IMG_LIMIT_VARIANTS)).each do |image|
+      add_layer = { title:, menuindex: 99, layer_type: 'text', params: BED_PARAMS }.to_json
       make_image(adv, image, count, add_layer)
     end
+
+    make_image(adv, last_image, count, skip_text_layers: true) if last_image.present?
   end
 end
