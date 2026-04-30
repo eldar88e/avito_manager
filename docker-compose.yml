@@ -53,7 +53,7 @@ services:
     container_name: dozzle
     restart: unless-stopped
     expose:
-      - "9999:8080"
+      - "172.17.0.1:8081:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
