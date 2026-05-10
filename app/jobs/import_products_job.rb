@@ -73,6 +73,8 @@ class ImportProductsJob < ApplicationJob
     add_attributes_bed(row) if row['category'] == 'Кровати'
     add_attributes_armchair(row) if row['category'] == 'Кресла'
 
+    row['extra']['purpose'] = 'Гостиная|Детская|Спальня|Дача и сад' if row['category'] == 'Диван-Кровати'
+
     row[:md5_hash]       = md5_hash(row.slice(*KEYS).merge(row['extra']))
     row[:touched_run_id] = run_id
     result               = update_product(user, row, count)
