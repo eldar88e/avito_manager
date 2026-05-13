@@ -1,7 +1,7 @@
 module Avito
   class CheckErrorsJob < Avito::BaseApplicationJob
     queue_as :default
-    BAN_PERIOD  = 4.weeks
+    BAN_PERIOD  = 30.days
     PER_PAGE    = 100
     NORM_TITLES = ['Не удалось опубликовать', 'Успешно опубликовано', 'Удалено из файла', 'Не опубликовано'].freeze
 
@@ -26,11 +26,12 @@ module Avito
       return unless report
 
       error_sections = report['section_stats']['sections'].select do |item|
-        # ######
         new_info_msg = "#{item['title']} для #{store.manager_name}"
-        TelegramService.call(store.user, new_info_msg) if NORM_TITLES.exclude?(item['title'])
-        # TODO: Убрать если больше не будет других sections по мимо NORM_TITLES
-        # #######
+        if NORM_TITLES.exclude?(item['title'])
+          TelegramService.call(store.user, new_info_msg)
+        else
+          TelegramService.call(store.user, "New error: #{new_info_msg}")
+        end
         item['slug'].match?(/error|not_publish/)
       end
       error_blocked = process_error_ads(store, current_user, error_sections)
