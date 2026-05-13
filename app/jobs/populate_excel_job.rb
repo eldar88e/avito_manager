@@ -4,10 +4,10 @@ class PopulateExcelJob < ApplicationJob
   include Rails.application.routes.url_helpers
 
   WIDTH_PRICES = {
-    192 => 2_000,
-    172 => 3_000,
+    192 => 200,
+    172 => 300,
     152 => 4_000,
-    132 => 6_000,
+    132 => 5_000,
     112 => 7_000,
     102 => 8_000
   }.freeze
