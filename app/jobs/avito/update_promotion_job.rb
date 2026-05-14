@@ -86,7 +86,7 @@ module Avito
       ads.each do |adv|
         promotion = fetch_promotion(avito, adv)
         best_min  = build_best_min(promotion, adv)
-        make_manual_promotion(avito, adv, best_min['valuePenny'])
+        make_manual_promotion(avito, adv, best_min['valuePenny']) if best_min.present?
       end
     end
 
@@ -97,7 +97,7 @@ module Avito
       result = bids.select { |b| b['valuePenny'] <= MAX_LIMIT_PENNY }.max_by { |b| b['valuePenny'] }
       msg    = "‼️ Минимальная ставка #{bids.first['valuePenny'] / 100} ₽\n#{adv.full_address}\n#{adv.adable.title}"
       TelegramJob.perform_later(msg: msg, user_id: adv.user_id) if result.blank?
-      result.presence || bids.first
+      result # .presence || bids.first
     end
 
     def make_manual_promotion(avito, adv, value_penny)
