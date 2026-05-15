@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_04_115402) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_15_110821) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
@@ -103,11 +103,13 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_04_115402) do
     t.string "file_id"
     t.string "full_address"
     t.boolean "promotion", default: false, null: false
+    t.boolean "promotion_allowed", default: true, null: false
     t.bigint "store_id", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["adable_type", "adable_id"], name: "index_ads_on_adable"
     t.index ["address_id"], name: "index_ads_on_address_id"
+    t.index ["promotion_allowed"], name: "index_ads_on_promotion_allowed"
     t.index ["store_id"], name: "index_ads_on_store_id"
     t.index ["user_id"], name: "index_ads_on_user_id"
   end

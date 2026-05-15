@@ -15,12 +15,11 @@ h3 class="text-lg" External ID: <span class="font-semibold">#{@ad.file_id}</span
     .flex.gap-2
       = form.check_box :promotion
       = form.label :promotion, class: '!-mb-0'
+    .flex.gap-2
+      = form.check_box :promotion_allowed
+      = form.label :promotion_allowed, class: '!-mb-0'
   .mb-5
     = form.label :banned_until
-    div data-controller="datepicker"
-      = form.text_field :banned_until, placeholder: 'Выберите дату', data: { datepicker_target: 'input' },
-                            class: 'form-control', value: (@ad.banned_until || Time.current).strftime('%Y-%m-%d')
-      span class="calendar-btn" data-datepicker-target="toggle"
-        i class="bi bi-calendar-date"
+    = form.date_field :banned_until, placeholder: 'Выберите дату'
   .flex.justify-end
     = form.submit 'Save', class: "btn btn-primary"

@@ -132,3 +132,5 @@ ru:
         deleted: "Удалено"
         banned_until: "Бан до"
         full_address: "Адрес"
+        promotion: "Продвигается"
+        promotion_allowed: "Разрешено продвижение"

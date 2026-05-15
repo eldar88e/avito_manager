@@ -14,6 +14,7 @@ module Avito
     METRICS         = %w[views contacts favorites presenceSpending impressions].freeze
     BALANCE_LIMIT   = 300
     MAX_RETRIES     = 3
+    PROMOTION_CATEGORIES = %w[Кровати Диваны Мини-Диваны Диван-Кровати].freeze
 
     def perform(user_id, store_id, **args)
       user       = User.find(user_id)
@@ -166,8 +167,9 @@ module Avito
       address.ads
              .active_ads
              .joins("INNER JOIN ad_imports ON ads.adable_id = ad_imports.id AND ads.adable_type = 'AdImport'")
+             .promotion_allowed
              .where(extra: nil)
-             .where.not(ad_imports: { category: ['Тумбы', 'Пуфы и банкетки'] })
+             .where(ad_imports: { category: PROMOTION_CATEGORIES })
     end
 
     def skipped_ads(address_id)

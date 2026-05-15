@@ -22,6 +22,8 @@ tr id=dom_id(ad) class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 
   td.px-6.py-4
     = ad.promotion? ? 'Да' : 'Нет'
   td.px-6.py-4
+    = ad.promotion_allowed? ? 'Да' : 'Нет'
+  td.px-6.py-4
     = link_to edit_store_ad_path(ad, store_id: @store), class: 'btn inline-flex', title: 'Править',
                   data: { controller: 'modal', action: 'click->modal#open', turbo_prefetch: false } do
       = render IconComponent.new name: :edit, width: 20
