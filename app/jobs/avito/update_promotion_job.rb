@@ -12,7 +12,7 @@ module Avito
     MIN_LIMIT_PENNY = 5000
     UP_LIMIT_PENNY  = 100
     METRICS         = %w[views contacts favorites presenceSpending impressions].freeze
-    BALANCE_LIMIT   = 300
+    BALANCE_LIMIT   = 500 # 500 руб.
     MAX_RETRIES     = 3
     PROMOTION_CATEGORIES = %w[Кровати Диваны Мини-Диваны Диван-Кровати].freeze
 
