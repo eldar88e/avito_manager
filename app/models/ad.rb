@@ -16,8 +16,12 @@ class Ad < ApplicationRecord
   scope :for_ad_import, -> { where(adable_type: 'AdImport') }
   scope :promotion_allowed, -> { where(promotion_allowed: true) }
 
+  ransacker :avito_id_text do
+    Arel.sql('ads.avito_id::text')
+  end
+
   def self.ransackable_attributes(_auth_object = nil)
-    %w[id avito_id file_id deleted banned banned_until promotion promotion_allowed]
+    %w[id avito_id avito_id_text file_id deleted banned banned_until promotion promotion_allowed]
   end
 
   def self.ransackable_associations(_auth_object = nil)
