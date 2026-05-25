@@ -149,10 +149,10 @@ class WatermarkService
     bg = Vips::Image.black(bg_w, bg_h).new_from_image(bg_color).copy(interpretation: :srgb)
 
     if radius.positive?
-      mask = rounded_rect_mask(bg_w, bg_h, radius)
+      mask     = rounded_rect_mask(bg_w, bg_h, radius)
       bg_rgb   = bg.extract_band(0, n: 3)
       bg_alpha = (bg.extract_band(3).cast(:float) * mask.cast(:float) / 255.0).cast(:uchar)
-      bg = bg_rgb.bandjoin(bg_alpha).copy(interpretation: :srgb)
+      bg       = bg_rgb.bandjoin(bg_alpha).copy(interpretation: :srgb)
     end
 
     text_layer = text_mask.ifthenelse(text_color, [0, 0, 0, 0]).copy(interpretation: :srgb)
@@ -160,10 +160,10 @@ class WatermarkService
   end
 
   def rounded_rect_mask(width, height, radius)
-    r = [radius, width / 2, height / 2].min.to_f
+    r  = [radius, width / 2, height / 2].min.to_f
     xy = Vips::Image.xyz(width, height)
-    x = xy[0]
-    y = xy[1]
+    x  = xy[0]
+    y  = xy[1]
 
     tl = (x < r) & (y < r) & ((((x - r)**2) + ((y - r)**2)) > r**2)
     tr = (x >= width - r) & (y < r) & ((((x - width + r)**2) + ((y - r)**2)) > r**2)
