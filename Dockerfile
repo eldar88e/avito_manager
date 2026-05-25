@@ -39,7 +39,6 @@ RUN apk add --no-cache \
     tzdata \
     libpq \
     yaml \
-    vips-dev \
     vips \
     fontconfig \
     freetype \
