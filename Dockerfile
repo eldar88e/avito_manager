@@ -3,7 +3,6 @@ FROM ruby:3.4.9-alpine3.23 AS builder
 RUN apk add --no-cache \
     build-base \
     postgresql-dev \
-    vips-dev \
     yaml-dev \
     tzdata \
     yarn
@@ -39,6 +38,7 @@ RUN apk add --no-cache \
     tzdata \
     libpq \
     yaml \
+    vips-dev \
     vips \
     fontconfig \
     freetype \
