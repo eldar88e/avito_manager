@@ -26,6 +26,6 @@ class AdImportsController < ApplicationController
   private
 
   def set_ad_imports
-    @ad_imports = current_user.ad_imports.find(params[:id])
+    @ad_imports = current_user.ad_imports.find(params.expect(:id))
   end
 end

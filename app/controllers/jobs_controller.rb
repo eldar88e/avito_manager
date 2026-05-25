@@ -4,7 +4,7 @@ class JobsController < ApplicationController
 
   def update_store_test_img
     @store  = current_user.stores.active.find(store_id)
-    address = @store.addresses.find(params[:address_id])
+    address = @store.addresses.find(params.expect(:address_id))
     result  = ExampleImageService.call(address)
     return error_notice("Не удалось создать тестовую картинку. Ошибка: #{result[:error]}") if result[:error]
 
@@ -23,7 +23,7 @@ class JobsController < ApplicationController
     models.each do |model|
       AddWatermarkJob.perform_later(
         user_id: current_user.id,
-        notify: !params[:product],
+        notify: !params.expect(:product),
         model:,
         store_id:,
         clean:,
@@ -37,7 +37,7 @@ class JobsController < ApplicationController
   end
 
   def update_ad_import_images
-    current_user.ad_imports.find(params[:ad_import_id])
+    current_user.ad_imports.find(params.expect(:ad_import_id))
     current_user.stores.active.find(store_id)
 
     UpdateAdImportImagesJob.perform_later(

@@ -19,13 +19,13 @@ class ApplicationController < ActionController::Base
   def set_store
     return cache_store if params[:store_id]
 
-    @store = current_user.stores.find(params[:id])
+    @store = current_user.stores.find(params.expect(:id))
     Rails.cache.write("user_#{current_user.id}_store_#{params[:id]}", @store, expires_in: 6.hours)
   end
 
   def cache_store
     @store = Rails.cache.fetch("user_#{current_user.id}_store_#{params[:store_id]}", expires_in: 6.hours) do
-      current_user.stores.find(params[:store_id])
+      current_user.stores.find(params.expect(:store_id))
     end
   end
 

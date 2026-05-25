@@ -33,7 +33,7 @@ class AdsController < ApplicationController
   private
 
   def set_ad
-    @ad = current_user.ads.find(params[:id])
+    @ad = current_user.ads.find(params.expect(:id))
   end
 
   def ad_params

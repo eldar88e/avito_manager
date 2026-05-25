@@ -143,8 +143,8 @@ class WatermarkService
   end
 
   def build_padded_text(text_mask, text_color, bg_color, padding, radius)
-    bg_w = text_mask.width + padding * 2
-    bg_h = text_mask.height + padding * 2
+    bg_w = text_mask.width + (padding * 2)
+    bg_h = text_mask.height + (padding * 2)
 
     bg = Vips::Image.black(bg_w, bg_h).new_from_image(bg_color).copy(interpretation: :srgb)
 
@@ -165,10 +165,10 @@ class WatermarkService
     x = xy[0]
     y = xy[1]
 
-    tl = (x < r) & (y < r) & (((x - r)**2 + (y - r)**2) > r**2)
-    tr = (x >= width - r) & (y < r) & (((x - width + r)**2 + (y - r)**2) > r**2)
-    bl = (x < r) & (y >= height - r) & (((x - r)**2 + (y - height + r)**2) > r**2)
-    br = (x >= width - r) & (y >= height - r) & (((x - width + r)**2 + (y - height + r)**2) > r**2)
+    tl = (x < r) & (y < r) & ((((x - r)**2) + ((y - r)**2)) > r**2)
+    tr = (x >= width - r) & (y < r) & ((((x - width + r)**2) + ((y - r)**2)) > r**2)
+    bl = (x < r) & (y >= height - r) & ((((x - r)**2) + ((y - height + r)**2)) > r**2)
+    br = (x >= width - r) & (y >= height - r) & ((((x - r)**2) + ((y - height + r)**2)) > r**2)
 
     outside = tl | tr | bl | br
     outside.ifthenelse(0, 255).cast(:uchar)
@@ -268,7 +268,8 @@ class WatermarkService
   def load_image(url_or_blob)
     return @prepared_main_img if @prepared_main_img && url_or_blob == @main_img
 
-    data = url_or_blob.is_a?(ActiveStorage::Blob) ? url_or_blob.download : URI.open(url_or_blob).read
+    data = url_or_blob.is_a?(ActiveStorage::Blob) ? url_or_blob.download : URI.parse(url_or_blob).open.read
+    # URI.open(url_or_blob).read
     Vips::Image.new_from_buffer(data, '')
   end
 

@@ -50,7 +50,7 @@ class AddressesController < ApplicationController
   private
 
   def set_address
-    @address = @store.addresses.find(params[:id])
+    @address = @store.addresses.find(params.expect(:id))
   end
 
   def address_params

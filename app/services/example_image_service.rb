@@ -40,7 +40,9 @@ class ExampleImageService
       Tempfile.open(%W[test-image-#{index} .jpg]) do |temp_img|
         image.write_to_file("#{temp_img.path}[Q=#{QUALITY}]")
         temp_img.flush
-        @store.test_imgs.attach(io: File.open(temp_img.path), filename: "test_#{index + 1}.jpg", content_type: 'image/jpeg')
+        @store.test_imgs.attach(
+          io: File.open(temp_img.path), filename: "test_#{index + 1}.jpg", content_type: 'image/jpeg'
+        )
       end
     end
   end

@@ -35,7 +35,7 @@ class ImageLayersController < ApplicationController
   private
 
   def set_layer
-    @layer = @store.image_layers.find(params[:id])
+    @layer = @store.image_layers.find(params.expect(:id))
   end
 
   def image_layer_params

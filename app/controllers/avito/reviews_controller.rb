@@ -21,7 +21,7 @@ module Avito
 
     def update
       url      = 'https://api.avito.ru/ratings/v1/answers'
-      payload  = { message: params[:message]&.strip, 'reviewId' => params[:id].to_i }
+      payload  = { message: params.expect(:message)&.strip, 'reviewId' => params[:id].to_i }
       response = fetch_and_parse(url, :post, payload)
       return error_notice(response[:error]) if response[:error]
 

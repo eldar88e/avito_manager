@@ -19,7 +19,7 @@ class SettingsController < ApplicationController
   end
 
   def update
-    @setting = current_user.settings.find(params[:id])
+    @setting = current_user.settings.find(params.expect(:id))
     if @setting.update(setting_params)
       render turbo_stream: [
         turbo_stream.replace("setting_#{@setting.id}", partial: 'settings/setting', locals: { setting: @setting }),

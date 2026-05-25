@@ -30,11 +30,11 @@ class StreetsController < ApplicationController
   private
 
   def set_address
-    @address = @store.addresses.find(params[:address_id]) if @store
+    @address = @store.addresses.find(params.expect(:address_id)) if @store
   end
 
   def set_street
-    @street = @address.streets.find(params[:id]) if @address
+    @street = @address.streets.find(params.expect(:id)) if @address
   end
 
   def handle_successful_save
