@@ -3,7 +3,7 @@ FROM ruby:3.4.9-alpine3.23 AS builder
 RUN apk add --no-cache \
     build-base \
     postgresql-dev \
-    zlib-dev \
+    vips-dev \
     yaml-dev \
     tzdata \
     yarn
