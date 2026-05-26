@@ -168,7 +168,8 @@ class WatermarkService
     tl = (x < r) & (y < r) & ((((x - r)**2) + ((y - r)**2)) > r**2)
     tr = (x >= width - r) & (y < r) & ((((x - width + r)**2) + ((y - r)**2)) > r**2)
     bl = (x < r) & (y >= height - r) & ((((x - r)**2) + ((y - height + r)**2)) > r**2)
-    br = (x >= width - r) & (y >= height - r) & ((((x - r)**2) + ((y - height + r)**2)) > r**2)
+    br = (x >= width - r) & (y >= height - r) & ((((x - width + r)**2) + ((y - height + r)**2)) > r**2)
+    # br = (x >= width - r) & (y >= height - r) & ((((x - r)**2) + ((y - height + r)**2)) > r**2)
 
     outside = tl | tr | bl | br
     outside.ifthenelse(0, 255).cast(:uchar)
