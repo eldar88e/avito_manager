@@ -181,12 +181,9 @@ class WatermarkService
 
     hex = str[1..]
     case hex.size
-    when 8
-      hex.scan(/../).map(&:hex)
-    when 6
-      hex.scan(/../).map(&:hex) << 255
-    else
-      DEFAULT_COLOR
+    when 8 then hex.scan(/../).map(&:hex)
+    when 6 then hex.scan(/../).map(&:hex) << 255
+    else DEFAULT_COLOR
     end
   end
 
