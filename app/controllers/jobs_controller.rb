@@ -23,7 +23,7 @@ class JobsController < ApplicationController
     models.each do |model|
       AddWatermarkJob.perform_later(
         user_id: current_user.id,
-        notify: !params.expect(:product),
+        notify: params[:product].blank?,
         model:,
         store_id:,
         clean:,
