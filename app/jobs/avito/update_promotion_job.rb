@@ -7,12 +7,12 @@ module Avito
     AD_TYPES        = 'AdImport'.freeze
     AD_CACHE_TIME   = 5.minutes
     MAX_PROMOTION   = 3
-    MAX_LIMIT_PENNY = 14_500 # 135 руб.
+    MAX_LIMIT_PENNY = 15_500 # 155 руб.
     MIN_BID         = 99
     MIN_LIMIT_PENNY = 5000
     UP_LIMIT_PENNY  = 100
     METRICS         = %w[views contacts favorites presenceSpending impressions].freeze
-    BALANCE_LIMIT   = 500 # 500 руб.
+    BALANCE_LIMIT   = 400 # 400 руб.
     MAX_RETRIES     = 3
     PROMOTION_CATEGORIES = %w[Кровати Диваны Мини-Диваны Диван-Кровати].freeze
 
