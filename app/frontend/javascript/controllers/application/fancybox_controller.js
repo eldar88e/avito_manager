@@ -4,7 +4,9 @@ import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 export default class extends Controller {
   connect() {
-    Fancybox.bind("[data-fancybox]");
+    Fancybox.bind("[data-fancybox]", {
+      Hash: false,
+    });
   }
 
   disconnect() {
