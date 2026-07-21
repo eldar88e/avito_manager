@@ -18,6 +18,8 @@
         th.px-6.py-3 scope="col"
           = sort_link(@q_ads, :file_id, 'External  ID & Адрес', data: { turbo_prefetch: false })
         th.px-6.py-3 scope="col"
+          = sort_link(@q_ads, :title, 'Заголовок', data: { turbo_prefetch: false })
+        th.px-6.py-3 scope="col"
           = sort_link(@q_ads, :deleted, 'Удалено', data: { turbo_prefetch: false })
         th.px-6.py-3 scope="col"
           = sort_link(@q_ads, :banned, 'Бан', data: { turbo_prefetch: false })

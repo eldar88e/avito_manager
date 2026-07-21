@@ -33,10 +33,10 @@ class AdsController < ApplicationController
   private
 
   def set_ad
-    @ad = current_user.ads.find(params.expect(:id))
+    @ad = @store.ads.find(params.expect(:id))
   end
 
   def ad_params
-    params.expect(ad: %i[avito_id full_address file_id banned_until banned deleted promotion promotion_allowed])
+    params.expect(ad: %i[title avito_id full_address file_id banned_until banned deleted promotion promotion_allowed])
   end
 end

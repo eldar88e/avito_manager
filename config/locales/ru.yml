@@ -128,6 +128,7 @@ ru:
       ad: "Объявление"
     attributes:
       ad:
+        title: "Заголовок"
         banned: "Забанено"
         deleted: "Удалено"
         banned_until: "Бан до"

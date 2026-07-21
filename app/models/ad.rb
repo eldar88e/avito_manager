@@ -1,6 +1,8 @@
 class Ad < ApplicationRecord
   validates :file_id, presence: true
 
+  normalizes :title, with: ->(title) { title.strip.presence }
+
   belongs_to :user
   belongs_to :store
   belongs_to :address
@@ -21,7 +23,7 @@ class Ad < ApplicationRecord
   end
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[id avito_id avito_id_text file_id deleted banned banned_until promotion promotion_allowed]
+    %w[id avito_id avito_id_text file_id title deleted banned banned_until promotion promotion_allowed]
   end
 
   def self.ransackable_associations(_auth_object = nil)

@@ -3,6 +3,9 @@ h3 class="text-lg" External ID: <span class="font-semibold">#{@ad.file_id}</span
 = form_with model: @ad, url: store_ad_path(params[:id], store_id: @store), method: :patch, class: 'admin-form',
               data: { controller: "modal", action: "submit->modal#close" } do |form|
   .mb-5
+    = form.label :title
+    = form.text_field :title, placeholder: 'Автоматически'
+  .mb-5
     = form.label :full_address
     = form.text_field :full_address
   .mb-5.flex.gap-3

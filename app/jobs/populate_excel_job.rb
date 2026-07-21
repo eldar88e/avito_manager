@@ -85,7 +85,7 @@ class PopulateExcelJob < ApplicationJob
 
       goods_type = game.category == 'Тумбы' ? 'Подставки и тумбы' : store.goods_type
       category   = game.category.sub('Мини-', '').sub('-Кровати', 'ы')
-      title      = formit_title(game, ad)
+      title      = ad.title.presence || formit_title(game, ad)
       worksheet.append_row(
         [ad.id, ad.avito_id, STOCK, current_time, store.ad_status, store.category, goods_type, store.ad_type,
          store.availability, ad.full_address, title, make_description(ad, title), store.condition,
