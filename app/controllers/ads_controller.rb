@@ -1,6 +1,6 @@
 class AdsController < ApplicationController
   before_action :authenticate_user!, :set_store
-  before_action :set_ad, only: %i[edit update]
+  before_action :set_ad, only: %i[edit update destroy]
 
   def index
     set_search_ads
@@ -18,6 +18,17 @@ class AdsController < ApplicationController
     return unless @ad.update(ad_params)
 
     render turbo_stream: [turbo_stream.replace(@ad), success_notice('Объявление было успешно обновлено.')]
+  end
+
+  def destroy
+    if @ad.destroy
+      render turbo_stream: [
+        turbo_stream.remove(@ad),
+        success_notice('Объявление было успешно удалено.')
+      ]
+    else
+      error_notice(@ad.errors.full_messages)
+    end
   end
 
   def update_all

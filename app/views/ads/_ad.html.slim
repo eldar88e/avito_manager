@@ -25,7 +25,12 @@ tr id=dom_id(ad) class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 
     = ad.promotion? ? 'Да' : 'Нет'
   td.px-6.py-4
     = ad.promotion_allowed? ? 'Да' : 'Нет'
-  td.px-6.py-4
+  td.px-6.py-4.flex.gap-2.items-center
     = link_to edit_store_ad_path(ad, store_id: @store), class: 'btn inline-flex', title: 'Править',
                   data: { controller: 'modal', action: 'click->modal#open', turbo_prefetch: false } do
       = render IconComponent.new name: :edit, width: 20
+    = button_to store_ad_path(@store, ad), method: :delete, class: 'btn btn-danger inline-flex',
+                title: 'Удалить',
+                data: { confirm: 'Вы уверены, что хотите удалить это объявление?',
+                        controller: 'confirm', action: 'click->confirm#call' } do
+      = render IconComponent.new name: :trash, width: 20
