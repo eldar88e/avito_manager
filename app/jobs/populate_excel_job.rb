@@ -14,7 +14,7 @@ class PopulateExcelJob < ApplicationJob
 
   MAIN_COLUMNS = %w[
     Id AvitoId Stock DateBegin AdStatus Category GoodsType AdType Availability Address Title Description Condition Price
-    AllowEmail ManagerName ContactPhone ContactMethod ImageUrls GoodsSubType TNVED
+    AllowEmail ManagerName ContactPhone ContactMethod ImageUrls GoodsSubType TNVED OKPD2
   ].freeze
   ADDITIONAL_COLUMNS = %w[
     Color ColorName FurnitureShape Modular FoldingMechanism TypeOfFoldingMechanism SleepingPlace UpholsteryMaterial
@@ -88,7 +88,7 @@ class PopulateExcelJob < ApplicationJob
          store.availability, ad.full_address, title, make_description(ad, title), store.condition,
          make_price(ad.extra&.dig('width'), ad_import.price),
          store.allow_email, store.manager_name, store.contact_phone, store.contact_method, img_urls,
-         category, make_tnved(category), *form_extra(ad_import, ad)]
+         category, make_tnved(category), make_okpd2(category), *form_extra(ad_import, ad)]
       )
     end
   end
@@ -143,6 +143,23 @@ class PopulateExcelJob < ApplicationJob
       9_401_610_000
     else
       raise 'Неизвестный TNVED'
+    end
+  end
+
+  def make_okpd2(category)
+    case category
+    when 'Диваны'
+      '31.09.12.119'
+    when 'Кровати'
+      '31.09.12.121'
+    when 'Тумбы'
+      '31.09.12.124'
+    when 'Кресла'
+      '31.01.12.160'
+    when 'Пуфы и банкетки'
+      '13.92.24.130'
+    else
+      raise 'Неизвестный OKPD2'
     end
   end
 
