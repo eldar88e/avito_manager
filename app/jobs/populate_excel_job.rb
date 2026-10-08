@@ -133,7 +133,7 @@ class PopulateExcelJob < ApplicationJob
     case category
     when 'Диваны', 'Кресла', 'Пуфы и банкетки'
       '9401 61 000 0'
-    when 'Кровати' || 'Тумбы'
+    when 'Кровати', 'Тумбы'
       '9403 50 000 9'
     else
       raise 'Неизвестный TNVED'
