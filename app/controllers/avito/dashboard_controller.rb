@@ -8,14 +8,9 @@ module Avito
     layout 'avito'
 
     def index
-      @report = fetch_cached("report_#{@store.id}", url: 'https://api.avito.ru/autoload/v3/reports/last_completed_report')
-      message = case @report['error']
-                when Hash
-                  @report['error']['message']
-                when String
-                  @report['error']
-                end
-      @report = {} if message.nil? || message == 'Report not found'
+      @report = fetch_cached("report_#{@store.id}", url: 'https://api.avito.ru/autoload/v4/uploads/last_successful')
+      message = @report.dig('error', 'message')
+      @report = {} if message.present? # .nil? || message == 'Report not found'
       @bal    = fetch_cached("bal_#{@store.id}",
                              url: 'https://api.avito.ru/cpa/v3/balanceInfo', method: :post, payload: {})
       @balance = fetch_cached("balance_#{@store.id}",
