@@ -34,7 +34,7 @@ class User < ApplicationRecord
       { variable: 'import_img_size', value: 1080 },
       { variable: 'tg_chat_ids', value: 'example,chat,ids' },
       { variable: 'tg_token', value: 'ExampleBotToken' },
-      { variable: 'quantity_games', value: 10 },
+      { variable: 'quantity_ads', value: 10 },
       { variable: 'avito_img_width', value: 1920 },
       { variable: 'avito_img_height', value: 1440 },
       { variable: 'avito_back_color', value: '#FFFFFF' }

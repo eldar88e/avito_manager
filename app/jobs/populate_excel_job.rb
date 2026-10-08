@@ -14,7 +14,7 @@ class PopulateExcelJob < ApplicationJob
 
   MAIN_COLUMNS = %w[
     Id AvitoId Stock DateBegin AdStatus Category GoodsType AdType Availability Address Title Description Condition Price
-    AllowEmail ManagerName ContactPhone ContactMethod ImageUrls GoodsSubType
+    AllowEmail ManagerName ContactPhone ContactMethod ImageUrls GoodsSubType TNVED
   ].freeze
   ADDITIONAL_COLUMNS = %w[
     Color ColorName FurnitureShape Modular FoldingMechanism TypeOfFoldingMechanism SleepingPlace UpholsteryMaterial
@@ -32,7 +32,7 @@ class PopulateExcelJob < ApplicationJob
   def perform(**args)
     store     = Store.find(args[:store_id])
     user      = store.user
-    limit     = Setting.all_cached(user.id)[:quantity_games]
+    limit     = Setting.all_cached(user.id)[:quantity_ads]
     workbook  = FastExcel.open
     worksheet = create_worksheet(workbook)
     # products = user.products.active.with_attached_image
@@ -68,30 +68,27 @@ class PopulateExcelJob < ApplicationJob
 
   def active_ad_import(address, limit)
     AdImport.active.order(created_at: :desc).limit(address.total_games || limit)
-    # .includes(:game_black_list)
   end
 
-  def process_ad_import(game, address, ads, worksheet)
-    # return if ad_import.game_black_list
-
+  def process_ad_import(ad_import, address, ads, worksheet)
     store        = address.store
     current_time = Time.current.strftime('%d.%m.%y')
-    prefix       = "#{game.external_id}_#{store.id}_#{address.id}"
+    prefix       = "#{ad_import.external_id}_#{store.id}_#{address.id}"
     selected_ads = ads.select { |i| i[:file_id].start_with?(prefix) }
 
     selected_ads.each do |ad|
       img_urls = ad.images.map { |img| make_image(img) }.join('|')
       next if img_urls.blank?
 
-      goods_type = game.category == 'Тумбы' ? 'Подставки и тумбы' : store.goods_type
-      category   = game.category.sub('Мини-', '').sub('-Кровати', 'ы')
-      title      = ad.title.presence || formit_title(game, ad)
+      goods_type = ad_import.category == 'Тумбы' ? 'Подставки и тумбы' : store.goods_type
+      category   = ad_import.category.sub('Мини-', '').sub('-Кровати', 'ы')
+      title      = ad.title.presence || formit_title(ad_import, ad)
       worksheet.append_row(
         [ad.id, ad.avito_id, STOCK, current_time, store.ad_status, store.category, goods_type, store.ad_type,
          store.availability, ad.full_address, title, make_description(ad, title), store.condition,
-         make_price(ad.extra&.dig('width'), game.price),
+         make_price(ad.extra&.dig('width'), ad_import.price),
          store.allow_email, store.manager_name, store.contact_phone, store.contact_method, img_urls,
-         category, *form_extra(game, ad)]
+         category, make_tnved(category), *form_extra(ad_import, ad)]
       )
     end
   end
@@ -130,6 +127,20 @@ class PopulateExcelJob < ApplicationJob
 
   def make_image(image)
     AttachmentUrlBuilderService.storage_path(image)
+  end
+
+  def make_tnved(category)
+    if category == 'Диваны'
+      9401610000
+    elsif category == 'Кровати'
+      9403500009
+    elsif category == 'Тумбы'
+      9403500009
+    elsif category == 'Кресла'
+      9401610000
+    else
+      raise 'Неизвестный TNVED'
+    end
   end
 
   def make_description(adv, title)
