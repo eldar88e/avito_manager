@@ -131,16 +131,10 @@ class PopulateExcelJob < ApplicationJob
 
   def make_tnved(category)
     case category
-    when 'Диваны'
-      9_401_610_000
-    when 'Кровати'
-      9_403_500_009
-    when 'Тумбы'
-      9_403_500_009
-    when 'Кресла'
-      9_401_610_000
-    when 'Пуфы и банкетки'
-      9_401_610_000
+    when 'Диваны', 'Кресла', 'Пуфы и банкетки'
+      '9401 61 000 0'
+    when 'Кровати' || 'Тумбы'
+      '9403 50 000 9'
     else
       raise 'Неизвестный TNVED'
     end
