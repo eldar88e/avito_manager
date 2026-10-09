@@ -14,7 +14,7 @@ class PopulateExcelJob < ApplicationJob
 
   MAIN_COLUMNS = %w[
     Id AvitoId Stock DateBegin AdStatus Category GoodsType AdType Availability Address Title Description Condition Price
-    AllowEmail ManagerName ContactPhone ContactMethod ImageUrls GoodsSubType TNVED OKPD2
+    AllowEmail ManagerName ContactPhone ContactMethod ImageUrls GoodsSubType TNVED OKPD2 NoDocuments
   ].freeze
   ADDITIONAL_COLUMNS = %w[
     Color ColorName FurnitureShape Modular FoldingMechanism TypeOfFoldingMechanism SleepingPlace UpholsteryMaterial
@@ -28,6 +28,7 @@ class PopulateExcelJob < ApplicationJob
     'Диван-Кровати' => 'Диван-кровать', 'Кресла' => 'Кресло'
   }.freeze
   STOCK = 2
+  NO_DOCUMENTS = 'Пропустить'.freeze
 
   def perform(**args)
     store     = Store.find(args[:store_id])
@@ -88,7 +89,7 @@ class PopulateExcelJob < ApplicationJob
          store.availability, ad.full_address, title, make_description(ad, title), store.condition,
          make_price(ad.extra&.dig('width'), ad_import.price),
          store.allow_email, store.manager_name, store.contact_phone, store.contact_method, img_urls,
-         category, make_tnved(category), make_okpd2(category), *form_extra(ad_import, ad)]
+         category, make_tnved(category), make_okpd2(category), NO_DOCUMENTS, *form_extra(ad_import, ad)]
       )
     end
   end
