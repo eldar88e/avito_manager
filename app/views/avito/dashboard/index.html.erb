@@ -125,10 +125,10 @@
           </div>
 
           <div class="list-group-item list-group-item-action">
-            <% deleted = @report.dig('section_stats', 'sections')&.find { |i| i['slug'] == 'removed_from_file' }.try(:[], 'count') || 0 %>
+            <% deleted = @report.dig('stats', 'sections')&.find { |i| i['slug'] == 'removed_from_file' }.try(:[], 'count') || 0 %>
             <div class="row">
               <div class="ps-3 ps-md-3 fw-bold col-6 col-md-3">Объявлений в файле</div>
-<!--              <div class="col-6 col-md-9"><%#= @report['section_stats']['count'] - deleted %></div>-->
+              <div class="col-6 col-md-9"><%= @report['stats']['count'] - deleted %></div>
             </div>
           </div>
         </ul>
