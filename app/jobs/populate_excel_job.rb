@@ -28,7 +28,7 @@ class PopulateExcelJob < ApplicationJob
     'Диван-Кровати' => 'Диван-кровать', 'Кресла' => 'Кресло'
   }.freeze
   STOCK = 2
-  NO_DOCUMENTS = 'Пропустить'.freeze
+  NO_DOCUMENTS = 'Подтверждаю'.freeze
 
   def perform(**args)
     store     = Store.find(args[:store_id])
