@@ -20,11 +20,11 @@ COPY Gemfile Gemfile.lock ./
 RUN gem install bundler -v "$(tail -n 1 Gemfile.lock)" \
  && bundle install --jobs=2 --retry=3 \
  && bundle clean --force \
- # && rm -rf node_modules/.cache
+ && rm -rf /usr/local/bundle/cache
 
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile \
- && rm -rf node_modules/.cache
+ # && rm -rf node_modules/.cache
 
 COPY . .
 
