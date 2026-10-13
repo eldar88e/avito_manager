@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
 import ViteRails from "vite-plugin-rails";
 import tailwindcss from "@tailwindcss/vite";
-import autoprefixer from "autoprefixer";
 
 export default defineConfig({
   plugins: [
@@ -15,11 +14,6 @@ export default defineConfig({
     }),
     tailwindcss(),
   ],
-  css: {
-    postcss: {
-      plugins: [autoprefixer()],
-    },
-  },
   build: {
     assetsInlineLimit: 1500,
     chunkSizeWarningLimit: 600,

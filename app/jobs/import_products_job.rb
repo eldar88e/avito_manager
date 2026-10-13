@@ -66,14 +66,14 @@ class ImportProductsJob < ApplicationJob
     row['extra']['cabinet_type'] = 'Прикроватные тумбы' if row['category'] == 'Тумбы'
     row['extra']['material']     = 'МДФ|Дерево' if row['category'] == 'Тумбы'
     row['extra']['purpose']      = 'Гостиная' if row['category'] == 'Диваны'
-    row['extra']['purpose']      = 'Гостиная|Детская|Кухня|Офис|Кафе и ресторан' if row['category'] == 'Мини-Диваны'
+    row['extra']['purpose']      = 'Гостиная|Детская|Кухня|Офис|Кафе и ресторан' if row['category'] == 'Мини-диваны'
     row['extra']['multi_name']   = row['title']
 
     add_attributes_puff(row) if row['category'] == 'Пуфы и банкетки'
     add_attributes_bed(row) if row['category'] == 'Кровати'
     add_attributes_armchair(row) if row['category'] == 'Кресла'
 
-    row['extra']['purpose'] = 'Гостиная|Детская|Спальня|Дача и сад' if row['category'] == 'Диван-Кровати'
+    row['extra']['purpose'] = 'Гостиная|Детская|Спальня|Дача и сад' if row['category'] == 'Диван-кровати'
 
     row[:md5_hash]       = md5_hash(row.slice(*KEYS).merge(row['extra']))
     row[:touched_run_id] = run_id

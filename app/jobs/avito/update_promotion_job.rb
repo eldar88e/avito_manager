@@ -14,7 +14,7 @@ module Avito
     METRICS         = %w[views contacts favorites presenceSpending impressions].freeze
     BALANCE_LIMIT   = 400 # 400 руб.
     MAX_RETRIES     = 3
-    PROMOTION_CATEGORIES = %w[Кровати Диваны Мини-Диваны Диван-Кровати].freeze
+    PROMOTION_CATEGORIES = %w[Кровати Диваны Мини-диваны Диван-кровати].freeze
 
     def perform(user_id, store_id, **args)
       user       = User.find(user_id)
