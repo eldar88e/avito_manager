@@ -23,8 +23,8 @@ RUN gem install bundler -v "$(tail -n 1 Gemfile.lock)" \
  && rm -rf /usr/local/bundle/cache
 
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
- # && rm -rf node_modules/.cache
+RUN yarn install --frozen-lockfile \
+  && rm -rf node_modules/.cache
 
 COPY . .
 
