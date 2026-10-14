@@ -16,7 +16,7 @@ class PopulateExcelJob < ApplicationJob
 
   MAIN_COLUMNS = %w[
     Id AvitoId Stock DateBegin AdStatus Category GoodsType AdType Availability Address Title Description Condition Price
-    AllowEmail ManagerName ContactPhone ContactMethod ImageUrls GoodsSubType TNVED OKPD2 NoDocuments
+    AllowEmail ManagerName ContactPhone ContactMethod ImageUrls GoodsSubType TNVED OKPD2 NoDocuments VideoFileURL
   ].freeze
   ADDITIONAL_COLUMNS = %w[
     Color ColorName FurnitureShape Modular FoldingMechanism TypeOfFoldingMechanism SleepingPlace UpholsteryMaterial
@@ -92,8 +92,8 @@ class PopulateExcelJob < ApplicationJob
         [ad.id, ad.avito_id, STOCK, current_time, store.ad_status, store.category, goods_type, store.ad_type,
          store.availability, ad.full_address, title, make_description(ad, title), store.condition,
          make_price(ad.extra&.dig('width'), ad_import.price),
-         store.allow_email, store.manager_name, store.contact_phone, store.contact_method, img_urls,
-         category, make_tnved(category), make_okpd2(category), NO_DOCUMENTS, *form_extra(ad_import, ad)]
+         store.allow_email, store.manager_name, store.contact_phone, store.contact_method, img_urls, category,
+         make_tnved(category), make_okpd2(category), NO_DOCUMENTS, ad_import.video, *form_extra(ad_import, ad)]
       )
     end
   end
