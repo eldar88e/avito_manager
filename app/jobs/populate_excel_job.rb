@@ -82,7 +82,7 @@ class PopulateExcelJob < ApplicationJob
       next if img_urls.blank?
 
       goods_type = ad_import.category == 'Тумбы' ? 'Подставки и тумбы' : store.goods_type
-      category   = ad_import.category.sub('Мини-', '').sub('-кровати', 'ы')
+      category   = ad_import.category.sub('Мини-диваны', 'Диваны').sub('-кровати', 'ы')
       title      = ad.title.presence || formit_title(ad_import, ad)
       worksheet.append_row(
         [ad.id, ad.avito_id, STOCK, current_time, store.ad_status, store.category, goods_type, store.ad_type,
