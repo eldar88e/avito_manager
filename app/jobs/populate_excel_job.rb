@@ -139,7 +139,8 @@ class PopulateExcelJob < ApplicationJob
     when 'Тумбы'
       '9403 50 000 9'
     else
-      raise 'Неизвестный TNVED'
+      binding.irb
+      # raise 'Неизвестный TNVED'
     end
   end
 
