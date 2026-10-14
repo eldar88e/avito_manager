@@ -3,6 +3,8 @@ class PopulateExcelJob < ApplicationJob
 
   include Rails.application.routes.url_helpers
 
+  PRICE_LIMIT = 150_000
+
   WIDTH_PRICES = {
     192 => 200,
     172 => 300,
@@ -72,6 +74,8 @@ class PopulateExcelJob < ApplicationJob
   end
 
   def process_ad_import(ad_import, address, ads, worksheet)
+    return if ad_import.price > PRICE_LIMIT
+
     store        = address.store
     current_time = Time.current.strftime('%d.%m.%y')
     prefix       = "#{ad_import.external_id}_#{store.id}_#{address.id}"
