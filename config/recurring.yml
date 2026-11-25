@@ -25,14 +25,15 @@ production:
 #    class: Avito::StopPromotionJob
 #    args: [{ user_id: 1, store_id: 1 }]
 #    schedule: every day at 23:00
-  import_products:
-    class: ImportProductsJob
-    args: [{ user_id: 1 }]
-    schedule: every day at 22:10
-  update_feed:
-    class: WatermarksSheetsJob
-    args: [{ store_id: 1, user_id: 1 }]
-    schedule: every day at 22:20
+#
+#  import_products:
+#    class: ImportProductsJob
+#    args: [{ user_id: 1 }]
+#    schedule: every day at 22:10
+#  update_feed:
+#    class: WatermarksSheetsJob
+#    args: [{ store_id: 1, user_id: 1 }]
+#    schedule: every day at 22:20
   clear_failed_jobs:
     class: SolidQueue::ClearFailedJob
-    schedule: every day at 01:00
+    schedule: every month on the 1st at 01:00
